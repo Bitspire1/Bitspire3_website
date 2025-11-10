@@ -50,7 +50,6 @@ const BriefSeo: React.FC = () => {
       // Prepare data for Netlify Forms
       const formData = {
         "form-name": "brief-seo",
-        "bot-field": "", // honeypot
         ...form
       };
 

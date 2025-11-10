@@ -49,16 +49,9 @@ const Contact: React.FC = () => {
           <form 
             name="contact" 
             method="POST" 
-            data-netlify="true"
-            data-netlify-honeypot="bot-field"
             className="space-y-4" 
             onSubmit={handleSubmit}
           >
-            {/* Hidden field for Netlify */}
-            <input type="hidden" name="form-name" value="contact" />
-            {/* Honeypot field */}
-            <input type="hidden" name="bot-field" />
-            
             <input
               type="text"
               name="name"
