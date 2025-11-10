@@ -17,14 +17,17 @@ const Contact: React.FC = () => {
     console.log("Formularz kontaktowy:", form);
 
     try {
-      // Netlify Forms automatycznie obsługuje FormData
-      const formElement = e.target as HTMLFormElement;
-      const formData = new FormData(formElement);
+      // Prepare data for Netlify Forms
+      const formData = new URLSearchParams();
+      formData.append("form-name", "contact");
+      formData.append("name", form.name);
+      formData.append("email", form.email);
+      formData.append("message", form.message);
 
       await fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData as unknown as Record<string, string>).toString(),
+        body: formData.toString(),
       });
 
       console.log("Formularz wysłany pomyślnie");
