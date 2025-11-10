@@ -56,6 +56,7 @@ const BriefLogoComponent: React.FC = () => {
       // Prepare data for Netlify Forms
       const formData = {
         "form-name": "brief-logo",
+        "bot-field": "", // honeypot
         ...form
       };
 

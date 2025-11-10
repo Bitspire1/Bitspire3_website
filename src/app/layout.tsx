@@ -68,13 +68,15 @@ export default function RootLayout({
           {/* Hidden forms for Netlify Forms detection */}
           <form name="contact" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
             <input type="hidden" name="form-name" value="contact" />
+            <input type="hidden" name="bot-field" />
             <input type="text" name="name" />
             <input type="email" name="email" />
             <textarea name="message"></textarea>
           </form>
 
-          <form name="brief-website" data-netlify="true" hidden>
+          <form name="brief-website" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
             <input type="hidden" name="form-name" value="brief-website" />
+            <input type="hidden" name="bot-field" />
             <input type="text" name="projectType" />
             <textarea name="mainGoal"></textarea>
             <input type="text" name="responsive" />
@@ -95,8 +97,9 @@ export default function RootLayout({
             <input type="text" name="contact" />
           </form>
 
-          <form name="brief-shop" data-netlify="true" hidden>
+          <form name="brief-shop" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
             <input type="hidden" name="form-name" value="brief-shop" />
+            <input type="hidden" name="bot-field" />
             <input type="text" name="shopType" />
             <textarea name="products"></textarea>
             <input type="text" name="productCount" />
@@ -112,8 +115,9 @@ export default function RootLayout({
             <input type="text" name="contact" />
           </form>
 
-          <form name="brief-logo" data-netlify="true" hidden>
+          <form name="brief-logo" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
             <input type="hidden" name="form-name" value="brief-logo" />
+            <input type="hidden" name="bot-field" />
             <input type="text" name="logoType" />
             <input type="text" name="brandName" />
             <input type="text" name="tagline" />
@@ -127,8 +131,9 @@ export default function RootLayout({
             <input type="text" name="contact" />
           </form>
 
-          <form name="brief-seo" data-netlify="true" hidden>
+          <form name="brief-seo" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
             <input type="hidden" name="form-name" value="brief-seo" />
+            <input type="hidden" name="bot-field" />
             <input type="text" name="online" />
             <input type="text" name="url" />
             <textarea name="goals"></textarea>

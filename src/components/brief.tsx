@@ -241,6 +241,7 @@ const WebsiteBrief: React.FC = () => {
 			 // Prepare data for Netlify Forms
 			 const formData = {
 				 "form-name": "brief-website",
+				 "bot-field": "", // honeypot
 				 ...form
 			 };
 

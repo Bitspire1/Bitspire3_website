@@ -70,6 +70,7 @@ const BriefShop: React.FC = () => {
       // Prepare data for Netlify Forms
       const formData = {
         "form-name": "brief-shop",
+        "bot-field": "", // honeypot
         ...form
       };
 
