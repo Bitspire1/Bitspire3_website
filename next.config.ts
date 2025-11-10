@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Disable image optimization for Netlify
+  output: "export",
   images: {
     unoptimized: true,
   },
