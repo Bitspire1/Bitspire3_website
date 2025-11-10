@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect, useCallback, useMemo } from "react"
 const STEPS = [
   { label: "Nowy sklep czy przebudowa?", required: true, options: ["Nowy sklep", "Przebudowa"], key: "shopType" },
   { label: "Jakie produkty chcesz sprzedawać?", required: true, type: "textarea", key: "products" },
-  { label: "Ile produktów planujesz na start?", required: false, options: ["1-10", "11-50", "51-200", ">200"], key: "productCount" },
+  { label: "Ile produktów planujesz na start?", required: false, options: ["do10", "od11do50", "od51do200", "powyzej200"], key: "productCount" },
   { label: "Czy sklep ma obsługiwać różne warianty produktów (np. rozmiar, kolor)?", required: false, options: ["Tak", "Nie"], key: "variants" },
   { label: "Jakie metody płatności mają być dostępne?", required: false, type: "textarea", key: "payments" },
   { label: "Jakie metody dostawy mają być dostępne?", required: false, type: "textarea", key: "shipping" },
@@ -41,18 +41,48 @@ const BriefShop: React.FC = () => {
     }
   }, [current.key]);
 
+  // Validate all required fields
+  const isFormValid = useMemo(() => {
+    const requiredFields = STEPS.filter(step => step.required).map(step => step.key);
+    return requiredFields.every(key => form[key] && form[key].trim() !== "");
+  }, [form]);
+
+  // Helper to encode form data for Netlify
+  const encodeFormData = (data: Record<string, string>) => {
+    return Object.keys(data)
+      .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+      .join("&");
+  };
+
   const handleSubmit = useCallback(async () => {
+    // Validate required fields before sending
+    const requiredFields = STEPS.filter(step => step.required).map(step => step.key);
+    const missing = requiredFields.filter(key => !form[key] || form[key].trim() === "");
+    if (missing.length > 0) {
+      setError("Uzupełnij wszystkie wymagane pola oznaczone gwiazdką.");
+      return;
+    }
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("https://abundant-ants-020704db14.strapiapp.com/api/brief-shops", {
+      console.log("Formularz sklepu:", form);
+      
+      // Prepare data for Netlify Forms
+      const formData = {
+        "form-name": "brief-shop",
+        ...form
+      };
+
+      await fetch("/", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: form }),
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encodeFormData(formData),
       });
-      if (!res.ok) throw new Error("Błąd podczas wysyłania. Spróbuj ponownie.");
+
+      console.log("Brief sklepu wysłany pomyślnie");
       setSuccess(true);
     } catch (e: unknown) {
+      console.error("Błąd sklepu:", e);
       if (e instanceof Error) {
         setError(e.message || "Błąd podczas wysyłania.");
       } else {
@@ -103,7 +133,8 @@ const BriefShop: React.FC = () => {
             <label className="block text-2xl md:text-3xl font-extrabold font-rajdhani mb-4 text-white">
               {current.label} {current.required && <span className="text-[#ff2e3c]">*</span>}
             </label>
-            <div className="flex flex-col gap-4 mt-2">
+            {/* Force remount of inputs when step changes to avoid uncontrolled -> controlled warnings */}
+            <div key={current.key} className="flex flex-col gap-4 mt-2">
               {current.options && current.options.map((option: string) => (
                 <div key={option} className="flex flex-col">
                   <label className={`flex items-center gap-4 cursor-pointer p-4 rounded-xl border-2 transition-all duration-200 group hover:border-[#41B0E5] hover:bg-[#41B0E5]/10 ${
@@ -114,7 +145,10 @@ const BriefShop: React.FC = () => {
                     <div className="relative">
                       <input
                         type="radio"
-                        checked={form[current.key] === option || (option === "Inne" && form[current.key]?.startsWith("Inne:"))}
+                        name={`brief-shop-${current.key}`}
+                        checked={Boolean(
+                          form[current.key] === option || (option === "Inne" && form[current.key]?.startsWith("Inne:"))
+                        )}
                         onChange={() => handleSelect(option)}
                         className="sr-only"
                       />
@@ -191,12 +225,12 @@ const BriefShop: React.FC = () => {
               <button
                 className={`flex-1 px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all duration-300 border-2
                   ${
-                    !form[current.key] || loading
+                    (!form[current.key] || !isFormValid) || loading
                       ? "border-gray-500 bg-gray-600/30 text-gray-400 cursor-not-allowed"
                       : "border-green-500 bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-105 shadow-lg hover:shadow-green-500/25"
                   }`}
                 onClick={handleSubmit}
-                disabled={!form[current.key]||loading}
+                disabled={(!form[current.key] || !isFormValid) || loading}
               >
                 {loading ? 'Wysyłanie...' : 'Wyślij'}
               </button>

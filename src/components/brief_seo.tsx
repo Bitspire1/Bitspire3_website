@@ -34,16 +34,32 @@ const BriefSeo: React.FC = () => {
     setForm((prev) => ({ ...prev, [current.key]: option }));
   }, [current.key]);
 
+  // Helper to encode form data for Netlify
+  const encodeFormData = (data: Record<string, string>) => {
+    return Object.keys(data)
+      .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+      .join("&");
+  };
+
   const handleSubmit = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("https://abundant-ants-020704db14.strapiapp.com/api/brief-seos", {
+      console.log("Formularz SEO:", form);
+      
+      // Prepare data for Netlify Forms
+      const formData = {
+        "form-name": "brief-seo",
+        ...form
+      };
+
+      await fetch("/", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: form }),
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encodeFormData(formData),
       });
-      if (!res.ok) throw new Error("Błąd podczas wysyłania. Spróbuj ponownie.");
+
+      console.log("Brief SEO wysłany pomyślnie");
       setSuccess(true);
     } catch (e: unknown) {
       if (e instanceof Error) {
@@ -96,7 +112,8 @@ const BriefSeo: React.FC = () => {
             <label className="block text-2xl md:text-3xl font-extrabold font-rajdhani mb-4 text-white">
               {current.label} {current.required && <span className="text-[#ff2e3c]">*</span>}
             </label>
-            <div className="flex flex-col gap-4 mt-2">
+            {/* Force remount when the step changes to avoid uncontrolled -> controlled warnings */}
+            <div key={current.key} className="flex flex-col gap-4 mt-2">
               {current.options && current.options.map((option: string) => (
                 <label key={option} className={`flex items-center gap-4 cursor-pointer p-4 rounded-xl border-2 transition-all duration-200 group hover:border-[#41B0E5] hover:bg-[#41B0E5]/10 ${
                   form[current.key] === option
@@ -106,6 +123,7 @@ const BriefSeo: React.FC = () => {
                   <div className="relative">
                     <input
                       type="radio"
+                      name={`brief-seo-${current.key}`}
                       checked={form[current.key] === option}
                       onChange={() => handleSelect(option)}
                       className="sr-only"

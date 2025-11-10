@@ -11,60 +11,95 @@ const logos = [
   { src: "/Tailwind_CSS.svg", alt: "Tailwind CSS Logo", useBrightness: true },
   { src: "/Vite.svg", alt: "Vite Logo", useBrightness: true },
   { src: "/Stripe.svg", alt: "Stripe Logo", useBrightness: false },
+	{ src: "/Docker.svg", alt: "Docker Logo", useBrightness: false },
 ];
 
 const LOGO_WIDTH = 140; // 80px image + 60px gap
+const SPEED = 0.4; // px per frame
 
 const Technology: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [logoCount, setLogoCount] = useState(logos.length * 8);
-  const [positions, setPositions] = useState<number[]>([]);
+	const [logoCount, setLogoCount] = useState(logos.length * 8);
+	// animation state stored in refs to avoid React re-renders on every frame
+	const positionsRef = useRef<number[]>([]);
+	const rafRef = useRef<number | null>(null);
+	const itemsRef = useRef<Array<HTMLSpanElement | null>>([]);
+	const lastWidthRef = useRef<number>(0);
+	const resizeTimeoutRef = useRef<number | null>(null);
   
   // Animation state
   const [visible, setVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-	// Calculate how many logos are needed to fill the container + buffer
-	const updateLogoCount = () => {
-	  const containerWidth = containerRef.current?.offsetWidth || 2200;
-	  const minCount = Math.ceil(containerWidth / LOGO_WIDTH) + logos.length * 5;
-	  setLogoCount(minCount);
-	  setPositions(Array.from({ length: minCount }, (_, i) => i * LOGO_WIDTH));
-	};
-	updateLogoCount();
-	window.addEventListener("resize", updateLogoCount);
-	return () => window.removeEventListener("resize", updateLogoCount);
+		// Calculate how many logos are needed to fill the container + buffer
+		const computeCount = () => {
+			const vw = window.visualViewport?.width || window.innerWidth || 2200;
+			// ignore tiny changes that occur when mobile address bar hides/shows
+			if (Math.abs(vw - lastWidthRef.current) < 10 && positionsRef.current.length) return;
+			lastWidthRef.current = vw;
+			const minCount = Math.ceil(vw / LOGO_WIDTH) + logos.length * 5;
+			setLogoCount((prev) => (prev === minCount ? prev : minCount));
+			// initialize or preserve a smooth offset
+			if (!positionsRef.current.length) {
+				positionsRef.current = Array.from({ length: minCount }, (_, i) => i * LOGO_WIDTH);
+			} else {
+				const base = positionsRef.current[0];
+				positionsRef.current = Array.from({ length: minCount }, (_, i) => base + i * LOGO_WIDTH);
+			}
+		};
+
+		const onResize = () => {
+			if (resizeTimeoutRef.current) window.clearTimeout(resizeTimeoutRef.current);
+			resizeTimeoutRef.current = window.setTimeout(() => computeCount(), 120) as unknown as number;
+		};
+
+		computeCount();
+		window.visualViewport?.addEventListener("resize", onResize);
+		window.addEventListener("resize", onResize);
+		return () => {
+			window.visualViewport?.removeEventListener("resize", onResize);
+			window.removeEventListener("resize", onResize);
+			if (resizeTimeoutRef.current) window.clearTimeout(resizeTimeoutRef.current);
+		};
   }, []);
 
   useEffect(() => {
-	let animationFrame: number;
-	const animate = () => {
-	  setPositions((prev) => {
-		return prev.map((pos) => {
-		  let newPos = pos - 0.4; // zmniejszona prędkość
-		  if (newPos < -LOGO_WIDTH) {
-			// Move logo to the right side
-			const maxPos = Math.max(...prev);
-			newPos = maxPos + LOGO_WIDTH;
-		  }
-		  return newPos;
-		});
-	  });
-	  animationFrame = requestAnimationFrame(animate);
-	};
-	
-	// Start animation only if visible and not in reduced motion
-	if (visible && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-	  animationFrame = requestAnimationFrame(animate);
-	}
-	
-	return () => {
-	  if (animationFrame) {
-		cancelAnimationFrame(animationFrame);
-	  }
-	};
-  }, [visible, logoCount]);
+		// per-frame transform updates (no React state churn)
+		const step = () => {
+			const arr = positionsRef.current;
+			if (!arr.length) {
+				rafRef.current = requestAnimationFrame(step);
+				return;
+			}
+			// compute max only once per frame
+			let maxPos = -Infinity;
+			for (let i = 0; i < arr.length; i++) if (arr[i] > maxPos) maxPos = arr[i];
+
+			for (let i = 0; i < arr.length; i++) {
+				let p = arr[i] - SPEED;
+				if (p < -LOGO_WIDTH) p = maxPos + LOGO_WIDTH;
+				arr[i] = p;
+				const el = itemsRef.current[i];
+				if (el) el.style.transform = `translate3d(${p}px, -50%, 0)`;
+			}
+			rafRef.current = requestAnimationFrame(step);
+		};
+
+		if (visible && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			// initialize transforms immediately to avoid flicker
+			for (let i = 0; i < positionsRef.current.length; i++) {
+				const el = itemsRef.current[i];
+				if (el) el.style.transform = `translate3d(${positionsRef.current[i]}px, -50%, 0)`;
+			}
+			rafRef.current = requestAnimationFrame(step);
+		}
+
+		return () => {
+			if (rafRef.current) cancelAnimationFrame(rafRef.current);
+			rafRef.current = null;
+		};
+	}, [visible, logoCount]);
 
   useEffect(() => {
 	if (visible) return;
@@ -83,19 +118,18 @@ const Technology: React.FC = () => {
 	return () => observer.disconnect();
   }, [visible]);
 
-  return (
-	<section
-	  ref={sectionRef}
-	  className={`w-full py-8 px-0 relative overflow-hidden
-		transition-all duration-700 ease-[cubic-bezier(.4,0,.2,1)] will-change-transform will-change-opacity
-		${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
-	  `}
-	>
+	return (
+		<section
+			ref={sectionRef}
+			// slide-in animation removed as requested; keep minimal will-change for performance
+			className={`w-full py-8 px-0 relative overflow-hidden will-change-transform`}
+		>
 	  <div className="w-full">
 		<div
 		  className="relative mx-auto h-20 flex items-center overflow-hidden"
 		  style={{
 			maxWidth: '1600px',
+						minHeight: '5rem',
 			WebkitMaskImage:
 			  'linear-gradient(to right, transparent 0px, black 64px, black calc(100% - 64px), transparent 100%)',
 			maskImage:
@@ -103,19 +137,22 @@ const Technology: React.FC = () => {
 		  }}
 		  ref={containerRef}
 		>
-		  <div className="absolute left-0 top-0 w-full h-full" style={{ pointerEvents: "none" }}>
-			{positions.map((pos, i) => {
+		  <div className="absolute left-0 top-0 w-full h-full" role="list" aria-label="Technologie" style={{ pointerEvents: "none" }}>
+			{Array.from({ length: logoCount }).map((_, i) => {
 			  const { src, alt, useBrightness } = logos[i % logos.length];
 			  return (
 				<span
 				  key={i}
 				  role="listitem"
-				  className="marquee-item"
+									ref={(el) => {
+										itemsRef.current[i] = el;
+									}}
+				  className="marquee-item transform-gpu will-change-transform"
 				  style={{
 					position: "absolute",
-					left: `${pos}px`,
+					left: 0,
 					top: "50%",
-					transform: "translateY(-50%)",
+					transform: `translate3d(${positionsRef.current[i] ?? i * LOGO_WIDTH}px, -50%, 0)`,
 					width: "80px",
 					display: "flex",
 					justifyContent: "center"

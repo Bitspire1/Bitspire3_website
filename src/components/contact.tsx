@@ -14,29 +14,24 @@ const Contact: React.FC = () => {
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Formularz:", form);
+    console.log("Formularz kontaktowy:", form);
 
     try {
-      const res = await fetch("https://abundant-ants-020704db14.strapiapp.com/api/contacts", {
+      // Netlify Forms automatycznie obsługuje FormData
+      const formElement = e.target as HTMLFormElement;
+      const formData = new FormData(formElement);
+
+      await fetch("/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // "Authorization": "Bearer TWÓJ_TOKEN", // odkomentuj jeśli potrzebne
-        },
-        body: JSON.stringify({ data: form }),
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formData as unknown as Record<string, string>).toString(),
       });
 
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Błąd: ${res.status} – ${errorText}`);
-      }
-
-      const responseData = await res.json();
-      console.log("Odpowiedź z Strapi:", responseData);
+      console.log("Formularz wysłany pomyślnie");
       setSent(true);
     } catch (error) {
       console.error("Błąd:", error);
-      setSent(true); // UX friendly, ale może warto rozważyć warunkowy komunikat
+      alert("Wystąpił błąd podczas wysyłania formularza. Spróbuj ponownie.");
     }
   }, [form]);
 
@@ -51,7 +46,19 @@ const Contact: React.FC = () => {
             Dziękujemy za kontakt! Odpowiemy wkrótce.
           </div>
         ) : (
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form 
+            name="contact" 
+            method="POST" 
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
+            className="space-y-4" 
+            onSubmit={handleSubmit}
+          >
+            {/* Hidden field for Netlify */}
+            <input type="hidden" name="form-name" value="contact" />
+            {/* Honeypot field */}
+            <input type="hidden" name="bot-field" />
+            
             <input
               type="text"
               name="name"
@@ -102,8 +109,8 @@ const Contact: React.FC = () => {
             </div>
             <div>
               <p className="text-gray-400 text-xs">Email</p>
-              <a href="mailto:bitspireone@proton.me" className="text-blue-400 hover:text-blue-300 font-medium text-sm">
-                bitspireone@proton.me
+              <a href="mailto:kontakt@bitspire.pl" className="text-blue-400 hover:text-blue-300 font-medium text-sm">
+                kontakt@bitspire.pl
               </a>
             </div>
           </div>

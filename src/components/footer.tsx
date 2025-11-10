@@ -131,10 +131,10 @@ export const Footer: React.FC = () => {
               <li className="flex items-center">
                 <FaEnvelope className="w-4 h-4 text-blue-400 mr-3 flex-shrink-0" />
                 <a 
-                  href="mailto:bitspireone@proton.me" 
+                  href="mailto:kontakt@bitspire.pl" 
                   className="text-gray-300 hover:text-white transition-colors text-sm"
                 >
-                  bitspireone@proton.me
+                  kontakt@bitspire.pl
                 </a>
               </li>
               <li className="flex items-center">
@@ -150,8 +150,8 @@ export const Footer: React.FC = () => {
                 <FaMapMarkerAlt className="w-4 h-4 text-blue-400 mr-3 flex-shrink-0 mt-0.5" />
                 <div className="text-gray-300 text-sm">
                   <p>Bitspire</p>
-                  <p>ul. Przykładowa 1</p>
-                  <p>00-000 Warszawa</p>
+                  <p>ul. Tuwima 22a</p>
+                  <p>76-200 Słupsk</p>
                 </div>
               </li>
             </ul>
@@ -164,18 +164,27 @@ export const Footer: React.FC = () => {
             © {new Date().getFullYear()} Bitspire. Wszystkie prawa zastrzeżone.
           </p>
           
-          <div className="flex space-x-6 text-sm">
-            <button 
-              onClick={() => scrollToSection('contact-section')}
-              className="text-gray-400 hover:text-white transition-colors"
-            >
+          <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm justify-center md:justify-end">
+            <a href="/polityka-prywatnosci/" className="text-gray-400 hover:text-white transition-colors">
               Polityka prywatności
-            </button>
-            <button 
-              onClick={() => scrollToSection('contact-section')}
-              className="text-gray-400 hover:text-white transition-colors"
-            >
+            </a>
+            <a href="/polityka-cookies/" className="text-gray-400 hover:text-white transition-colors">
+              Polityka cookies
+            </a>
+            <a href="/regulamin/" className="text-gray-400 hover:text-white transition-colors">
               Regulamin
+            </a>
+            <a href="/deklaracja-dostepnosci/" className="text-gray-400 hover:text-white transition-colors">
+              Deklaracja dostępności
+            </a>
+            <button
+              onClick={() => {
+                const evt = new CustomEvent("open-cookie-settings");
+                window.dispatchEvent(evt);
+              }}
+              className="text-gray-400 hover:text-white transition-colors underline decoration-dotted underline-offset-4"
+            >
+              Ustawienia cookies
             </button>
           </div>
         </div>

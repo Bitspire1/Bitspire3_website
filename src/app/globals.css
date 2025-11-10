@@ -1,2 +1,18 @@
 @import "tailwindcss";
 
+/* Global background to prevent white flashes during paints/scroll on mobile */
+:root { --site-bg: #0b1220; }
+html, body, #__next {
+	background-color: var(--site-bg) !important;
+	color-scheme: dark;
+	min-height: 100vh;
+}
+
+/* Minor GPU/compositing hints for marquee items */
+.marquee-item {
+	backface-visibility: hidden;
+	-webkit-backface-visibility: hidden;
+	transform: translate3d(0,0,0);
+	-webkit-transform: translate3d(0,0,0);
+}
+
