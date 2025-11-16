@@ -4,9 +4,9 @@ export default defineConfig({
   branch: "main",
   
   // Get this from tina.io
-  clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID || "",
+  clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID || "a40ff8b9-0082-4d76-bcf4-65199fb84432",
   // Get this from tina.io
-  token: process.env.TINA_TOKEN || "",
+  token: process.env.TINA_TOKEN || "8498b0864d915e53c11e066762bb90a6c122c739",
 
   build: {
     outputFolder: "admin",
