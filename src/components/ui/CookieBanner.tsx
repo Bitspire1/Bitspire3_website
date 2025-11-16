@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { useCookieConsent } from "@/hooks/useCookies";
 import { CookieSettingsModal } from "./CookieSettingsModal";
 
@@ -52,7 +53,7 @@ export const CookieBanner: React.FC = () => {
         <h2 className="text-lg font-semibold text-white mb-2">Szanujemy Twoją prywatność</h2>
         <p className="text-sm text-slate-300 leading-relaxed mb-4">
           Używamy plików cookies niezbędnych oraz – po wyrażeniu zgody – analitycznych, personalizacyjnych i marketingowych aby ulepszać
-          działanie serwisu. Szczegóły znajdziesz w <a href="/polityka-prywatnosci/" className="text-blue-400 underline">polityce prywatności</a> i <a href="/polityka-cookies/" className="text-blue-400 underline">polityce cookies</a>.
+          działanie serwisu. Szczegóły znajdziesz w <Link href="/polityka-prywatnosci/" className="text-blue-400 underline">polityce prywatności</Link> i <Link href="/polityka-cookies/" className="text-blue-400 underline">polityce cookies</Link>.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-end">
           <button
