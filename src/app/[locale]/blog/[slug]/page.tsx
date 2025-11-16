@@ -93,19 +93,26 @@ const mdxComponents = {
 };
 
 export async function generateStaticParams() {
-  const blogConnection = await client.queries.blogConnection();
-  const posts = blogConnection.data.blogConnection.edges || [];
-  
-  return posts
-    .map(edge => edge?.node)
-    .filter(node => node !== null && node !== undefined)
-    .map(node => {
-      const pathParts = node._sys.relativePath.split('/');
-      return {
-        locale: pathParts[0],
-        slug: node._sys.filename,
-      };
-    });
+  try {
+    const blogConnection = await client.queries.blogConnection();
+    const posts = blogConnection.data.blogConnection.edges || [];
+
+    return posts
+      .map(edge => edge?.node)
+      .filter(node => node !== null && node !== undefined)
+      .map(node => {
+        const pathParts = node._sys.relativePath.split('/');
+        return {
+          locale: pathParts[0],
+          slug: node._sys.filename,
+        };
+      });
+  } catch (error) {
+    // If fetching the blogConnection fails during build, log a warning and return no static params.
+    // This prevents build failure due to unreachable CMS (like localhost) in CI environments.
+    console.error('generateStaticParams: Failed to fetch blogConnection for static params:', error);
+    return [];
+  }
 }
 
 export default async function BlogPostPage({ 
