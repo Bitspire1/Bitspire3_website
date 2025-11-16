@@ -1,10 +1,5 @@
 import { createClient } from "tinacms/dist/client";
 import { queries } from "./types";
-
-// Use environment variable if available (e.g. in Netlify build), fallback to localhost for local dev
-const tinaUrl = process.env.NEXT_PUBLIC_TINA_CLIENT_URL || process.env.NEXT_PUBLIC_TINA_API_URL || process.env.TINA_API_URL || 'http://localhost:4001/graphql';
-const tinaToken = process.env.TINA_TOKEN || process.env.NEXT_PUBLIC_TINA_TOKEN || '';
-
-export const client = createClient({ url: tinaUrl, token: tinaToken, queries,  });
+export const client = createClient({ cacheDir: 'C:/Users/kubap/Desktop/bitspie_v4 — kopia/frontend/tina/__generated__/.cache/1763324769956', url: 'https://content.tinajs.io/1.6/content/a40ff8b9-0082-4d76-bcf4-65199fb84432/github/main', token: '8498b0864d915e53c11e066762bb90a6c122c739', queries,  });
 export default client;
   
