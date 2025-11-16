@@ -29,7 +29,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   } catch (error) {
     console.error('Error fetching portfolio posts for sitemap:', error);
   }
-  
+
+  // Fetch all blog posts
+  let blogPosts: MetadataRoute.Sitemap = [];
+  try {
+    const blogConnection = await client.queries.blogConnection();
+    
+    blogPosts = (blogConnection.data.blogConnection.edges || [])
+      .map(edge => edge?.node)
+      .filter(node => node !== null && node !== undefined)
+      .flatMap(node => {
+        if (!node) return [];
+        
+        const slug = node._sys.filename;
+        const locale = node._sys.relativePath.split('/')[0];
+        const date = node.date ? new Date(node.date) : new Date();
+        
+        return {
+          url: `${baseUrl}/${locale}/blog/${slug}`,
+          lastModified: date,
+          changeFrequency: 'monthly' as const,
+          priority: 0.7,
+        };
+      });
+  } catch (error) {
+    console.error('Error fetching blog posts for sitemap:', error);
+  }
+
   return [
     {
       url: baseUrl,
@@ -55,7 +81,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.8,
     },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/en/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
     ...portfolioPosts,
+    ...blogPosts,
     {
       url: `${baseUrl}/polityka-prywatnosci`,
       lastModified: new Date(),

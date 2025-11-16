@@ -5,6 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Background } from "@/components/background";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { convertTinaBodyToMarkdown } from "@/lib/tina-utils";
+import { mdxComponents } from "@/lib/mdx-components";
+import fs from 'fs';
+import path from 'path';
 
 interface PortfolioPostPageProps {
   params: Promise<{
@@ -13,132 +17,43 @@ interface PortfolioPostPageProps {
   }>;
 }
 
-// MDX Components for custom styling
-const mdxComponents = {
-  h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-400 to-emerald-300 bg-clip-text text-transparent tracking-tight mt-12 mb-6" {...props} />
-  ),
-  h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-emerald-300 bg-clip-text text-transparent tracking-tight mt-12 mb-6" {...props} />
-  ),
-  h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h3 className="text-2xl md:text-3xl font-bold text-slate-200 tracking-tight mt-8 mb-4" {...props} />
-  ),
-  h4: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h4 className="text-xl md:text-2xl font-semibold text-slate-300 mt-6 mb-3" {...props} />
-  ),
-  p: (props: React.HTMLAttributes<HTMLParagraphElement>) => (
-    <p className="text-slate-300 leading-relaxed mb-4" {...props} />
-  ),
-  ul: (props: React.HTMLAttributes<HTMLUListElement>) => (
-    <ul className="list-disc list-outside ml-6 mb-6 space-y-2 text-slate-300" {...props} />
-  ),
-  ol: (props: React.HTMLAttributes<HTMLOListElement>) => (
-    <ol className="list-decimal list-outside ml-6 mb-6 space-y-2 text-slate-300" {...props} />
-  ),
-  li: (props: React.HTMLAttributes<HTMLLIElement>) => (
-    <li className="text-slate-300 marker:text-blue-400" {...props} />
-  ),
-  a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
-    <a className="text-blue-400 hover:text-blue-300 underline transition-colors" {...props} />
-  ),
-  strong: (props: React.HTMLAttributes<HTMLElement>) => (
-    <strong className="text-slate-200 font-semibold" {...props} />
-  ),
-  em: (props: React.HTMLAttributes<HTMLElement>) => (
-    <em className="text-slate-300 italic" {...props} />
-  ),
-  blockquote: (props: React.HTMLAttributes<HTMLQuoteElement>) => (
-    <blockquote className="border-l-4 border-blue-500 bg-slate-800/30 py-4 px-6 my-6 rounded-r-lg text-slate-300 italic" {...props} />
-  ),
-  code: (props: React.HTMLAttributes<HTMLElement>) => (
-    <code className="text-blue-300 bg-slate-800/50 px-1.5 py-0.5 rounded text-sm font-mono" {...props} />
-  ),
-  pre: (props: React.HTMLAttributes<HTMLPreElement>) => (
-    <pre className="bg-slate-800/50 p-4 rounded-lg overflow-x-auto mb-6 border border-slate-700/50" {...props} />
-  ),
-  img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
-    <span className="block my-8 rounded-lg overflow-hidden border border-slate-700/50">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className="w-full h-auto" {...props} alt={props.alt || ''} />
-    </span>
-  ),
-  table: (props: React.HTMLAttributes<HTMLTableElement>) => (
-    <div className="overflow-x-auto my-6">
-      <table className="min-w-full divide-y divide-slate-700" {...props} />
-    </div>
-  ),
-  th: (props: React.HTMLAttributes<HTMLTableCellElement>) => (
-    <th className="px-4 py-2 text-left text-slate-200 font-semibold bg-slate-800/50" {...props} />
-  ),
-  td: (props: React.HTMLAttributes<HTMLTableCellElement>) => (
-    <td className="px-4 py-2 text-slate-300 border-t border-slate-700/50" {...props} />
-  ),
-};
+export async function generateStaticParams() {
+  try {
+    const portfolioConnection = await client.queries.portfolioConnection();
+    const posts = portfolioConnection.data.portfolioConnection.edges || [];
 
-// Helper function to convert Tina body to markdown string
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function convertTinaBodyToMarkdown(body: any): string {
-  if (typeof body === 'string') return body;
-  
-  if (!body || !body.children || !Array.isArray(body.children)) {
-    return '';
+    return posts
+      .map(edge => edge?.node)
+      .filter(node => node !== null && node !== undefined)
+      .map(node => {
+        const pathParts = node._sys.relativePath.split('/');
+        return {
+          locale: pathParts[0],
+          slug: node._sys.filename,
+        };
+      });
+  } catch (error) {
+    // If fetching the portfolioConnection fails during build, log a warning and fallback to reading local files.
+    console.error('generateStaticParams: Failed to fetch portfolioConnection for static params:', error);
+    // Fallback: read from local content/portfolio folder
+    try {
+      const contentDir = path.join(process.cwd(), 'content', 'portfolio');
+      if (!fs.existsSync(contentDir)) return [];
+
+      const locales = fs.readdirSync(contentDir).filter((f: string) => fs.statSync(path.join(contentDir, f)).isDirectory());
+      const params: Array<{ locale: string; slug: string }> = [];
+      locales.forEach((loc: string) => {
+        const files = fs.readdirSync(path.join(contentDir, loc)).filter((f: string) => f.endsWith('.mdx'));
+        files.forEach((file: string) => {
+          params.push({ locale: loc, slug: file.replace(/\.mdx$/, '') });
+        });
+      });
+      return params;
+    } catch (fsError) {
+      console.error('generateStaticParams: Failed to build static params from local files:', fsError);
+      return [];
+    }
   }
-  
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const processNode = (node: any): string => {
-    if (!node) return '';
-    
-    // Text node
-    if (node.type === 'text') {
-      let text = node.text || '';
-      if (node.bold) text = `**${text}**`;
-      if (node.italic) text = `*${text}*`;
-      if (node.code) text = `\`${text}\``;
-      return text;
-    }
-    
-    // Process children
-    const children = node.children?.map(processNode).join('') || '';
-    
-    // Element nodes
-    switch (node.type) {
-      case 'h1':
-        return `\n# ${children}\n`;
-      case 'h2':
-        return `\n## ${children}\n`;
-      case 'h3':
-        return `\n### ${children}\n`;
-      case 'h4':
-        return `\n#### ${children}\n`;
-      case 'h5':
-        return `\n##### ${children}\n`;
-      case 'h6':
-        return `\n###### ${children}\n`;
-      case 'p':
-        return `\n${children}\n`;
-      case 'blockquote':
-        return `\n> ${children}\n`;
-      case 'ul':
-        return `\n${children}\n`;
-      case 'ol':
-        return `\n${children}\n`;
-      case 'li':
-        return `- ${children}\n`;
-      case 'a':
-        return `[${children}](${node.url || '#'})`;
-      case 'img':
-        return `\n![${node.alt || ''}](${node.url || ''})\n`;
-      case 'code_block':
-        return `\n\`\`\`${node.lang || ''}\n${children}\n\`\`\`\n`;
-      case 'hr':
-        return '\n---\n';
-      default:
-        return children;
-    }
-  };
-  
-  return body.children.map(processNode).join('');
 }
 
 export default async function PortfolioPostPage({ params }: PortfolioPostPageProps) {
