@@ -13,14 +13,15 @@ The `netlify.toml` is already configured with correct settings:
 
 Go to **Site settings → Build & deploy → Environment** in Netlify and add:
 
-#### Required for Tina CMS (if using Tina Cloud):
+#### Required for Tina CMS:
 ```
-NEXT_PUBLIC_TINA_CLIENT_URL=https://content.tinajs.io/content/<your-client-id>/github/main
+NEXT_PUBLIC_TINA_CLIENT_ID=a40ff8b9-0082-4d76-bcf4-65199fb84432
+NEXT_PUBLIC_TINA_CLIENT_URL=https://content.tinajs.io/content/a40ff8b9-0082-4d76-bcf4-65199fb84432/github/main
 ```
 
-#### Optional (for private repos):
+#### Optional (for private repos or write access):
 ```
-TINA_TOKEN=<your-readonly-token>
+TINA_TOKEN=<your-readonly-token-from-tina-cloud>
 ```
 
 **Note**: If you don't set these variables, the build will still succeed using filesystem fallback (reads from `content/` folder directly), but won't fetch latest content from Tina Cloud.
