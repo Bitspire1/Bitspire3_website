@@ -34,9 +34,6 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <head>
-        <link rel="preload" href="/Docker.svg" as="image" />
-        <link rel="preload" href="/Nextjs.svg" as="image" />
-        <link rel="preload" href="/React.svg" as="image" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className="antialiased bg-slate-900">
