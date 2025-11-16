@@ -1,0 +1,101 @@
+fragment PortfolioParts on Portfolio {
+  __typename
+  title
+  slug
+  description
+  excerpt
+  date
+  category
+  tags
+  image
+  imageAlt
+  link
+  client
+  year
+  body
+}
+
+fragment BlogParts on Blog {
+  __typename
+  title
+  slug
+  description
+  excerpt
+  date
+  author
+  category
+  tags
+  image
+  imageAlt
+  readTime
+  body
+}
+
+fragment PagesParts on Pages {
+  __typename
+  title
+  description
+  lastUpdate
+  projects {
+    __typename
+    title
+    description
+    tags
+    year
+    image
+    imageAlt
+    link
+  }
+  sections {
+    __typename
+    id
+    title
+    content
+  }
+  hero {
+    __typename
+    title
+    titleAccent
+    titleEnd
+    subtitle
+    ctaButton
+    briefButton
+    image
+  }
+  technology {
+    __typename
+    title
+    items {
+      __typename
+      name
+      icon
+      useBrightness
+    }
+  }
+  offer {
+    __typename
+    title
+    subtitle
+    services {
+      __typename
+      title
+      description
+      icon
+      features
+    }
+  }
+  brief {
+    __typename
+    title
+    description
+    buttonText
+    contact {
+      __typename
+      email
+      phone
+      address
+      addressLine2
+      city
+    }
+  }
+}

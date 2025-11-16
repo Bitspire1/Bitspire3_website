@@ -1,13 +1,14 @@
 "use client";
 import React, { useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import {
   FaFacebookF,
   FaInstagram,
   FaLinkedinIn,
   FaGithub,
 } from 'react-icons/fa';
+import { LanguageSwitcher } from './ui/LanguageSwitcher';
+import { PreviewLink } from './ui/PreviewLink';
 
 export const Header: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -29,13 +30,13 @@ export const Header: React.FC = () => {
   <div className="px-4 md:px-6 py-2.5 flex items-center justify-between gap-4">
           {/* left: logo + optional center nav */}
           <div className="flex items-center">
-            <Link
+            <PreviewLink
               href="/"
               className="flex items-center shrink-0 -translate-y-[0px] motion-safe:transition-transform"
               aria-label="Przejdź do strony głównej"
             >
               <Image
-                src="/Bitspire logo main.svg"
+                src="/logo/Bitspire logo main.svg"
                 alt="Bitspire - strona główna"
                 className="h-8 sm:h-10 w-auto max-h-10 max-w-[140px] object-contain"
                 width={120}
@@ -43,21 +44,29 @@ export const Header: React.FC = () => {
                 priority
                 sizes="140px"
               />
-            </Link>
+            </PreviewLink>
 
             <nav className="hidden md:flex ml-2 space-x-6" aria-label="Główna nawigacja">
-              <a
+              <PreviewLink
                 href="/portfolio/"
                 className="ml-10 text-sm font-medium text-slate-300 hover:text-white hover:underline underline-offset-4 decoration-blue-400/60 transition"
               >
                 Portfolio
-              </a>
+              </PreviewLink>
+              <PreviewLink
+                href="/blog/"
+                className="text-sm font-medium text-slate-300 hover:text-white hover:underline underline-offset-4 decoration-blue-400/60 transition"
+              >
+                Blog
+              </PreviewLink>
             </nav>
           </div>
 
           {/* right: CTA + social icons (desktop) and hamburger stays at the end for mobile */}
           <div className="flex items-center gap-4">
             <div className="hidden md:flex items-center gap-6">
+              <LanguageSwitcher />
+              
               <div className="flex items-center space-x-6" aria-label="Linki do mediów społecznościowych">
                 <a
                   href="https://www.facebook.com/profile.php?id=61578556904045"
@@ -148,13 +157,23 @@ export const Header: React.FC = () => {
           aria-hidden={!open}
         >
           <div className="flex flex-col gap-6 py-4" aria-label="Menu mobilne linki">
-            <a
+            <div className="flex justify-center">
+              <LanguageSwitcher />
+            </div>
+            <PreviewLink
               href="/portfolio/"
               onClick={() => setOpen(false)}
               className="text-lg font-semibold text-slate-200 hover:text-white hover:underline underline-offset-4 decoration-blue-400/60 transition"
             >
               Portfolio
-            </a>
+            </PreviewLink>
+            <PreviewLink
+              href="/blog/"
+              onClick={() => setOpen(false)}
+              className="text-lg font-semibold text-slate-200 hover:text-white hover:underline underline-offset-4 decoration-blue-400/60 transition"
+            >
+              Blog
+            </PreviewLink>
             <div className="flex justify-center items-center gap-8" aria-label="Linki do mediów społecznościowych">
               <a href="https://www.facebook.com/profile.php?id=61578556904045" target="_blank" rel="noopener noreferrer" className="text-white hover:text-blue-400 transition text-3xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-md p-1" aria-label="Facebook">
                 <FaFacebookF aria-hidden="true" />

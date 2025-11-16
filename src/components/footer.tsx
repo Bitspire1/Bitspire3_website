@@ -10,6 +10,7 @@ import {
   FaPhone,
   FaMapMarkerAlt,
 } from 'react-icons/fa';
+import { PreviewLink } from './ui/PreviewLink';
 
 export const Footer: React.FC = () => {
   const scrollToSection = (sectionId: string) => {
@@ -32,7 +33,7 @@ export const Footer: React.FC = () => {
           <div className="lg:col-span-2">
             <div className="flex items-center mb-4">
               <Image
-                src="/Bitspire logo main.svg"
+                src="/logo/Bitspire logo main.svg"
                 alt="Bitspire"
                 className="h-10 w-auto"
                 width={120}
@@ -165,18 +166,16 @@ export const Footer: React.FC = () => {
           </p>
           
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm justify-center md:justify-end">
-            <a href="/polityka-prywatnosci/" className="text-gray-400 hover:text-white transition-colors">
+            <PreviewLink href="/polityka-prywatnosci/" className="text-gray-400 hover:text-white transition-colors">
               Polityka prywatności
-            </a>
-            <a href="/polityka-cookies/" className="text-gray-400 hover:text-white transition-colors">
+            </PreviewLink>
+            <PreviewLink href="/polityka-cookies/" className="text-gray-400 hover:text-white transition-colors">
               Polityka cookies
-            </a>
-            <a href="/regulamin/" className="text-gray-400 hover:text-white transition-colors">
+            </PreviewLink>
+            <PreviewLink href="/regulamin/" className="text-gray-400 hover:text-white transition-colors">
               Regulamin
-            </a>
-            <a href="/deklaracja-dostepnosci/" className="text-gray-400 hover:text-white transition-colors">
-              Deklaracja dostępności
-            </a>
+            </PreviewLink>
+            {/* Deklaracja dostępności usunięta */}
             <button
               onClick={() => {
                 const evt = new CustomEvent("open-cookie-settings");

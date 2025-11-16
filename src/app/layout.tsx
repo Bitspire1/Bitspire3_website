@@ -1,10 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
-import { CursorLightProvider } from "@/hooks/cursor-light";
-import { CookieBanner } from "@/components/CookieBanner";
-import { AnalyticsGate } from "@/components/AnalyticsGate";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bitspire.pl"),
@@ -49,23 +44,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="pl">
-      <head>
-        <link rel="preload" href="/Docker.svg" as="image" />
-        <link rel="preload" href="/Nextjs.svg" as="image" />
-        <link rel="preload" href="/React.svg" as="image" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      </head>
-      <body className="antialiased bg-slate-900">
-        <CursorLightProvider>
-          <Header />
-          {children}
-          <Footer />
-          <CookieBanner />
-          <AnalyticsGate />
-        </CursorLightProvider>
-      </body>
-    </html>
-  );
+  return children;
 }
