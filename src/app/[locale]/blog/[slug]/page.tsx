@@ -5,6 +5,8 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import fs from 'fs';
+import path from 'path';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -108,10 +110,26 @@ export async function generateStaticParams() {
         };
       });
   } catch (error) {
-    // If fetching the blogConnection fails during build, log a warning and return no static params.
-    // This prevents build failure due to unreachable CMS (like localhost) in CI environments.
+    // If fetching the blogConnection fails during build, log a warning and fallback to reading local files.
     console.error('generateStaticParams: Failed to fetch blogConnection for static params:', error);
-    return [];
+    // Fallback: read from local content/blog folder
+    try {
+      const contentDir = path.join(process.cwd(), 'content', 'blog');
+      if (!fs.existsSync(contentDir)) return [];
+
+      const locales = fs.readdirSync(contentDir).filter((f: string) => fs.statSync(path.join(contentDir, f)).isDirectory());
+      const params: Array<{ locale: string; slug: string }> = [];
+      locales.forEach((loc: string) => {
+        const files = fs.readdirSync(path.join(contentDir, loc)).filter((f: string) => f.endsWith('.mdx'));
+        files.forEach((file: string) => {
+          params.push({ locale: loc, slug: file.replace(/\.mdx$/, '') });
+        });
+      });
+      return params;
+    } catch (fsError) {
+      console.error('generateStaticParams: Failed to build static params from local files:', fsError);
+      return [];
+    }
   }
 }
 
