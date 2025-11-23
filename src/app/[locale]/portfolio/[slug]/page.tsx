@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Background } from "@/components/background";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { convertTinaBodyToMarkdown } from "@/lib/tina-utils";
-import { mdxComponents } from "@/lib/mdx-components";
 import fs from 'fs';
 import path from 'path';
 
@@ -161,11 +160,22 @@ export default async function PortfolioPostPage({ params }: PortfolioPostPagePro
           )}
 
           {/* Content */}
-          <div className="mdx-content">
+          <div className="prose prose-invert prose-lg max-w-none 
+            prose-headings:font-bold prose-headings:tracking-tight
+            prose-h1:text-4xl prose-h1:md:text-5xl prose-h1:bg-linear-to-r prose-h1:from-blue-400 prose-h1:to-emerald-300 prose-h1:bg-clip-text prose-h1:text-transparent
+            prose-h2:text-3xl prose-h2:md:text-4xl prose-h2:bg-linear-to-r prose-h2:from-blue-400 prose-h2:to-emerald-300 prose-h2:bg-clip-text prose-h2:text-transparent
+            prose-h3:text-2xl prose-h3:text-slate-200
+            prose-p:text-slate-300 prose-p:leading-relaxed
+            prose-a:text-blue-400 prose-a:no-underline hover:prose-a:text-blue-300
+            prose-strong:text-slate-200
+            prose-code:text-blue-300 prose-code:bg-slate-800/50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
+            prose-pre:bg-slate-800/50 prose-pre:border prose-pre:border-slate-700/50
+            prose-ul:list-disc prose-li:text-slate-300
+            prose-img:rounded-lg prose-img:border prose-img:border-slate-700/50
+          ">
             {post.body && typeof post.body === 'object' && 'children' in post.body ? (
               <MDXRemote 
                 source={convertTinaBodyToMarkdown(post.body)}
-                components={mdxComponents}
               />
             ) : null}
           </div>
