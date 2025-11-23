@@ -1,9 +1,28 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useCallback } from "react";
 import { CursorLightCard } from "../../hooks/cursor-light";
+import { tinaField } from 'tinacms/dist/react';
 
-const Contact: React.FC = () => {
+interface ContactData {
+  title?: string | null;
+  description?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  addressLine2?: string | null;
+  city?: string | null;
+  successTitle?: string | null;
+  successMessage?: string | null;
+  nameLabel?: string | null;
+  emailLabel?: string | null;
+  messageLabel?: string | null;
+  buttonText?: string | null;
+  contactDataTitle?: string | null;
+  [key: string]: unknown;
+}
+
+const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [sent, setSent] = useState(false);
 
@@ -39,118 +58,191 @@ const Contact: React.FC = () => {
   }, [form]);
 
   return (
-    <div className="space-y-6 h-full min-h-[480px] flex flex-col">
-      {/* Formularz kontaktowy */}
-      <CursorLightCard className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl p-6 flex-shrink-0">
-        <h3 className="text-xl font-bold text-white mb-4">💬 Skontaktuj się</h3>
-        
-        {sent ? (
-          <div className="p-4 bg-green-600 text-white rounded-xl text-center font-semibold text-sm">
-            Dziękujemy za kontakt! Odpowiemy wkrótce.
-          </div>
-        ) : (
-          <form 
-            name="contact" 
-            method="POST" 
-            className="space-y-4" 
-            onSubmit={handleSubmit}
-          >
-            <input
-              type="text"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              placeholder="Imię i nazwisko"
-              className="w-full px-3 py-2 rounded-lg bg-slate-800/50 text-white border border-slate-600 focus:outline-none focus:border-blue-400 focus:bg-slate-800/70 transition-all duration-200 text-sm"
-              required
-            />
-            <input
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="Adres email"
-              className="w-full px-3 py-2 rounded-lg bg-slate-800/50 text-white border border-slate-600 focus:outline-none focus:border-blue-400 focus:bg-slate-800/70 transition-all duration-200 text-sm"
-              required
-            />
-            <textarea
-              name="message"
-              value={form.message}
-              onChange={handleChange}
-              placeholder="Twoja wiadomość..."
-              rows={3}
-              className="w-full px-3 py-2 rounded-lg bg-slate-800/50 text-white border border-slate-600 focus:outline-none focus:border-blue-400 focus:bg-slate-800/70 transition-all duration-200 resize-none text-sm"
-              required
-            />
-            <button
-              type="submit"
-              className="w-full px-4 py-3 rounded-lg font-semibold text-sm bg-blue-600 text-white shadow-lg transition-all duration-200 hover:bg-blue-500 hover:scale-105"
-            >
-              Wyślij wiadomość
-            </button>
-          </form>
-        )}
-      </CursorLightCard>
-
-      {/* Dane kontaktowe */}
-      <CursorLightCard className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl p-6 flex-1 flex flex-col">
-        <h3 className="text-xl font-bold text-white mb-4">📞 Dane kontaktowe</h3>
-        
-        <div className="space-y-4 flex-1">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.95a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-gray-400 text-xs">Email</p>
-              <a href="mailto:kontakt@bitspire.pl" className="text-blue-400 hover:text-blue-300 font-medium text-sm">
-                kontakt@bitspire.pl
-              </a>
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-gray-400 text-xs">Telefon</p>
-              <a href="tel:+48778768363" className="text-blue-400 hover:text-blue-300 font-medium text-sm">
-                +48 778 768 363
-              </a>
-            </div>
-          </div>
-
-          <div className="flex items-start space-x-3">
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-gray-400 text-xs">Adres</p>
-              <p className="text-white text-sm">
-                Bitspire<br />
-                <span className="text-gray-300 text-xs">ul. Tuwina 22a<br />76-200 Słupsk</span>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Czas odpowiedzi - na dole */}
-        <div className="mt-auto p-3 bg-blue-600/10 border border-blue-600/20 rounded-lg">
-          <p className="text-blue-400 font-semibold mb-1 text-sm">💡 Szybka odpowiedź</p>
-          <p className="text-gray-300 text-xs">
-            Odpowiadamy w ciągu 24h w dni robocze.
+    <section className="py-24 px-4 bg-slate-900/20" id="contact">
+      <div className="container mx-auto max-w-7xl">
+        <div className="text-center mb-12">
+          <div className="w-16 h-0.5 bg-gradient-to-r from-blue-600 to-cyan-500 mb-6 mx-auto"></div>
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4" data-tina-field={tinaField(data, 'title')}>
+            {data?.title || 'Porozmawiajmy o Twoim projekcie'}
+          </h2>
+          <p className="text-slate-400 text-lg" data-tina-field={tinaField(data, 'description')}>
+            {data?.description || 'Wypełnij formularz, a my skontaktujemy się z Tobą w ciągu 24 godzin'}
           </p>
         </div>
-      </CursorLightCard>
-    </div>
+
+        <div className="grid lg:grid-cols-[2fr_1fr] gap-8">
+          {/* Formularz kontaktowy */}
+          <CursorLightCard className="glass-panel rounded-2xl p-8">
+            {sent ? (
+              <div className="py-12 text-center">
+                <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-500/20">
+                   <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-green-400">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                   </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-3" data-tina-field={tinaField(data, 'successTitle')}>
+                  {data?.successTitle || 'Dziękujemy za kontakt!'}
+                </h3>
+                <p className="text-slate-400" data-tina-field={tinaField(data, 'successMessage')}>
+                  {data?.successMessage || 'Odpowiemy wkrótce na Twoją wiadomość.'}
+                </p>
+              </div>
+            ) : (
+              <form 
+                name="contact" 
+                method="POST" 
+                className="space-y-6" 
+                onSubmit={handleSubmit}
+              >
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                     <label className="text-xs font-medium text-slate-400 uppercase tracking-wider ml-1" data-tina-field={tinaField(data, 'nameLabel')}>
+                       {data?.nameLabel || 'Imię i nazwisko'}
+                     </label>
+                     <input
+                       type="text"
+                       name="name"
+                       value={form.name}
+                       onChange={handleChange}
+                       placeholder="Jan Kowalski"
+                       className="w-full px-4 py-3 rounded-lg bg-slate-900/50 text-white border border-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200 placeholder-slate-600"
+                       required
+                     />
+                  </div>
+                  
+                  <div className="space-y-2">
+                     <label className="text-xs font-medium text-slate-400 uppercase tracking-wider ml-1" data-tina-field={tinaField(data, 'emailLabel')}>
+                       {data?.emailLabel || 'Email'}
+                     </label>
+                     <input
+                       type="email"
+                       name="email"
+                       value={form.email}
+                       onChange={handleChange}
+                       placeholder="jan@example.com"
+                       className="w-full px-4 py-3 rounded-lg bg-slate-900/50 text-white border border-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200 placeholder-slate-600"
+                       required
+                     />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                   <label className="text-xs font-medium text-slate-400 uppercase tracking-wider ml-1" data-tina-field={tinaField(data, 'messageLabel')}>
+                     {data?.messageLabel || 'Wiadomość'}
+                   </label>
+                   <textarea
+                     name="message"
+                     value={form.message}
+                     onChange={handleChange}
+                     placeholder="Opisz swój projekt..."
+                     rows={6}
+                     className="w-full px-4 py-3 rounded-lg bg-slate-900/50 text-white border border-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200 placeholder-slate-600 resize-none"
+                     required
+                   />
+                </div>
+                
+                <button
+                  type="submit"
+                  className="btn-tech-primary w-full py-4 rounded-lg font-bold text-sm uppercase tracking-wider"
+                  data-tina-field={tinaField(data, 'buttonText')}
+                >
+                  {data?.buttonText || 'Wyślij wiadomość'}
+                </button>
+              </form>
+            )}
+          </CursorLightCard>
+
+          {/* Dane kontaktowe */}
+          <div className="glass-panel rounded-2xl p-8 flex flex-col">
+            <div className="flex items-center gap-3 mb-6">
+               <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+                  <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+               </div>
+               <h3 className="text-xl font-bold text-white" data-tina-field={tinaField(data, 'contactDataTitle')}>
+                 {data?.contactDataTitle || 'Dane kontaktowe'}
+               </h3>
+            </div>
+            
+            <div className="space-y-6 flex-1">
+              {/* Email */}
+              <div className="flex items-start gap-4 group">
+                <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500/20 group-hover:text-blue-400 transition-colors text-slate-400">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-slate-500 text-xs uppercase tracking-wider font-bold mb-1">Email</p>
+                  <a 
+                    href={`mailto:${data?.email || 'kontakt@bitspire.pl'}`}
+                    className="text-white hover:text-blue-400 font-medium transition-colors"
+                    data-tina-field={tinaField(data, 'email')}
+                  >
+                    {data?.email || 'kontakt@bitspire.pl'}
+                  </a>
+                </div>
+              </div>
+
+              {/* Telefon */}
+              <div className="flex items-start gap-4 group">
+                <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500/20 group-hover:text-blue-400 transition-colors text-slate-400">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-slate-500 text-xs uppercase tracking-wider font-bold mb-1">Telefon</p>
+                  <a 
+                    href={`tel:${data?.phone || '+48778768363'}`}
+                    className="text-white hover:text-blue-400 font-medium transition-colors"
+                    data-tina-field={tinaField(data, 'phone')}
+                  >
+                    {data?.phone || '+48 778 768 363'}
+                  </a>
+                </div>
+              </div>
+
+              {/* Adres */}
+              <div className="flex items-start gap-4 group">
+                <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500/20 group-hover:text-blue-400 transition-colors text-slate-400">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-slate-500 text-xs uppercase tracking-wider font-bold mb-1">Adres</p>
+                  <div className="text-white text-sm">
+                    <p className="font-medium" data-tina-field={tinaField(data, 'address')}>
+                      {data?.address || 'Bitspire'}
+                    </p>
+                    <p className="text-slate-400" data-tina-field={tinaField(data, 'addressLine2')}>
+                      {data?.addressLine2 || 'ul. Tuwima 22a'}
+                    </p>
+                    <p className="text-slate-400" data-tina-field={tinaField(data, 'city')}>
+                      {data?.city || '76-200 Słupsk'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Szybka odpowiedź - na dole */}
+            <div className="bg-blue-500/5 border border-blue-500/10 rounded-xl p-4 mt-6 flex items-center gap-3">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <div>
+                 <p className="text-blue-400 font-bold text-xs uppercase tracking-wider mb-0.5">Szybka odpowiedź</p>
+                 <p className="text-slate-400 text-xs">
+                   Odpowiadamy w ciągu 24h w dni robocze.
+                 </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 

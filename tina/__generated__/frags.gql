@@ -1,17 +1,63 @@
+fragment HeaderParts on Header {
+  __typename
+  logo
+  logoAlt
+  navigation {
+    __typename
+    label
+    href
+  }
+  ctaButton {
+    __typename
+    text
+    href
+  }
+}
+
+fragment FooterParts on Footer {
+  __typename
+  companyName
+  description
+  contact {
+    __typename
+    email
+    phone
+    location
+  }
+  navigation {
+    __typename
+    label
+    href
+  }
+  socialMedia {
+    __typename
+    platform
+    url
+  }
+  copyright
+  legalLinks {
+    __typename
+    label
+    href
+  }
+  cookieSettingsText
+}
+
 fragment PortfolioParts on Portfolio {
   __typename
   title
   slug
   description
-  excerpt
   date
+  excerpt
   category
   tags
+  year
+  client
   image
   imageAlt
   link
-  client
-  year
+  featured
   body
 }
 
@@ -36,14 +82,15 @@ fragment PagesParts on Pages {
   title
   description
   lastUpdate
+  selectedProjects
   projects {
     __typename
     title
     description
-    tags
-    year
     image
     imageAlt
+    tags
+    year
     link
   }
   sections {
@@ -65,6 +112,7 @@ fragment PagesParts on Pages {
   technology {
     __typename
     title
+    description
     items {
       __typename
       name
@@ -76,12 +124,15 @@ fragment PagesParts on Pages {
     __typename
     title
     subtitle
+    sectionLabel
     services {
       __typename
       title
       description
       icon
       features
+      link
+      buttonText
     }
   }
   brief {
@@ -98,4 +149,54 @@ fragment PagesParts on Pages {
       city
     }
   }
+  portfolioHighlights {
+    __typename
+    title
+    description
+  }
+  howWeWork {
+    __typename
+    title
+    description
+    steps {
+      __typename
+      title
+      description
+      icon
+      duration
+    }
+    ctaTitle
+    ctaDescription
+    ctaButton
+  }
+  faq {
+    __typename
+    title
+    description
+    items {
+      __typename
+      question
+      answer
+    }
+    ctaQuestion
+    ctaButton
+  }
+  contact {
+    __typename
+    title
+    description
+    email
+    phone
+    address
+    addressLine2
+    city
+    successTitle
+    successMessage
+    nameLabel
+    emailLabel
+    messageLabel
+    buttonText
+    contactDataTitle
+  }
+  body
 }

@@ -12,17 +12,55 @@ import {
 } from 'react-icons/fa';
 import { PreviewLink } from './ui/PreviewLink';
 
-export const Footer: React.FC = () => {
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+interface FooterProps {
+  data?: {
+    companyName?: string | null;
+    description?: string | null;
+    contact?: {
+      email?: string | null;
+      phone?: string | null;
+      location?: string | null;
+    } | null;
+    navigation?: Array<{ label?: string | null; href?: string | null } | null> | null;
+    socialMedia?: Array<{
+      platform?: string | null;
+      url?: string | null;
+      icon?: string | null;
+    } | null> | null;
+    copyright?: string | null;
+    legalLinks?: Array<{ label?: string | null; href?: string | null } | null> | null;
+    cookieSettingsText?: string | null;
+  } | null;
+  locale?: string;
+}
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+export const Footer: React.FC<FooterProps> = ({ data, locale }) => {
+  // Default values
+  const companyName = data?.companyName || 'Bitspire';
+  const description = data?.description || (
+    locale === 'en' 
+      ? 'We create modern websites, online stores and applications. We help businesses grow in the digital world.'
+      : 'Tworzymy nowoczesne strony internetowe, sklepy online i aplikacje. Pomagamy firmom rozwijać się w świecie cyfrowym.'
+  );
+  
+  const contact = {
+    email: data?.contact?.email || 'kontakt@bitspire.pl',
+    phone: data?.contact?.phone || '+48 123 456 789',
+    location: data?.contact?.location || 'Polska'
   };
+  
+  const navigation = data?.navigation?.filter((item): item is { label: string; href: string } => 
+    item !== null && typeof item.label === 'string' && typeof item.href === 'string'
+  ) || [];
+  
+  const socialMedia = data?.socialMedia?.filter((item): item is { platform: string; url: string; icon?: string | null } => 
+    item !== null && typeof item.platform === 'string' && typeof item.url === 'string'
+  ) || [
+    { platform: 'Facebook', url: 'https://www.facebook.com/profile.php?id=61578556904045', icon: 'facebook' },
+    { platform: 'Instagram', url: 'https://instagram.com/bitspire_', icon: 'instagram' },
+    { platform: 'LinkedIn', url: 'https://linkedin.com/company/bitspire', icon: 'linkedin' },
+    { platform: 'GitHub', url: 'https://github.com/bitspire1', icon: 'github' }
+  ];
 
   return (
     <footer className="bg-slate-900 border-t border-slate-700 text-white">
@@ -34,127 +72,102 @@ export const Footer: React.FC = () => {
             <div className="flex items-center mb-4">
               <Image
                 src="/logo/Bitspire logo main.svg"
-                alt="Bitspire"
+                alt={companyName}
                 className="h-10 w-auto"
                 width={120}
                 height={40}
               />
             </div>
             <p className="text-gray-300 mb-6 max-w-md">
-              Tworzymy nowoczesne strony internetowe, sklepy online i aplikacje. 
-              Pomagamy firmom rozwijać się w świecie cyfrowym.
+              {description}
             </p>
             
             {/* Social Media */}
             <div className="flex space-x-4">
-              <a
-                href="https://www.facebook.com/profile.php?id=61578556904045"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-blue-400 transition-colors p-2 rounded-full hover:bg-slate-800"
-                aria-label="Facebook"
-              >
-                <FaFacebookF className="w-5 h-5" />
-              </a>
-              <a
-                href="https://instagram.com/bitspire_"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-pink-400 transition-colors p-2 rounded-full hover:bg-slate-800"
-                aria-label="Instagram"
-              >
-                <FaInstagram className="w-5 h-5" />
-              </a>
-              <a
-                href="https://linkedin.com/company/bitspire"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-blue-600 transition-colors p-2 rounded-full hover:bg-slate-800"
-                aria-label="LinkedIn"
-              >
-                <FaLinkedinIn className="w-5 h-5" />
-              </a>
-              <a
-                href="https://github.com/bitspire1"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-gray-300 transition-colors p-2 rounded-full hover:bg-slate-800"
-                aria-label="GitHub"
-              >
-                <FaGithub className="w-5 h-5" />
-              </a>
+              {socialMedia.map((social, index) => {
+                const getSocialIcon = (icon?: string | null) => {
+                  switch (icon?.toLowerCase()) {
+                    case 'facebook': return <FaFacebookF className="w-5 h-5" />;
+                    case 'instagram': return <FaInstagram className="w-5 h-5" />;
+                    case 'linkedin': return <FaLinkedinIn className="w-5 h-5" />;
+                    case 'github': return <FaGithub className="w-5 h-5" />;
+                    default: return <FaEnvelope className="w-5 h-5" />;
+                  }
+                };
+                
+                return (
+                  <a
+                    key={index}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-blue-400 transition-colors p-2 rounded-full hover:bg-slate-800"
+                    aria-label={social.platform}
+                  >
+                    {getSocialIcon(social.icon)}
+                  </a>
+                );
+              })}
             </div>
           </div>
 
           {/* Nawigacja */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 text-blue-400">Nawigacja</h3>
-            <ul className="space-y-2">
-              <li>
-                <button
-                  onClick={scrollToTop}
-                  className="text-gray-300 hover:text-white transition-colors"
-                >
-                  Strona główna
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection('offer-section')}
-                  className="text-gray-300 hover:text-white transition-colors"
-                >
-                  Oferta
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection('brief-section')}
-                  className="text-gray-300 hover:text-white transition-colors"
-                >
-                  Brief
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection('contact-section')}
-                  className="text-gray-300 hover:text-white transition-colors"
-                >
-                  Kontakt
-                </button>
-              </li>
-            </ul>
-          </div>
+          {navigation.length > 0 && (
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-blue-400">
+                {locale === 'en' ? 'Navigation' : 'Nawigacja'}
+              </h3>
+              <ul className="space-y-2">
+                {navigation.map((item, index) => (
+                  <li key={index}>
+                    <PreviewLink
+                      href={item.href}
+                      className="text-gray-300 hover:text-white transition-colors"
+                    >
+                      {item.label}
+                    </PreviewLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* Kontakt */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-blue-400">Kontakt</h3>
+            <h3 className="text-lg font-semibold mb-4 text-blue-400">
+              {locale === 'en' ? 'Contact' : 'Kontakt'}
+            </h3>
             <ul className="space-y-3">
-              <li className="flex items-center">
-                <FaEnvelope className="w-4 h-4 text-blue-400 mr-3 flex-shrink-0" />
-                <a 
-                  href="mailto:kontakt@bitspire.pl" 
-                  className="text-gray-300 hover:text-white transition-colors text-sm"
-                >
-                  kontakt@bitspire.pl
-                </a>
-              </li>
-              <li className="flex items-center">
-                <FaPhone className="w-4 h-4 text-blue-400 mr-3 flex-shrink-0" />
-                <a 
-                  href="tel:+48778768363" 
-                  className="text-gray-300 hover:text-white transition-colors text-sm"
-                >
-                  +48 778 768 363
-                </a>
-              </li>
-              <li className="flex items-start">
-                <FaMapMarkerAlt className="w-4 h-4 text-blue-400 mr-3 flex-shrink-0 mt-0.5" />
-                <div className="text-gray-300 text-sm">
-                  <p>Bitspire</p>
-                  <p>ul. Tuwima 22a</p>
-                  <p>76-200 Słupsk</p>
-                </div>
-              </li>
+              {contact.email && (
+                <li className="flex items-center">
+                  <FaEnvelope className="w-4 h-4 text-blue-400 mr-3 flex-shrink-0" />
+                  <a 
+                    href={`mailto:${contact.email}`}
+                    className="text-gray-300 hover:text-white transition-colors text-sm"
+                  >
+                    {contact.email}
+                  </a>
+                </li>
+              )}
+              {contact.phone && (
+                <li className="flex items-center">
+                  <FaPhone className="w-4 h-4 text-blue-400 mr-3 flex-shrink-0" />
+                  <a 
+                    href={`tel:${contact.phone.replace(/\s/g, '')}`}
+                    className="text-gray-300 hover:text-white transition-colors text-sm"
+                  >
+                    {contact.phone}
+                  </a>
+                </li>
+              )}
+              {contact.location && (
+                <li className="flex items-start">
+                  <FaMapMarkerAlt className="w-4 h-4 text-blue-400 mr-3 flex-shrink-0 mt-0.5" />
+                  <div className="text-gray-300 text-sm">
+                    <p>{contact.location}</p>
+                  </div>
+                </li>
+              )}
             </ul>
           </div>
         </div>
@@ -162,20 +175,36 @@ export const Footer: React.FC = () => {
         {/* Dolny pasek */}
         <div className="border-t border-slate-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm mb-4 md:mb-0">
-            © {new Date().getFullYear()} Bitspire. Wszystkie prawa zastrzeżone.
+            {data?.copyright?.replace('{year}', new Date().getFullYear().toString()) || 
+              `© ${new Date().getFullYear()} Bitspire. ${locale === 'en' ? 'All rights reserved.' : 'Wszystkie prawa zastrzeżone.'}`}
           </p>
           
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm justify-center md:justify-end">
-            <PreviewLink href="/polityka-prywatnosci/" className="text-gray-400 hover:text-white transition-colors">
-              Polityka prywatności
-            </PreviewLink>
-            <PreviewLink href="/polityka-cookies/" className="text-gray-400 hover:text-white transition-colors">
-              Polityka cookies
-            </PreviewLink>
-            <PreviewLink href="/regulamin/" className="text-gray-400 hover:text-white transition-colors">
-              Regulamin
-            </PreviewLink>
-            {/* Deklaracja dostępności usunięta */}
+            {data?.legalLinks && data.legalLinks.length > 0 ? (
+              data.legalLinks.map((link, index) => 
+                link && link.label && link.href ? (
+                  <PreviewLink 
+                    key={index}
+                    href={link.href} 
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    {link.label}
+                  </PreviewLink>
+                ) : null
+              )
+            ) : (
+              <>
+                <PreviewLink href={locale === 'en' ? '/privacy-policy/' : '/polityka-prywatnosci/'} className="text-gray-400 hover:text-white transition-colors">
+                  {locale === 'en' ? 'Privacy Policy' : 'Polityka prywatności'}
+                </PreviewLink>
+                <PreviewLink href={locale === 'en' ? '/cookies-policy/' : '/polityka-cookies/'} className="text-gray-400 hover:text-white transition-colors">
+                  {locale === 'en' ? 'Cookies Policy' : 'Polityka cookies'}
+                </PreviewLink>
+                <PreviewLink href={locale === 'en' ? '/terms/' : '/regulamin/'} className="text-gray-400 hover:text-white transition-colors">
+                  {locale === 'en' ? 'Terms' : 'Regulamin'}
+                </PreviewLink>
+              </>
+            )}
             <button
               onClick={() => {
                 const evt = new CustomEvent("open-cookie-settings");
@@ -183,7 +212,7 @@ export const Footer: React.FC = () => {
               }}
               className="text-gray-400 hover:text-white transition-colors underline decoration-dotted underline-offset-4"
             >
-              Ustawienia cookies
+              {data?.cookieSettingsText || (locale === 'en' ? 'Cookie Settings' : 'Ustawienia cookies')}
             </button>
           </div>
         </div>

@@ -185,86 +185,100 @@ const WebsiteBrief: React.FC = () => {
 	};
 
 	return (
-		<>
-			<div className="mb-6">
-				<div className="w-full h-6 bg-slate-700 rounded-lg overflow-hidden border border-slate-600">
+		<div className="h-full flex flex-col">
+			<div className="mb-8">
+				<div className="flex justify-between items-end mb-2">
+					<span className="text-xs font-mono text-blue-400">POSTĘP</span>
+					<span className="text-xs font-mono text-blue-400">{percent}%</span>
+				</div>
+				<div className="w-full h-2 bg-slate-900/50 rounded-full overflow-hidden border border-slate-800">
 					<div
-						className="h-full bg-gradient-to-r from-blue-500 to-blue-600"
+						className="h-full bg-gradient-to-r from-blue-600 to-cyan-500 relative"
 						style={{
 							width: `${percent}%`,
-							transition: "width 0.3s",
+							transition: "width 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
 						}}
 					>
-						<span className="pl-3 text-white font-bold text-sm">
-							{percent}%
-						</span>
+						<div className="absolute inset-0 bg-white/20 animate-pulse-slow"></div>
 					</div>
 				</div>
 			</div>
+
 			{success ? (
-				<div className="p-6 bg-green-600 text-white rounded-xl text-center font-bold text-xl">
-					Dziękujemy za przesłanie briefu! Skontaktujemy się z Tobą wkrótce.
+				<div className="flex-1 flex flex-col items-center justify-center p-8 text-center animate-fade-in">
+					<div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mb-6 border border-green-500/20 shadow-[0_0_30px_rgba(34,197,94,0.2)]">
+						<svg className="w-10 h-10 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+						</svg>
+					</div>
+					<h3 className="text-2xl font-bold text-white mb-3">Brief wysłany pomyślnie!</h3>
+					<p className="text-slate-400 max-w-md">
+						Dziękujemy za poświęcony czas. Przeanalizujemy Twoje odpowiedzi i skontaktujemy się z Tobą w ciągu 24 godzin.
+					</p>
 				</div>
 			) : (
 				<>
-					<div className="mb-8">
-						<label className="block text-2xl md:text-3xl font-bold mb-4 text-white">
+					<div className="flex-1 mb-8">
+						<label className="block text-2xl md:text-3xl font-bold mb-6 text-white leading-tight">
 							{current.label}{" "}
 							{current.required && (
-								<span className="text-red-400">*</span>
+								<span className="text-blue-500 text-lg align-top">*</span>
 							)}
 						</label>
-						<div key={current.key} className="flex flex-col gap-4 mt-2">
+						
+						<div key={current.key} className="flex flex-col gap-3 animate-fade-in-up">
 							{current.options &&
 								current.options.map((option: string) => (
 									<div key={option} className="flex flex-col">
 										<label
-											className={`flex items-center gap-4 cursor-pointer p-4 rounded-xl border-2 transition-all duration-200 group hover:border-blue-400 hover:bg-blue-400/10 ${
+											className={`flex items-center gap-4 cursor-pointer p-4 rounded-xl border transition-all duration-300 group relative overflow-hidden
+											${
 												form[current.key] === option ||
 												(option === "Inne" && form[current.key]?.startsWith("Inne:"))
-													? "border-blue-400 bg-blue-400/20 shadow-lg"
-													: "border-slate-600 bg-slate-800/30"
+													? "border-blue-500 bg-blue-500/10 shadow-[0_0_20px_rgba(59,130,246,0.15)]"
+													: "border-slate-800 bg-slate-900/40 hover:border-blue-500/30 hover:bg-slate-800/60"
 											}`}
 										>
-											<div className="relative">
-												<input
-													type="radio"
-													name={`brief-${current.key}`}
-													checked={Boolean(
-														form[current.key] === option ||
-														(option === "Inne" && form[current.key]?.startsWith("Inne:"))
-													)}
-													onChange={() => handleSelect(option)}
-													className="sr-only"
-												/>
-												<div
-													className={`w-6 h-6 rounded-full border-2 transition-all duration-200 ${
-														form[current.key] === option ||
-														(option === "Inne" &&
-															form[current.key]?.startsWith(
-																"Inne:"
-															))
-															? "border-blue-400 bg-blue-400"
-															: "border-gray-400 bg-transparent group-hover:border-blue-400"
-													}`}
-												>
-													{(form[current.key] === option ||
-														(option === "Inne" &&
-															form[current.key]?.startsWith(
-																"Inne:"
-															))) && (
-														<div className="w-2 h-2 bg-white rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
-													)}
+											<div className="relative z-10 flex items-center gap-4 w-full">
+												<div className="relative">
+													<input
+														type="radio"
+														name={`brief-${current.key}`}
+														checked={Boolean(
+															form[current.key] === option ||
+															(option === "Inne" && form[current.key]?.startsWith("Inne:"))
+														)}
+														onChange={() => handleSelect(option)}
+														className="sr-only"
+													/>
+													<div
+														className={`w-5 h-5 rounded-full border transition-all duration-300 flex items-center justify-center
+														${
+															form[current.key] === option ||
+															(option === "Inne" && form[current.key]?.startsWith("Inne:"))
+																? "border-blue-500 bg-blue-500"
+																: "border-slate-600 bg-transparent group-hover:border-blue-400"
+														}`}
+													>
+														{(form[current.key] === option ||
+															(option === "Inne" && form[current.key]?.startsWith("Inne:"))) && (
+															<div className="w-2 h-2 bg-white rounded-full"></div>
+														)}
+													</div>
 												</div>
+												<span className={`text-lg font-medium transition-colors ${
+													form[current.key] === option || (option === "Inne" && form[current.key]?.startsWith("Inne:"))
+													? "text-white"
+													: "text-slate-400 group-hover:text-slate-200"
+												}`}>{option}</span>
 											</div>
-											<span className="text-white text-lg font-medium flex-1">{option}</span>
 										</label>
 										{current.key === "technology" &&
 											option === "Inne" &&
 											(form[current.key] === "Inne" ||
 												form[current.key]?.startsWith("Inne:")) && (
 												<input
-													className="w-full mt-4 p-4 rounded-xl bg-slate-800/50 border-2 border-blue-400 text-white text-lg placeholder-gray-400 focus:bg-slate-800/70 transition-all duration-200 backdrop-blur-sm"
+													className="w-full mt-3 p-4 rounded-xl bg-slate-900/80 border border-blue-500/50 text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all animate-fade-in"
 													type="text"
 													placeholder="Podaj preferowane technologie..."
 													value={
@@ -286,75 +300,83 @@ const WebsiteBrief: React.FC = () => {
 								))}
 							{current.type === "textarea" && (
 								<textarea
-									className="w-full p-6 rounded-xl bg-slate-800/30 border-2 border-slate-600 text-white text-lg mt-2 placeholder-gray-400 focus:border-blue-400 focus:bg-slate-800/50 transition-all duration-200 resize-none backdrop-blur-sm"
+									className="w-full p-5 rounded-xl bg-slate-900/50 border border-slate-700 text-white text-lg placeholder-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none min-h-[160px]"
 									rows={4}
 									value={form[current.key] || ""}
 									onChange={(e) =>
 										setForm({ ...form, [current.key]: e.target.value })
 									}
-									placeholder="Wpisz odpowiedź..."
+									placeholder="Wpisz tutaj..."
 								/>
 							)}
 							{current.type === "text" && (
 								<input
-									className="w-full p-6 rounded-xl bg-slate-800/30 border-2 border-slate-600 text-white text-lg mt-2 placeholder-gray-400 focus:border-blue-400 focus:bg-slate-800/50 transition-all duration-200 backdrop-blur-sm"
+									className="w-full p-5 rounded-xl bg-slate-900/50 border border-slate-700 text-white text-lg placeholder-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
 									type="text"
 									value={form[current.key] || ""}
 									onChange={(e) =>
 										setForm({ ...form, [current.key]: e.target.value })
 									}
-									placeholder="Wpisz odpowiedź..."
+									placeholder="Wpisz tutaj..."
 								/>
 							)}
 						</div>
 					</div>
+					
 					{error && (
-						<div className="mb-4 text-red-400 font-bold text-center">
+						<div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-center text-sm font-medium animate-shake">
 							{error}
 						</div>
 					)}
-					<div className="flex flex-col sm:flex-row gap-4 mt-8">
+					
+					<div className="flex gap-4 pt-4 border-t border-slate-800/50 mt-auto">
 						<button
-							className={`flex-1 px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all duration-300 border-2
-				${step === 0 || loading 
-					? "border-gray-500 bg-gray-600/30 text-gray-400 cursor-not-allowed" 
-					: "border-blue-400 bg-blue-400/10 text-blue-400 hover:bg-blue-400 hover:text-white hover:scale-105 shadow-lg hover:shadow-blue-400/25"}`}
+							className={`px-6 py-3 rounded-lg font-medium text-sm transition-all duration-300 border
+								${step === 0 || loading 
+									? "border-slate-800 text-slate-600 cursor-not-allowed opacity-50" 
+									: "border-slate-700 text-slate-400 hover:text-white hover:border-slate-500 hover:bg-slate-800"}`}
 							onClick={() => setStep((s) => Math.max(0, s - 1))}
 							disabled={step === 0 || loading}
 						>
-							← Wstecz
+							Wstecz
 						</button>
+						
 						{step < STEPS.length - 1 ? (
 							<button
-								className={`flex-1 px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all duration-300 border-2
-				  ${
-					!form[current.key] || loading
-						? "border-gray-500 bg-gray-600/30 text-gray-400 cursor-not-allowed"
-						: "border-blue-400 bg-blue-400/10 text-blue-400 hover:bg-blue-400 hover:text-white hover:scale-105 shadow-lg hover:shadow-blue-400/25"
-				  }`}
+								className={`flex-1 px-6 py-3 rounded-lg font-bold text-sm uppercase tracking-wider transition-all duration-300
+								  ${
+									!form[current.key] || loading
+										? "bg-slate-800 text-slate-500 cursor-not-allowed"
+										: "btn-tech-primary"
+								  }`}
 								onClick={() => setStep((s) => Math.min(STEPS.length - 1, s + 1))}
 								disabled={!form[current.key] || loading}
 							>
-								Dalej →
+								Dalej
 							</button>
 						) : (
 							<button
-								className={`flex-1 px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all duration-300 border-2
-				  ${
-					(!form[current.key] || !isFormValid) || loading
-						? "border-gray-500 bg-gray-600/30 text-gray-400 cursor-not-allowed"
-						: "border-green-500 bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-105 shadow-lg hover:shadow-green-500/25"
-				  }`}
+								className={`flex-1 px-6 py-3 rounded-lg font-bold text-sm uppercase tracking-wider transition-all duration-300
+								  ${
+									(!form[current.key] || !isFormValid) || loading
+										? "bg-slate-800 text-slate-500 cursor-not-allowed"
+										: "bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:shadow-[0_0_20px_rgba(6,182,212,0.4)]"
+								  }`}
 								onClick={handleSubmit}
 								disabled={(!form[current.key] || !isFormValid) || loading}
 							>
-								{loading ? "Wysyłanie..." : "Wyślij brief"}
+								{loading ? (
+                                    <span className="flex items-center justify-center gap-2">
+                                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                        Wysyłanie...
+                                    </span>
+                                ) : "Wyślij brief"}
 							</button>
 						)}
 					</div>
 				</>
 			)}
-		</>
+		</div>
 	);
 };
 

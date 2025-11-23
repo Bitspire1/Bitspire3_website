@@ -19,6 +19,186 @@ var config_default = defineConfig({
   schema: {
     collections: [
       {
+        name: "header",
+        label: "Header",
+        path: "content/global",
+        format: "mdx",
+        match: {
+          include: "*/header"
+        },
+        ui: {
+          router: ({ document }) => {
+            const pathParts = document._sys.relativePath.split("/");
+            const locale = pathParts[0];
+            return `preview/${locale}/home`;
+          }
+        },
+        fields: [
+          {
+            type: "image",
+            name: "logo",
+            label: "Logo"
+          },
+          {
+            type: "string",
+            name: "logoAlt",
+            label: "Logo Alt Text"
+          },
+          {
+            type: "object",
+            name: "navigation",
+            label: "Navigation Links",
+            list: true,
+            fields: [
+              {
+                type: "string",
+                name: "label",
+                label: "Label"
+              },
+              {
+                type: "string",
+                name: "href",
+                label: "Link"
+              }
+            ]
+          },
+          {
+            type: "object",
+            name: "ctaButton",
+            label: "CTA Button",
+            fields: [
+              {
+                type: "string",
+                name: "text",
+                label: "Button Text"
+              },
+              {
+                type: "string",
+                name: "href",
+                label: "Button Link"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        name: "footer",
+        label: "Footer",
+        path: "content/global",
+        format: "mdx",
+        match: {
+          include: "*/footer"
+        },
+        ui: {
+          router: ({ document }) => {
+            const pathParts = document._sys.relativePath.split("/");
+            const locale = pathParts[0];
+            return `preview/${locale}/home`;
+          }
+        },
+        fields: [
+          {
+            type: "string",
+            name: "companyName",
+            label: "Company Name"
+          },
+          {
+            type: "string",
+            name: "description",
+            label: "Description",
+            ui: {
+              component: "textarea"
+            }
+          },
+          {
+            type: "object",
+            name: "contact",
+            label: "Contact Information",
+            fields: [
+              {
+                type: "string",
+                name: "email",
+                label: "Email"
+              },
+              {
+                type: "string",
+                name: "phone",
+                label: "Phone"
+              },
+              {
+                type: "string",
+                name: "location",
+                label: "Location"
+              }
+            ]
+          },
+          {
+            type: "object",
+            name: "navigation",
+            label: "Footer Navigation",
+            list: true,
+            fields: [
+              {
+                type: "string",
+                name: "label",
+                label: "Label"
+              },
+              {
+                type: "string",
+                name: "href",
+                label: "Link"
+              }
+            ]
+          },
+          {
+            type: "object",
+            name: "socialMedia",
+            label: "Social Media",
+            list: true,
+            fields: [
+              {
+                type: "string",
+                name: "platform",
+                label: "Platform"
+              },
+              {
+                type: "string",
+                name: "url",
+                label: "URL"
+              }
+            ]
+          },
+          {
+            type: "string",
+            name: "copyright",
+            label: "Copyright Text"
+          },
+          {
+            type: "object",
+            name: "legalLinks",
+            label: "Legal Links",
+            list: true,
+            fields: [
+              {
+                type: "string",
+                name: "label",
+                label: "Label"
+              },
+              {
+                type: "string",
+                name: "href",
+                label: "Link"
+              }
+            ]
+          },
+          {
+            type: "string",
+            name: "cookieSettingsText",
+            label: "Cookie Settings Button Text"
+          }
+        ]
+      },
+      {
         name: "portfolio",
         label: "Portfolio",
         path: "content/portfolio",
@@ -32,9 +212,9 @@ var config_default = defineConfig({
             if (pathParts.length >= 2) {
               const locale = pathParts[0];
               const slug = pathParts[1].replace(".mdx", "");
-              return `/admin/preview/${locale}/portfolio/${slug}`;
+              return `preview/${locale}/portfolio/${slug}`;
             }
-            return "/admin/preview/pl/portfolio";
+            return "preview/pl/portfolio";
           }
         },
         fields: [
@@ -53,8 +233,16 @@ var config_default = defineConfig({
           {
             type: "string",
             name: "description",
-            label: "Meta Description",
-            required: true
+            label: "Project Description",
+            required: true,
+            ui: {
+              component: "textarea"
+            }
+          },
+          {
+            type: "datetime",
+            name: "date",
+            label: "Publication Date"
           },
           {
             type: "string",
@@ -63,12 +251,6 @@ var config_default = defineConfig({
             ui: {
               component: "textarea"
             }
-          },
-          {
-            type: "datetime",
-            name: "date",
-            label: "Publication Date",
-            required: true
           },
           {
             type: "string",
@@ -82,9 +264,19 @@ var config_default = defineConfig({
             list: true
           },
           {
+            type: "string",
+            name: "year",
+            label: "Year"
+          },
+          {
+            type: "string",
+            name: "client",
+            label: "Client Name"
+          },
+          {
             type: "image",
             name: "image",
-            label: "Featured Image"
+            label: "Project Image"
           },
           {
             type: "string",
@@ -97,14 +289,10 @@ var config_default = defineConfig({
             label: "Project URL"
           },
           {
-            type: "string",
-            name: "client",
-            label: "Client Name"
-          },
-          {
-            type: "string",
-            name: "year",
-            label: "Year"
+            type: "boolean",
+            name: "featured",
+            label: "Featured Project",
+            description: "Show this project on homepage"
           },
           {
             type: "rich-text",
@@ -128,9 +316,9 @@ var config_default = defineConfig({
             if (pathParts.length >= 2) {
               const locale = pathParts[0];
               const slug = pathParts[1].replace(".mdx", "");
-              return `/admin/preview/${locale}/blog/${slug}`;
+              return `preview/${locale}/blog/${slug}`;
             }
-            return "/admin/preview/pl/blog";
+            return "preview/pl/blog";
           }
         },
         fields: [
@@ -220,9 +408,9 @@ var config_default = defineConfig({
             if (pathParts.length >= 2) {
               const locale = pathParts[0];
               const slug = pathParts[1].replace(".mdx", "");
-              return `/admin/preview/${locale}/${slug}`;
+              return `preview/${locale}/${slug}`;
             }
-            return "/admin/preview/pl/home";
+            return "preview/pl/home";
           }
         },
         fields: [
@@ -243,11 +431,22 @@ var config_default = defineConfig({
             label: "Last Update Date",
             description: "For legal pages (YYYY-MM-DD)"
           },
-          // Portfolio fields
+          {
+            type: "string",
+            name: "selectedProjects",
+            label: "Selected Portfolio Projects",
+            description: "Choose which portfolio projects to display (max 3 for highlights)",
+            list: true,
+            ui: {
+              component: "list"
+            }
+          },
+          // Portfolio listing page projects
           {
             type: "object",
             name: "projects",
             label: "Portfolio Projects",
+            description: "List of projects for portfolio listing page",
             list: true,
             fields: [
               {
@@ -264,9 +463,19 @@ var config_default = defineConfig({
                 }
               },
               {
+                type: "image",
+                name: "image",
+                label: "Project Image"
+              },
+              {
+                type: "string",
+                name: "imageAlt",
+                label: "Image Alt Text"
+              },
+              {
                 type: "string",
                 name: "tags",
-                label: "Tags",
+                label: "Technologies/Tags",
                 list: true
               },
               {
@@ -276,18 +485,8 @@ var config_default = defineConfig({
               },
               {
                 type: "string",
-                name: "image",
-                label: "Image Path"
-              },
-              {
-                type: "string",
-                name: "imageAlt",
-                label: "Image Alt Text"
-              },
-              {
-                type: "string",
                 name: "link",
-                label: "Project Link"
+                label: "Project Link (URL)"
               }
             ]
           },
@@ -375,6 +574,14 @@ var config_default = defineConfig({
                 label: "Section Title"
               },
               {
+                type: "string",
+                name: "description",
+                label: "Section Description",
+                ui: {
+                  component: "textarea"
+                }
+              },
+              {
                 type: "object",
                 name: "items",
                 label: "Technology Items",
@@ -418,6 +625,11 @@ var config_default = defineConfig({
                 }
               },
               {
+                type: "string",
+                name: "sectionLabel",
+                label: "Section Label"
+              },
+              {
                 type: "object",
                 name: "services",
                 label: "Services",
@@ -446,6 +658,16 @@ var config_default = defineConfig({
                     name: "features",
                     label: "Features",
                     list: true
+                  },
+                  {
+                    type: "string",
+                    name: "link",
+                    label: "Link URL"
+                  },
+                  {
+                    type: "string",
+                    name: "buttonText",
+                    label: "Button Text"
                   }
                 ]
               }
@@ -507,6 +729,219 @@ var config_default = defineConfig({
                 ]
               }
             ]
+          },
+          {
+            type: "object",
+            name: "portfolioHighlights",
+            label: "Portfolio Highlights Section",
+            fields: [
+              {
+                type: "string",
+                name: "title",
+                label: "Section Title"
+              },
+              {
+                type: "string",
+                name: "description",
+                label: "Section Description"
+              }
+            ]
+          },
+          {
+            type: "object",
+            name: "howWeWork",
+            label: "How We Work Section",
+            fields: [
+              {
+                type: "string",
+                name: "title",
+                label: "Section Title"
+              },
+              {
+                type: "string",
+                name: "description",
+                label: "Section Description"
+              },
+              {
+                type: "object",
+                name: "steps",
+                label: "Process Steps",
+                list: true,
+                fields: [
+                  {
+                    type: "string",
+                    name: "title",
+                    label: "Step Title"
+                  },
+                  {
+                    type: "string",
+                    name: "description",
+                    label: "Step Description",
+                    ui: {
+                      component: "textarea"
+                    }
+                  },
+                  {
+                    type: "string",
+                    name: "icon",
+                    label: "Icon Name (clipboard, design, code, test, rocket, support)"
+                  },
+                  {
+                    type: "string",
+                    name: "duration",
+                    label: "Duration"
+                  }
+                ]
+              },
+              {
+                type: "string",
+                name: "ctaTitle",
+                label: "CTA Title"
+              },
+              {
+                type: "string",
+                name: "ctaDescription",
+                label: "CTA Description"
+              },
+              {
+                type: "string",
+                name: "ctaButton",
+                label: "CTA Button Text"
+              }
+            ]
+          },
+          {
+            type: "object",
+            name: "faq",
+            label: "FAQ Section",
+            fields: [
+              {
+                type: "string",
+                name: "title",
+                label: "Section Title"
+              },
+              {
+                type: "string",
+                name: "description",
+                label: "Section Description"
+              },
+              {
+                type: "object",
+                name: "items",
+                label: "FAQ Items",
+                list: true,
+                fields: [
+                  {
+                    type: "string",
+                    name: "question",
+                    label: "Question"
+                  },
+                  {
+                    type: "string",
+                    name: "answer",
+                    label: "Answer",
+                    ui: {
+                      component: "textarea"
+                    }
+                  }
+                ]
+              },
+              {
+                type: "string",
+                name: "ctaQuestion",
+                label: "CTA Question"
+              },
+              {
+                type: "string",
+                name: "ctaButton",
+                label: "CTA Button Text"
+              }
+            ]
+          },
+          {
+            type: "object",
+            name: "contact",
+            label: "Contact Section",
+            fields: [
+              {
+                type: "string",
+                name: "title",
+                label: "Section Title"
+              },
+              {
+                type: "string",
+                name: "description",
+                label: "Section Description"
+              },
+              {
+                type: "string",
+                name: "email",
+                label: "Email"
+              },
+              {
+                type: "string",
+                name: "phone",
+                label: "Phone"
+              },
+              {
+                type: "string",
+                name: "address",
+                label: "Company Name"
+              },
+              {
+                type: "string",
+                name: "addressLine2",
+                label: "Street Address"
+              },
+              {
+                type: "string",
+                name: "city",
+                label: "City & Postal Code"
+              },
+              {
+                type: "string",
+                name: "successTitle",
+                label: "Success Message Title"
+              },
+              {
+                type: "string",
+                name: "successMessage",
+                label: "Success Message Text"
+              },
+              {
+                type: "string",
+                name: "nameLabel",
+                label: "Name Field Label"
+              },
+              {
+                type: "string",
+                name: "emailLabel",
+                label: "Email Field Label"
+              },
+              {
+                type: "string",
+                name: "messageLabel",
+                label: "Message Field Label"
+              },
+              {
+                type: "string",
+                name: "buttonText",
+                label: "Submit Button Text"
+              },
+              {
+                type: "string",
+                name: "contactDataTitle",
+                label: "Contact Data Section Title"
+              }
+            ]
+          },
+          // Rich-text body for simple pages (brief, blog listing, etc.)
+          {
+            type: "rich-text",
+            name: "body",
+            label: "Page Content",
+            description: "Rich text content for simple pages like Brief, Blog listing, etc.",
+            isBody: true
           }
         ]
       }

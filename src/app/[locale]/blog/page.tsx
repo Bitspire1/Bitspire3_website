@@ -33,10 +33,16 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
         <Background />
         <main className="relative z-10 max-w-7xl mx-auto px-6 pb-24">
           <header className="mb-14 text-center">
-            <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-400 to-emerald-300 bg-clip-text text-transparent tracking-tight">
-              {locale === 'pl' ? 'Blog' : 'Blog'}
+            <div className="inline-block px-3 py-1 mb-4 rounded-full border border-blue-500/20 bg-blue-500/5">
+              <span className="text-blue-400 text-xs font-bold tracking-widest uppercase">
+                {locale === 'pl' ? 'Wiedza' : 'Knowledge'}
+              </span>
+            </div>
+            <h1 className="text-4xl lg:text-6xl font-bold mb-6">
+              <span className="text-white">{locale === 'pl' ? 'Nasz ' : 'Our '}</span>
+              <span className="text-gradient">Blog</span>
             </h1>
-            <p className="mt-6 text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+            <p className="mt-6 text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
               {locale === 'pl' 
                 ? 'Praktyczne porady, najnowsze trendy i głęboka wiedza z zakresu web development. Dzielimy się doświadczeniem i best practices.'
                 : 'Practical tips, latest trends, and in-depth knowledge about web development. We share our experience and best practices.'}

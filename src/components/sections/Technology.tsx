@@ -1,23 +1,29 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import Image from "next/image";
+import { tinaField } from 'tinacms/dist/react';
 
+interface TechnologyData {
+  title?: string | null;
+  description?: string | null;
+  [key: string]: unknown;
+}
 
 const logos = [
-  { src: "/logo/Nextjs.svg", alt: "Next.js Logo", useBrightness: false },
-  { src: "/logo/React.svg", alt: "React Logo", useBrightness: true },
-  { src: "/logo/TypeScript.svg", alt: "TypeScript Logo", useBrightness: false },
-  { src: "/logo/Vercel_logo.svg", alt: "Vercel Logo", useBrightness: false },
-  { src: "/logo/Tailwind_CSS.svg", alt: "Tailwind CSS Logo", useBrightness: true },
-  { src: "/logo/Vite.svg", alt: "Vite Logo", useBrightness: true },
-  { src: "/logo/Stripe.svg", alt: "Stripe Logo", useBrightness: false },
-	{ src: "/logo/Docker.svg", alt: "Docker Logo", useBrightness: false },
+  { src: "/logo/Nextjs.svg", alt: "Next.js Logo", filter: true },
+  { src: "/logo/React.svg", alt: "React Logo", filter: false },
+  { src: "/logo/TypeScript.svg", alt: "TypeScript Logo", filter: true },
+  { src: "/logo/Vercel_logo.svg", alt: "Vercel Logo", filter: true },
+  { src: "/logo/Tailwind_CSS.svg", alt: "Tailwind CSS Logo", filter: false },
+  { src: "/logo/Vite.svg", alt: "Vite Logo", filter: false },
+  { src: "/logo/Stripe.svg", alt: "Stripe Logo", filter: true },
+	{ src: "/logo/Docker.svg", alt: "Docker Logo", filter: false },
 ];
 
 const LOGO_WIDTH = 140; // 80px image + 60px gap
 const SPEED = 0.4; // px per frame
 
-const Technology: React.FC = () => {
+const Technology: React.FC<{ data?: TechnologyData }> = ({ data }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 	const [logoCount, setLogoCount] = useState(logos.length * 8);
 	// animation state stored in refs to avoid React re-renders on every frame
@@ -121,25 +127,36 @@ const Technology: React.FC = () => {
 	return (
 		<section
 			ref={sectionRef}
-			// slide-in animation removed as requested; keep minimal will-change for performance
-			className={`w-full py-8 px-0 relative overflow-hidden will-change-transform`}
+			className="w-full py-24 relative overflow-hidden"
 		>
+      <div className="container mx-auto px-4 mb-12">
+        <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
+          <div className="w-16 h-0.5 bg-gradient-to-r from-blue-600 to-cyan-500 mb-6"></div>
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4" data-tina-field={tinaField(data, 'title')}>
+            {data?.title || 'Technologie nowej generacji'}
+          </h2>
+          <p className="text-slate-400 text-lg" data-tina-field={tinaField(data, 'description')}>
+            {data?.description || 'Wykorzystujemy najnowocześniejsze narzędzia do budowy szybkich i skalowalnych aplikacji'}
+          </p>
+        </div>
+      </div>
+      
 	  <div className="w-full">
 		<div
-		  className="relative mx-auto h-20 flex items-center overflow-hidden"
+		  className="relative mx-auto h-32 flex items-center overflow-hidden"
 		  style={{
 			maxWidth: '1600px',
-						minHeight: '5rem',
+			minHeight: '8rem',
 			WebkitMaskImage:
-			  'linear-gradient(to right, transparent 0px, black 64px, black calc(100% - 64px), transparent 100%)',
+			  'linear-gradient(to right, transparent 0px, black 128px, black calc(100% - 128px), transparent 100%)',
 			maskImage:
-			  'linear-gradient(to right, transparent 0px, black 64px, black calc(100% - 64px), transparent 100%)'
+			  'linear-gradient(to right, transparent 0px, black 128px, black calc(100% - 128px), transparent 100%)'
 		  }}
 		  ref={containerRef}
 		>
 		  <div className="absolute left-0 top-0 w-full h-full" role="list" aria-label="Technologie" style={{ pointerEvents: "none" }}>
 			{Array.from({ length: logoCount }).map((_, i) => {
-			  const { src, alt, useBrightness } = logos[i % logos.length];
+			  const { src, alt, filter } = logos[i % logos.length];
 			  return (
 				<span
 				  key={i}
@@ -158,19 +175,19 @@ const Technology: React.FC = () => {
 					justifyContent: "center"
 				  }}
 				>
-				  <Image
-					src={src}
-					alt={alt}
-					width={80}
-					height={60}
-					className={`h-12 w-auto object-contain ${
-					  useBrightness 
-						? "grayscale brightness-200 contrast-75 opacity-70"
-						: "brightness-0 invert opacity-60"
-					}`}
-					loading="lazy"
-					sizes="80px"
-				  />
+          <div className="relative group">
+            <div className="absolute -inset-4 bg-gradient-to-r from-blue-600/0 via-blue-500/20 to-cyan-500/0 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-500 blur-xl" />
+            <div className="absolute -inset-2 bg-slate-800/0 group-hover:bg-slate-800/60 rounded-lg border border-slate-700/0 group-hover:border-slate-600/50 transition-all duration-300" />
+            <Image
+            src={src}
+            alt={alt}
+            width={80}
+            height={60}
+            className={`h-14 w-auto object-contain opacity-40 grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 relative z-10 ${filter ? 'brightness-0 invert' : ''}`}
+            loading="lazy"
+            sizes="80px"
+            />
+          </div>
 				</span>
 			  );
 			})}

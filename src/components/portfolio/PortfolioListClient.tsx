@@ -14,7 +14,7 @@ interface PortfolioPost {
   slug: string;
   description: string;
   excerpt?: string | null;
-  date: string;
+  date?: string | null;
   category?: string | null;
   tags?: (string | null)[] | null;
   image?: string | null;

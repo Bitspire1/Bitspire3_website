@@ -1,17 +1,36 @@
 "use client";
 import React, { useState } from 'react';
 import Image from 'next/image';
-import {
-  FaFacebookF,
-  FaInstagram,
-  FaLinkedinIn,
-  FaGithub,
-} from 'react-icons/fa';
 import { LanguageSwitcher } from './ui/LanguageSwitcher';
 import { PreviewLink } from './ui/PreviewLink';
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  data?: {
+    logo?: string | null;
+    logoAlt?: string | null;
+    navigation?: Array<{ label?: string | null; href?: string | null } | null> | null;
+    ctaButton?: { text?: string | null; href?: string | null } | null;
+  } | null;
+  locale?: string;
+}
+
+export const Header: React.FC<HeaderProps> = ({ data, locale }) => {
   const [open, setOpen] = useState(false);
+  
+  // Default values if data is not provided
+  const logo = data?.logo || '/logo/Bitspire logo main.svg';
+  const logoAlt = data?.logoAlt || 'Bitspire - strona główna';
+  const navigation = data?.navigation?.filter((item): item is { label: string; href: string } => 
+    item !== null && typeof item.label === 'string' && typeof item.href === 'string'
+  ) || [
+    { label: 'Portfolio', href: '/portfolio/' },
+    { label: 'Blog', href: '/blog/' },
+    { label: 'Brief', href: '/brief/' }
+  ];
+  const ctaButton = data?.ctaButton || { 
+    text: locale === 'en' ? 'Get a Quote' : 'Zapytaj o ofertę', 
+    href: '/brief/' 
+  };
 
   return (
     <header
@@ -33,11 +52,11 @@ export const Header: React.FC = () => {
             <PreviewLink
               href="/"
               className="flex items-center shrink-0 -translate-y-[0px] motion-safe:transition-transform"
-              aria-label="Przejdź do strony głównej"
+              aria-label={logoAlt}
             >
               <Image
-                src="/logo/Bitspire logo main.svg"
-                alt="Bitspire - strona główna"
+                src={logo}
+                alt={logoAlt}
                 className="h-8 sm:h-10 w-auto max-h-10 max-w-[140px] object-contain"
                 width={120}
                 height={40}
@@ -47,77 +66,32 @@ export const Header: React.FC = () => {
             </PreviewLink>
 
             <nav className="hidden md:flex ml-2 space-x-6" aria-label="Główna nawigacja">
-              <PreviewLink
-                href="/portfolio/"
-                className="ml-10 text-sm font-medium text-slate-300 hover:text-white hover:underline underline-offset-4 decoration-blue-400/60 transition"
-              >
-                Portfolio
-              </PreviewLink>
-              <PreviewLink
-                href="/blog/"
-                className="text-sm font-medium text-slate-300 hover:text-white hover:underline underline-offset-4 decoration-blue-400/60 transition"
-              >
-                Blog
-              </PreviewLink>
+              {navigation.map((item, index) => (
+                <PreviewLink
+                  key={index}
+                  href={item.href}
+                  className={`${index === 0 ? 'ml-10' : ''} text-sm font-medium text-slate-300 hover:text-white hover:underline underline-offset-4 decoration-blue-400/60 transition`}
+                >
+                  {item.label}
+                </PreviewLink>
+              ))}
             </nav>
           </div>
 
-          {/* right: CTA + social icons (desktop) and hamburger stays at the end for mobile */}
+          {/* right: CTA + language switcher (desktop) and hamburger stays at the end for mobile */}
           <div className="flex items-center gap-4">
             <div className="hidden md:flex items-center gap-6">
               <LanguageSwitcher />
-              
-              <div className="flex items-center space-x-6" aria-label="Linki do mediów społecznościowych">
-                <a
-                  href="https://www.facebook.com/profile.php?id=61578556904045"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white hover:text-blue-400 transition text-3xl sm:text-4xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-md p-1"
-                  aria-label="Odwiedź naszą stronę na Facebooku (otwiera w nowym oknie)"
-                >
-                  <FaFacebookF aria-hidden="true" />
-                </a>
-                <a
-                  href="https://instagram.com/bitspire_"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white hover:text-pink-400 transition text-3xl sm:text-4xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-md p-1"
-                  aria-label="Odwiedź nasz profil na Instagramie (otwiera w nowym oknie)"
-                >
-                  <FaInstagram aria-hidden="true" />
-                </a>
-                <a
-                  href="https://linkedin.com/company/bitspire"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white hover:text-blue-600 transition text-3xl sm:text-4xl focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-md p-1"
-                  aria-label="Odwiedź nasz profil na LinkedIn (otwiera w nowym oknie)"
-                >
-                  <FaLinkedinIn aria-hidden="true" />
-                </a>
-                <a
-                  href="https://github.com/bitspire1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white hover:text-gray-300 transition text-3xl sm:text-4xl focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-md p-1"
-                  aria-label="Odwiedź nasze repozytoria na GitHub (otwiera w nowym oknie)"
-                >
-                  <FaGithub aria-hidden="true" />
-                </a>
-              </div>
 
-              <button
-                onClick={() => {
-                  const offerElement = document.getElementById('offer-section');
-                  if (offerElement) {
-                    offerElement.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
-                className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md transition"
-                aria-label="Przejdź do sekcji oferty"
-              >
-                Zapytaj o ofertę
-              </button>
+              {ctaButton && (
+                <PreviewLink
+                  href={ctaButton.href || '/brief/'}
+                  className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md transition"
+                  aria-label={ctaButton.text || ''}
+                >
+                  {ctaButton.text}
+                </PreviewLink>
+              )}
             </div>
 
             {/* hamburger for mobile */}
@@ -160,45 +134,26 @@ export const Header: React.FC = () => {
             <div className="flex justify-center">
               <LanguageSwitcher />
             </div>
-            <PreviewLink
-              href="/portfolio/"
-              onClick={() => setOpen(false)}
-              className="text-lg font-semibold text-slate-200 hover:text-white hover:underline underline-offset-4 decoration-blue-400/60 transition"
-            >
-              Portfolio
-            </PreviewLink>
-            <PreviewLink
-              href="/blog/"
-              onClick={() => setOpen(false)}
-              className="text-lg font-semibold text-slate-200 hover:text-white hover:underline underline-offset-4 decoration-blue-400/60 transition"
-            >
-              Blog
-            </PreviewLink>
-            <div className="flex justify-center items-center gap-8" aria-label="Linki do mediów społecznościowych">
-              <a href="https://www.facebook.com/profile.php?id=61578556904045" target="_blank" rel="noopener noreferrer" className="text-white hover:text-blue-400 transition text-3xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-md p-1" aria-label="Facebook">
-                <FaFacebookF aria-hidden="true" />
-              </a>
-              <a href="https://instagram.com/bitspire_" target="_blank" rel="noopener noreferrer" className="text-white hover:text-pink-400 transition text-3xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-md p-1" aria-label="Instagram">
-                <FaInstagram aria-hidden="true" />
-              </a>
-              <a href="https://linkedin.com/company/bitspire" target="_blank" rel="noopener noreferrer" className="text-white hover:text-blue-600 transition text-3xl focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-md p-1" aria-label="LinkedIn">
-                <FaLinkedinIn aria-hidden="true" />
-              </a>
-              <a href="https://github.com/bitspire1" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition text-3xl focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-md p-1" aria-label="GitHub">
-                <FaGithub aria-hidden="true" />
-              </a>
-            </div>
-            <button
-              onClick={() => {
-                const offerElement = document.getElementById('offer-section');
-                if (offerElement) offerElement.scrollIntoView({ behavior: 'smooth' });
-                setOpen(false);
-              }}
-              className="mt-2 flex justify-center items-center py-3 w-full rounded-md transition focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900 bg-blue-600 hover:bg-blue-500 text-white"
-              aria-label="Przejdź do sekcji oferty"
-            >
-              Zapytaj o ofertę
-            </button>
+            {navigation.map((item, index) => (
+              <PreviewLink
+                key={index}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className="text-lg font-semibold text-slate-200 hover:text-white hover:underline underline-offset-4 decoration-blue-400/60 transition"
+              >
+                {item.label}
+              </PreviewLink>
+            ))}
+            {ctaButton && (
+              <PreviewLink
+                href={ctaButton.href || '/brief/'}
+                onClick={() => setOpen(false)}
+                className="mt-2 flex justify-center items-center py-3 w-full rounded-md transition focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900 bg-blue-600 hover:bg-blue-500 text-white"
+                aria-label={ctaButton.text || ''}
+              >
+                {ctaButton.text}
+              </PreviewLink>
+            )}
           </div>
         </nav>
       </div>

@@ -13,6 +13,7 @@ interface Section {
 interface LegalPageData {
   __typename?: string;
   title?: string | null;
+  titleAccent?: string | null;
   lastUpdate?: string | null;
   sections?: (Section | null)[] | null;
   [key: string]: unknown;
@@ -75,14 +76,21 @@ export default function LegalPage({ data }: { data?: LegalPageData }) {
         <div className="space-y-10">
           {/* Header */}
           <header className="bg-slate-800/60 border border-slate-700 rounded-2xl p-8 shadow-lg backdrop-blur-md">
-            <h1 
-              className="text-3xl md:text-4xl font-bold tracking-tight text-white"
-              data-tina-field={tinaField(data, 'title')}
-            >
-              {data?.title || 'Document'}{' '}
-              <span className="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
-                Bitspire
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
+              <span data-tina-field={tinaField(data, 'title')}>
+                {data?.title || 'Document'}
               </span>
+              {data?.titleAccent && (
+                <>
+                  {' '}
+                  <span 
+                    className="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent"
+                    data-tina-field={tinaField(data, 'titleAccent')}
+                  >
+                    {data.titleAccent}
+                  </span>
+                </>
+              )}
             </h1>
             {data?.lastUpdate && (
               <p 
