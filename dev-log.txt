@@ -1,0 +1,5 @@
+﻿
+> frontend@0.1.0 dev
+> tinacms dev -c "next dev"
+
+­čŽÖ TinaCMS Dev Server is initializing...
