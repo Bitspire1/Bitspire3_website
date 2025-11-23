@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "tinacms dev -c \"next dev\"",
-    "build": "tinacms build && next build",
-    "start": "tinacms build && next start",
+    "build": "next build",
+    "build:tina": "tinacms build && next build",
+    "start": "next start",
     "prod": "NODE_ENV=production npm run start",
     "lint": "eslint"
   },
