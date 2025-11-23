@@ -2,8 +2,10 @@
 import { defineConfig } from "tinacms";
 var config_default = defineConfig({
   branch: "main",
-  // Tryb lokalny - TinaCMS używa tylko lokalnych plików z content/
-  // clientId i token są opcjonalne w trybie lokalnym
+  // Get this from tina.io
+  clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID || "f529e4e6-9630-4638-8404-25897477e309",
+  // Get this from tina.io
+  token: process.env.TINA_TOKEN || "c0dae5149a6de428b239c63fd03821589f538a6c",
   build: {
     outputFolder: "admin",
     publicFolder: "public"
