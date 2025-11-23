@@ -63,7 +63,7 @@ export const Hero: React.FC<{ data?: HeroData }> = ({ data }) => {
           <div className="relative h-[500px] lg:h-[600px] flex items-center justify-center">
             {data?.image ? (
               <div className="relative w-full h-full animate-float">
-                 <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/20 to-cyan-500/20 rounded-3xl blur-2xl -z-10" />
+                 <div className="absolute inset-0 bg-linear-to-tr from-blue-500/20 to-cyan-500/20 rounded-3xl blur-2xl -z-10" />
                  <div className="tech-border rounded-3xl p-2 h-full w-full bg-slate-900/50 backdrop-blur-sm">
                     <Image
                       src={data.image}
@@ -98,7 +98,7 @@ export const Hero: React.FC<{ data?: HeroData }> = ({ data }) => {
                       </div>
                    </div>
                    <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 w-[90%]" />
+                      <div className="h-full bg-linear-to-r from-blue-500 to-cyan-500 w-[90%]" />
                    </div>
                 </div>
               </div>

@@ -100,7 +100,7 @@ export default async function BlogPostPage({
               </div>
             )}
             
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold bg-linear-to-r from-white to-slate-300 bg-clip-text text-transparent mb-6 leading-tight">
               {post.title}
             </h1>
             
@@ -135,7 +135,7 @@ export default async function BlogPostPage({
 
           {/* Featured Image */}
           {post.image && (
-            <div className="relative w-full aspect-[16/9] mb-12 rounded-2xl overflow-hidden border border-slate-800">
+            <div className="relative w-full aspect-video mb-12 rounded-2xl overflow-hidden border border-slate-800">
               <Image
                 src={post.image}
                 alt={post.imageAlt || post.title || 'Blog post image'}

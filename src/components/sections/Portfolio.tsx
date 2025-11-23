@@ -33,7 +33,7 @@ export default function Portfolio({ data }: { data?: PortfolioData }) {
       <main className="relative z-10 max-w-7xl mx-auto px-6">
         <header className="mb-20">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-0.5 bg-gradient-to-r from-blue-600 to-cyan-500"></div>
+            <div className="w-16 h-0.5 bg-linear-to-r from-blue-600 to-cyan-500"></div>
             <span className="text-blue-400 text-xs font-bold tracking-widest uppercase" data-tina-field={tinaField(data, 'sectionLabel')}>
               {(data && 'sectionLabel' in data ? (data as Record<string, unknown>).sectionLabel : 'Selected Works') as string}
             </span>
@@ -69,8 +69,8 @@ export default function Portfolio({ data }: { data?: PortfolioData }) {
                 >
                   {/* Image */}
                   {project.image && (
-                    <div className="relative w-full aspect-[16/9] overflow-hidden bg-slate-900/50 flex items-center justify-center border-b border-slate-800/50">
-                      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-transparent to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    <div className="relative w-full aspect-video overflow-hidden bg-slate-900/50 flex items-center justify-center border-b border-slate-800/50">
+                      <div className="absolute inset-0 bg-linear-to-br from-blue-600/10 via-transparent to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                       <Image
                         src={project.image}
@@ -88,7 +88,7 @@ export default function Portfolio({ data }: { data?: PortfolioData }) {
                     <header className="mb-6">
                       <div className="flex items-start justify-between gap-3 mb-4">
                         <h2 
-                          className="text-2xl md:text-3xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-cyan-400 transition-all duration-300"
+                          className="text-2xl md:text-3xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-linear-to-r group-hover:from-blue-400 group-hover:to-cyan-400 transition-all duration-300"
                           data-tina-field={tinaField(data, `projects.${idx}.title`)}
                         >
                           {project.title}

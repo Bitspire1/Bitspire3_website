@@ -72,12 +72,12 @@ export const Offer: React.FC<{ data?: OfferData }> = ({ data }) => {
             return (
               <CursorLightCard key={index} className="rounded-2xl">
                 <div 
-                  className="glass-panel p-6 rounded-2xl h-full flex flex-col transition-all duration-300 hover:translate-y-[-8px] group"
+                  className="glass-panel p-6 rounded-2xl h-full flex flex-col transition-all duration-300 hover:-translate-y-2 group"
                   data-tina-field={tinaField(service)}
                 >
                   {/* Icon */}
                   <div className="mb-4 relative">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center text-3xl border border-blue-500/20 group-hover:border-blue-500/50 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
+                    <div className="w-14 h-14 rounded-xl bg-linear-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center text-3xl border border-blue-500/20 group-hover:border-blue-500/50 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
                       {service.icon || '💼'}
                     </div>
                   </div>
@@ -92,7 +92,7 @@ export const Offer: React.FC<{ data?: OfferData }> = ({ data }) => {
                   
                   {/* Description */}
                   <p 
-                    className="text-slate-400 text-sm mb-4 flex-grow leading-relaxed"
+                    className="text-slate-400 text-sm mb-4 grow leading-relaxed"
                     data-tina-field={tinaField(service, 'description')}
                   >
                     {service.description || 'Description'}
@@ -104,7 +104,7 @@ export const Offer: React.FC<{ data?: OfferData }> = ({ data }) => {
                       {service.features.map((feature, idx) => 
                         feature ? (
                           <li key={idx} className="flex items-start text-xs text-slate-300">
-                            <svg className="w-4 h-4 mr-2 mt-0.5 text-blue-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg className="w-4 h-4 mr-2 mt-0.5 text-blue-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                             </svg>
                             <span data-tina-field={tinaField(service, `features.${idx}`)}>{feature}</span>

@@ -121,7 +121,7 @@ export function PortfolioListClient({ posts, locale }: PortfolioListClientProps)
                 {/* Image */}
                 {post.image && (
                   <Link href={`/${locale}/portfolio/${slug}`}>
-                    <div className="relative w-full aspect-[3/2] overflow-hidden bg-slate-900 flex items-center justify-center p-4 md:p-6">
+                    <div className="relative w-full aspect-3/2 overflow-hidden bg-slate-900 flex items-center justify-center p-4 md:p-6">
                       <Image
                         src={post.image}
                         alt={post.imageAlt || post.title || 'Project image'}
@@ -129,7 +129,7 @@ export function PortfolioListClient({ posts, locale }: PortfolioListClientProps)
                         className="object-contain transition-transform duration-700 group-hover:scale-[1.01]"
                         sizes="(max-width: 1024px) 100vw, 600px"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-tr from-slate-950/70 via-slate-900/20 to-transparent" />
+                      <div className="absolute inset-0 bg-linear-to-tr from-slate-950/70 via-slate-900/20 to-transparent" />
                     </div>
                   </Link>
                 )}
@@ -168,7 +168,7 @@ export function PortfolioListClient({ posts, locale }: PortfolioListClientProps)
                         .filter((tag): tag is string => !!tag)
                         .slice(0, 4)
                         .map((tag) => {
-                          const base = "text-[11px] md:text-xs uppercase tracking-wide rounded-full px-3 py-1 font-medium shadow-sm bg-gradient-to-r";
+                          const base = "text-[11px] md:text-xs uppercase tracking-wide rounded-full px-3 py-1 font-medium shadow-sm bg-linear-to-r";
                           const cls =
                             tag === "CMS"
                               ? `${base} from-purple-600 to-fuchsia-500 text-white`
@@ -207,7 +207,7 @@ export function PortfolioListClient({ posts, locale }: PortfolioListClientProps)
                 </div>
 
                 {/* Accent line */}
-                <div className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400" />
+                <div className="absolute bottom-0 left-0 h-1 w-full bg-linear-to-r from-blue-500 via-cyan-400 to-emerald-400" />
               </article>
             );
           })

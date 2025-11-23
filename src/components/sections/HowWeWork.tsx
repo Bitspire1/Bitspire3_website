@@ -105,7 +105,7 @@ const HowWeWork: React.FC<HowWeWorkProps> = ({ data }) => {
       
       <div className="container mx-auto max-w-6xl relative z-10">
         <div className="text-center mb-16">
-          <div className="w-16 h-0.5 bg-gradient-to-r from-blue-600 to-cyan-500 mb-6 mx-auto"></div>
+          <div className="w-16 h-0.5 bg-linear-to-r from-blue-600 to-cyan-500 mb-6 mx-auto"></div>
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4" data-tina-field={tinaField(data, 'title')}>
             {data?.title || 'Jak pracujemy?'}
           </h2>
@@ -116,7 +116,7 @@ const HowWeWork: React.FC<HowWeWorkProps> = ({ data }) => {
 
         <div className="relative">
           {/* Timeline line */}
-          <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-cyan-500 to-blue-500 -translate-x-1/2" />
+          <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-linear-to-b from-blue-500 via-cyan-500 to-blue-500 -translate-x-1/2" />
 
           <div className="space-y-12">
             {steps.map((step, index) => (
@@ -131,7 +131,7 @@ const HowWeWork: React.FC<HowWeWorkProps> = ({ data }) => {
                   <div className="glass-panel rounded-2xl p-8 border border-slate-700/50 hover:border-blue-500/50 transition-all duration-300 hover:scale-[1.02] group">
                     <div className="flex items-start gap-4 mb-4">
                       {/* Icon */}
-                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                      <div className="w-14 h-14 rounded-xl bg-linear-to-br from-blue-500 to-cyan-500 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                         <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           {getIcon(step?.icon)}
                         </svg>
@@ -157,11 +157,11 @@ const HowWeWork: React.FC<HowWeWorkProps> = ({ data }) => {
                 </div>
 
                 {/* Step number */}
-                <div className="relative flex-shrink-0">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-blue-500/50 relative z-10">
+                <div className="relative shrink-0">
+                  <div className="w-16 h-16 rounded-full bg-linear-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-blue-500/50 relative z-10">
                     {index + 1}
                   </div>
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 animate-pulse-slow opacity-50 blur-md" />
+                  <div className="absolute inset-0 rounded-full bg-linear-to-br from-blue-500 to-cyan-500 animate-pulse-slow opacity-50 blur-md" />
                 </div>
 
                 {/* Spacer for alternating layout */}

@@ -6,10 +6,10 @@ import React from 'react';
  */
 export const mdxComponents = {
   h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-400 to-emerald-300 bg-clip-text text-transparent tracking-tight mt-12 mb-6" {...props} />
+  <h1 className="text-4xl md:text-5xl font-extrabold bg-linear-to-r from-blue-400 to-emerald-300 bg-clip-text text-transparent tracking-tight mt-12 mb-6" {...props} />
   ),
   h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-emerald-300 bg-clip-text text-transparent tracking-tight mt-12 mb-6" {...props} />
+  <h2 className="text-3xl md:text-4xl font-bold bg-linear-to-r from-blue-400 to-emerald-300 bg-clip-text text-transparent tracking-tight mt-12 mb-6" {...props} />
   ),
   h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h3 className="text-2xl md:text-3xl font-bold text-slate-200 tracking-tight mt-8 mb-4" {...props} />

@@ -131,7 +131,7 @@ const Technology: React.FC<{ data?: TechnologyData }> = ({ data }) => {
 		>
       <div className="container mx-auto px-4 mb-12">
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
-          <div className="w-16 h-0.5 bg-gradient-to-r from-blue-600 to-cyan-500 mb-6"></div>
+		  <div className="w-16 h-0.5 bg-linear-to-r from-blue-600 to-cyan-500 mb-6"></div>
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4" data-tina-field={tinaField(data, 'title')}>
             {data?.title || 'Technologie nowej generacji'}
           </h2>
@@ -176,7 +176,7 @@ const Technology: React.FC<{ data?: TechnologyData }> = ({ data }) => {
 				  }}
 				>
           <div className="relative group">
-            <div className="absolute -inset-4 bg-gradient-to-r from-blue-600/0 via-blue-500/20 to-cyan-500/0 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-500 blur-xl" />
+			<div className="absolute -inset-4 bg-linear-to-r from-blue-600/0 via-blue-500/20 to-cyan-500/0 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-500 blur-xl" />
             <div className="absolute -inset-2 bg-slate-800/0 group-hover:bg-slate-800/60 rounded-lg border border-slate-700/0 group-hover:border-slate-600/50 transition-all duration-300" />
             <Image
             src={src}

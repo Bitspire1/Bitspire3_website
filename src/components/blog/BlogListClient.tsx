@@ -122,7 +122,7 @@ export function BlogListClient({ posts, locale }: BlogListClientProps) {
                 {/* Image */}
                 {post.image && (
                   <Link href={`/${locale}/blog/${slug}`}>
-                    <div className="relative w-full aspect-[16/9] overflow-hidden bg-slate-900">
+                    <div className="relative w-full aspect-video overflow-hidden bg-slate-900">
                       <Image
                         src={post.image}
                         alt={post.imageAlt || post.title || 'Blog post image'}
@@ -130,7 +130,7 @@ export function BlogListClient({ posts, locale }: BlogListClientProps) {
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent opacity-60" />
+                      <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-slate-900/20 to-transparent opacity-60" />
                     </div>
                   </Link>
                 )}
@@ -195,7 +195,7 @@ export function BlogListClient({ posts, locale }: BlogListClientProps) {
                 </div>
 
                 {/* Accent line */}
-                <div className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute bottom-0 left-0 h-1 w-full bg-linear-to-r from-blue-500 via-cyan-400 to-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" />
               </article>
             );
           })

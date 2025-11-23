@@ -143,7 +143,7 @@ export default function PreviewClient({
             {/* Content */}
             <div className="prose prose-invert prose-lg max-w-none
               prose-headings:font-bold prose-headings:tracking-tight
-              prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:bg-gradient-to-r prose-h2:from-blue-400 prose-h2:to-emerald-300 prose-h2:bg-clip-text prose-h2:text-transparent
+              prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:bg-linear-to-r prose-h2:from-blue-400 prose-h2:to-emerald-300 prose-h2:bg-clip-text prose-h2:text-transparent
               prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-4 prose-h3:text-slate-200
               prose-p:text-slate-300 prose-p:leading-relaxed
               prose-a:text-blue-400 prose-a:no-underline hover:prose-a:text-blue-300 hover:prose-a:underline
@@ -267,7 +267,7 @@ export default function PreviewClient({
             {/* Content */}
             <div className="prose prose-invert prose-lg max-w-none
               prose-headings:font-bold prose-headings:tracking-tight
-              prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:bg-gradient-to-r prose-h2:from-blue-400 prose-h2:to-emerald-300 prose-h2:bg-clip-text prose-h2:text-transparent
+              prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:bg-linear-to-r prose-h2:from-blue-400 prose-h2:to-emerald-300 prose-h2:bg-clip-text prose-h2:text-transparent
               prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-4 prose-h3:text-slate-200
               prose-p:text-slate-300 prose-p:leading-relaxed
               prose-a:text-blue-400 prose-a:no-underline hover:prose-a:text-blue-300 hover:prose-a:underline
@@ -315,7 +315,7 @@ export default function PreviewClient({
         <Background />
         
         {/* Preview Banner */}
-        <div className="fixed top-0 left-0 right-0 bg-yellow-500 text-slate-900 text-center py-2 font-bold z-[60] text-sm">
+  <div className="fixed top-0 left-0 right-0 bg-yellow-500 text-slate-900 text-center py-2 font-bold z-60 text-sm">
           LIVE PREVIEW MODE - TinaCMS Visual Editor - Changes are saved in real-time
         </div>
         

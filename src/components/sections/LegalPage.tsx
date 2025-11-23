@@ -42,7 +42,7 @@ export default function LegalPage({ data }: { data?: LegalPageData }) {
   const sections = (data?.sections || []).filter((s): s is Section => s !== null);
 
   return (
-    <main className="relative px-4 pt-28 pb-24 min-h-screen bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-slate-200">
+    <main className="relative px-4 pt-28 pb-24 min-h-screen bg-linear-to-b from-slate-900 via-slate-900 to-slate-950 text-slate-200">
       <div className="max-w-7xl mx-auto grid gap-10 md:grid-cols-[260px_minmax(0,1fr)]">
         {/* Sidebar - Spis treści */}
         {sections.length > 0 && (
@@ -84,7 +84,7 @@ export default function LegalPage({ data }: { data?: LegalPageData }) {
                 <>
                   {' '}
                   <span 
-                    className="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent"
+                    className="bg-linear-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent"
                     data-tina-field={tinaField(data, 'titleAccent')}
                   >
                     {data.titleAccent}

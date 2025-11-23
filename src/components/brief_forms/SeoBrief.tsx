@@ -88,7 +88,7 @@ const SeoBrief: React.FC = () => {
   return (
     <div
       ref={rootRef}
-      className={`transition-all duration-700 ease-[cubic-bezier(.4,0,.2,1)] will-change-transform will-change-opacity h-full flex flex-col
+  className={`transition-all duration-700 ease-in-out will-change-transform will-change-opacity h-full flex flex-col
         ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
       `}
     >
@@ -98,7 +98,7 @@ const SeoBrief: React.FC = () => {
             <span className="text-xs font-mono text-blue-400">{percent}%</span>
         </div>
         <div className="w-full h-2 bg-slate-900/50 rounded-full overflow-hidden border border-slate-800">
-          <div className="h-full bg-gradient-to-r from-blue-600 to-cyan-500 relative" style={{width:`${percent}%`,transition:"width 0.5s cubic-bezier(0.4, 0, 0.2, 1)"}}>
+          <div className="h-full bg-linear-to-r from-blue-600 to-cyan-500 relative" style={{width:`${percent}%`,transition:"width 0.5s cubic-bezier(0.4, 0, 0.2, 1)"}}>
             <div className="absolute inset-0 bg-white/20 animate-pulse-slow"></div>
           </div>
         </div>
@@ -159,7 +159,7 @@ const SeoBrief: React.FC = () => {
               ))}
               {current.type === "textarea" && (
                 <textarea
-                  className="w-full p-5 rounded-xl bg-slate-900/50 border border-slate-700 text-white text-lg placeholder-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none min-h-[160px]"
+                  className="w-full p-5 rounded-xl bg-slate-900/50 border border-slate-700 text-white text-lg placeholder-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none min-h-40"
                   rows={4}
                   value={form[current.key]||""}
                   onChange={e=>setForm({...form,[current.key]:e.target.value})}
@@ -208,7 +208,7 @@ const SeoBrief: React.FC = () => {
                   ${
                     (!form[current.key] || !isFormValid) || loading
                       ? "bg-slate-800 text-slate-500 cursor-not-allowed"
-                      : "bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:shadow-[0_0_20px_rgba(6,182,212,0.4)]"
+                      : "bg-linear-to-r from-blue-600 to-cyan-500 text-white hover:shadow-[0_0_20px_rgba(6,182,212,0.4)]"
                   }`}
                 onClick={handleSubmit}
                 disabled={(!form[current.key] || !isFormValid) || loading}

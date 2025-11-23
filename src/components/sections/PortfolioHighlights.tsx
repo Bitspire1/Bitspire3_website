@@ -34,11 +34,11 @@ const PortfolioHighlights: React.FC<PortfolioHighlightsProps> = ({ data }) => {
   return (
     <section className="py-24 px-4 bg-slate-900/20 relative overflow-hidden" id="portfolio-highlights">
       {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 via-transparent to-transparent pointer-events-none" />
+  <div className="absolute inset-0 bg-linear-to-b from-blue-500/5 via-transparent to-transparent pointer-events-none" />
       
       <div className="container mx-auto max-w-7xl relative z-10">
         <div className="text-center mb-16">
-          <div className="w-16 h-0.5 bg-gradient-to-r from-blue-600 to-cyan-500 mb-6 mx-auto"></div>
+          <div className="w-16 h-0.5 bg-linear-to-r from-blue-600 to-cyan-500 mb-6 mx-auto"></div>
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4" data-tina-field={tinaField(data, 'title')}>
             {data?.title || 'Wyróżnione projekty'}
           </h2>
@@ -72,7 +72,7 @@ const PortfolioHighlights: React.FC<PortfolioHighlightsProps> = ({ data }) => {
                 )}
                 
                 {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+                <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-slate-900/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
                 
                 {/* Featured badge */}
                 <div className="absolute top-4 right-4 bg-blue-500/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5">

@@ -108,7 +108,7 @@ export default async function PortfolioPostPage({ params }: PortfolioPostPagePro
               )}
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-400 to-emerald-300 bg-clip-text text-transparent tracking-tight mb-4">
+            <h1 className="text-4xl md:text-5xl font-extrabold bg-linear-to-r from-blue-400 to-emerald-300 bg-clip-text text-transparent tracking-tight mb-4">
               {post.title}
             </h1>
 

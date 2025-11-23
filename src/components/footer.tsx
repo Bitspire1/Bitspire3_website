@@ -140,7 +140,7 @@ export const Footer: React.FC<FooterProps> = ({ data, locale }) => {
             <ul className="space-y-3">
               {contact.email && (
                 <li className="flex items-center">
-                  <FaEnvelope className="w-4 h-4 text-blue-400 mr-3 flex-shrink-0" />
+                  <FaEnvelope className="w-4 h-4 text-blue-400 mr-3 shrink-0" />
                   <a 
                     href={`mailto:${contact.email}`}
                     className="text-gray-300 hover:text-white transition-colors text-sm"
@@ -151,7 +151,7 @@ export const Footer: React.FC<FooterProps> = ({ data, locale }) => {
               )}
               {contact.phone && (
                 <li className="flex items-center">
-                  <FaPhone className="w-4 h-4 text-blue-400 mr-3 flex-shrink-0" />
+                  <FaPhone className="w-4 h-4 text-blue-400 mr-3 shrink-0" />
                   <a 
                     href={`tel:${contact.phone.replace(/\s/g, '')}`}
                     className="text-gray-300 hover:text-white transition-colors text-sm"
@@ -162,7 +162,7 @@ export const Footer: React.FC<FooterProps> = ({ data, locale }) => {
               )}
               {contact.location && (
                 <li className="flex items-start">
-                  <FaMapMarkerAlt className="w-4 h-4 text-blue-400 mr-3 flex-shrink-0 mt-0.5" />
+                  <FaMapMarkerAlt className="w-4 h-4 text-blue-400 mr-3 shrink-0 mt-0.5" />
                   <div className="text-gray-300 text-sm">
                     <p>{contact.location}</p>
                   </div>

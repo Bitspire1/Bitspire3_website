@@ -62,7 +62,7 @@ const FAQ: React.FC<FAQProps> = ({ data }) => {
       
       <div className="container mx-auto max-w-4xl relative z-10">
         <div className="text-center mb-16">
-          <div className="w-16 h-0.5 bg-gradient-to-r from-blue-600 to-cyan-500 mb-6 mx-auto"></div>
+          <div className="w-16 h-0.5 bg-linear-to-r from-blue-600 to-cyan-500 mb-6 mx-auto"></div>
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4" data-tina-field={tinaField(data, 'title')}>
             {data?.title || 'Najczęściej zadawane pytania'}
           </h2>
@@ -85,7 +85,7 @@ const FAQ: React.FC<FAQProps> = ({ data }) => {
                   {item?.question || 'Pytanie'}
                 </span>
                 
-                <div className={`flex-shrink-0 w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center transition-all duration-300 ${openIndex === index ? 'rotate-180 bg-blue-500/20' : ''}`}>
+                <div className={`shrink-0 w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center transition-all duration-300 ${openIndex === index ? 'rotate-180 bg-blue-500/20' : ''}`}>
                   <svg className="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
@@ -100,7 +100,7 @@ const FAQ: React.FC<FAQProps> = ({ data }) => {
                 }`}
               >
                 <div className="px-6 pb-6 pt-0">
-                  <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent mb-4" />
+                  <div className="w-full h-px bg-linear-to-r from-transparent via-slate-700 to-transparent mb-4" />
                   <p className="text-slate-400 leading-relaxed" data-tina-field={tinaField(item, 'answer')}>
                     {item?.answer || 'Odpowiedź'}
                   </p>
