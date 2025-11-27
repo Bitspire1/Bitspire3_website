@@ -64,20 +64,22 @@ export const CursorLightCard: React.FC<{
       onClick={onClick}
       style={{ isolation: 'isolate' }}
     >
-      {/* Lokalne światełko dla tego kafelka */}
+      {/* Lokalne światełko dla tego kafelka - będzie pod treścią (z-0) */}
       <div 
-        className={`absolute pointer-events-none z-10 w-120 h-120 transition-opacity duration-200 ${
+        className={`absolute pointer-events-none z-0 w-120 h-120 transition-opacity duration-200 ${
           isHovering ? 'opacity-100' : 'opacity-0'
         }`}
         style={{
           left: localMousePosition.x - 240,
           top: localMousePosition.y - 240,
-          background: 'radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, rgba(59, 130, 246, 0.12) 40%, transparent 75%)',
-          filter: 'blur(8px)',
-          mixBlendMode: 'overlay'
+          background: 'radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, rgba(59, 130, 246, 0.15) 40%, transparent 75%)',
+          filter: 'blur(12px)',
+          mixBlendMode: 'soft-light'
         }}
       />
-      {children}
+      <div className="relative z-10 h-full">
+        {children}
+      </div>
     </div>
   );
 };

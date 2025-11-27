@@ -1,12 +1,25 @@
 import { Background } from "@/components/background";
 import { Hero } from "@/components/sections/Hero";
 import Technology from "@/components/sections/Technology";
-import { Offer } from "@/components/sections/Offer";
-import PortfolioHighlights from "@/components/sections/PortfolioHighlights";
-import HowWeWork from "@/components/sections/HowWeWork";
-import FAQ from "@/components/sections/FAQ";
-import Contact from "@/components/sections/Contact";
+import dynamic from "next/dynamic";
 import client from "../../../tina/__generated__/client";
+
+// Lazy load heavy components
+const Offer = dynamic(() => import("@/components/sections/Offer").then(mod => ({ default: mod.Offer })), {
+  loading: () => <div className="py-12" />,
+});
+
+const HowWeWork = dynamic(() => import("@/components/sections/HowWeWork"), {
+  loading: () => <div className="py-12" />,
+});
+
+const FAQ = dynamic(() => import("@/components/sections/FAQ"), {
+  loading: () => <div className="py-12" />,
+});
+
+const Contact = dynamic(() => import("@/components/sections/Contact"), {
+  loading: () => <div className="py-12" />,
+});
 
 // Load page data from TinaCMS
 async function getPageData(locale: string) {
@@ -26,34 +39,6 @@ async function getPageData(locale: string) {
     console.error('Error loading page data from TinaCMS:', error);
     // Return null to use fallback
     return null;
-  }
-}
-
-// Load selected portfolio projects
-async function getPortfolioProjects(selectedProjects: string[] | null | undefined) {
-  if (!selectedProjects || !Array.isArray(selectedProjects)) {
-    return [];
-  }
-
-  try {
-    const projects = await Promise.all(
-      selectedProjects.map(async (projectPath) => {
-        try {
-          // projectPath format: "pl/sklep-ecommerce" or "en/ecommerce-store"
-          const relativePath = `${projectPath}.mdx`;
-          const result = await client.queries.portfolio({ relativePath });
-          return result?.data?.portfolio || null;
-        } catch (error) {
-          console.error(`Error loading project ${projectPath}:`, error);
-          return null;
-        }
-      })
-    );
-
-    return projects.filter(p => p !== null);
-  } catch (error) {
-    console.error('Error loading portfolio projects:', error);
-    return [];
   }
 }
 
@@ -81,13 +66,9 @@ export default async function Home({
   };
 
   const data = pageData || fallbackData;
-  
-  // Load portfolio projects based on selectedProjects
-  const selectedProjectPaths = (data && 'selectedProjects' in data ? (data as Record<string, unknown>).selectedProjects : null) as string[] | null;
-  const portfolioProjects = await getPortfolioProjects(selectedProjectPaths);
 
   return (
-    <div className="min-h-screen bg-slate-900 pt-20 relative overflow-hidden">
+    <div className="min-h-screen pt-20 relative overflow-hidden">
       <Background />
       
       {/* Główna zawartość strony */}
@@ -101,17 +82,6 @@ export default async function Home({
         {Boolean(data && 'offer' in data) && (
           <div id="offer-section">
             <Offer data={data.offer as never} />
-          </div>
-        )}
-        
-        {/* Wyróżnione projekty */}
-        {data && 'portfolioHighlights' in data && portfolioProjects && portfolioProjects.length > 0 && (
-          <div id="portfolio-section">
-            <PortfolioHighlights data={{ 
-              projects: portfolioProjects as never[], 
-              title: (data.portfolioHighlights && typeof data.portfolioHighlights === 'object' && 'title' in data.portfolioHighlights ? (data.portfolioHighlights as Record<string, unknown>).title : null) as string | null,
-              description: (data.portfolioHighlights && typeof data.portfolioHighlights === 'object' && 'description' in data.portfolioHighlights ? (data.portfolioHighlights as Record<string, unknown>).description : null) as string | null
-            }} />
           </div>
         )}
         

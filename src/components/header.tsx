@@ -42,7 +42,7 @@ export const Header: React.FC<HeaderProps> = ({ data, locale }) => {
           max-w-screen-2xl mx-auto rounded-xl shadow-xl
           overflow-hidden
           transition-[max-height] duration-500 ease-in-out
-          ${open ? 'max-h-[100vh]' : 'max-h-16 md:max-h-full'}
+          ${open ? 'max-h-screen' : 'max-h-16 md:max-h-full'}
         `}
       >
     {/* górny pasek */}
@@ -51,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({ data, locale }) => {
           <div className="flex items-center">
             <PreviewLink
               href="/"
-              className="flex items-center shrink-0 -translate-y-[0px] motion-safe:transition-transform"
+              className="flex items-center shrink-0 translate-y-0 motion-safe:transition-transform"
               aria-label={logoAlt}
             >
               <Image
@@ -80,9 +80,11 @@ export const Header: React.FC<HeaderProps> = ({ data, locale }) => {
 
           {/* right: CTA + language switcher (desktop) and hamburger stays at the end for mobile */}
           <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-6">
+            <div className="flex items-center">
               <LanguageSwitcher />
+            </div>
 
+            <div className="hidden md:flex items-center gap-6">
               {ctaButton && (
                 <PreviewLink
                   href={ctaButton.href || '/brief/'}
@@ -97,7 +99,7 @@ export const Header: React.FC<HeaderProps> = ({ data, locale }) => {
             {/* hamburger for mobile */}
             <button
               onClick={() => setOpen((o) => !o)}
-              className={`md:hidden focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-lg h-10 w-10 flex items-center justify-center transition-colors translate-y-[1px] motion-safe:transition-transform ${open ? 'bg-transparent' : 'bg-transparent'}`}
+              className={`md:hidden focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-lg h-10 w-10 flex items-center justify-center transition-colors translate-y-px motion-safe:transition-transform ${open ? 'bg-transparent' : 'bg-transparent'}`}
               aria-label={open ? 'Zamknij menu' : 'Otwórz menu'}
               aria-expanded={open}
               aria-controls="mobile-menu"
@@ -126,37 +128,48 @@ export const Header: React.FC<HeaderProps> = ({ data, locale }) => {
         {/* mobilne menu */}
         <nav
           id="mobile-menu"
-          className={`md:hidden flex flex-col px-4 md:px-6 pb-4 divide-y divide-white/30 transition-all duration-300 ease-in-out origin-top ${open ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}
+          className={`md:hidden flex flex-col px-6 pb-6 transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}
           aria-label="Menu mobilne"
           aria-hidden={!open}
         >
-          <div className="flex flex-col gap-6 py-4" aria-label="Menu mobilne linki">
-            <div className="flex justify-center">
-              <LanguageSwitcher />
-            </div>
+          <div className="flex flex-col gap-3 pt-6 border-t border-slate-700/50" aria-label="Menu mobilne linki">
             {navigation.map((item, index) => (
               <PreviewLink
                 key={index}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="text-lg font-semibold text-slate-200 hover:text-white hover:underline underline-offset-4 decoration-blue-400/60 transition"
+                className="group relative overflow-hidden rounded-xl bg-linear-to-r from-slate-800/60 to-slate-700/40 border border-slate-600/30 hover:border-blue-400/50 backdrop-blur-sm px-6 py-4 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02]"
               >
-                {item.label}
+                <div className="flex items-center justify-between relative z-10">
+                  <span className="text-lg font-semibold text-white group-hover:text-blue-300 transition-colors">
+                    {item.label}
+                  </span>
+                  <svg className="w-5 h-5 text-slate-500 group-hover:text-blue-400 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+                <div className="absolute inset-0 bg-linear-to-r from-blue-600/0 via-blue-500/10 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </PreviewLink>
             ))}
-            {ctaButton && (
-              <PreviewLink
-                href={ctaButton.href || '/brief/'}
-                onClick={() => setOpen(false)}
-                className="mt-2 flex justify-center items-center py-3 w-full rounded-md transition focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900 bg-blue-600 hover:bg-blue-500 text-white"
-                aria-label={ctaButton.text || ''}
-              >
-                {ctaButton.text}
-              </PreviewLink>
-            )}
+            
+            <div className="flex flex-col gap-3 pt-3">
+              {ctaButton && (
+                <PreviewLink
+                  href={ctaButton.href || '/brief/'}
+                  onClick={() => setOpen(false)}
+                  className="relative overflow-hidden flex justify-center items-center py-4 w-full rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900 bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white text-lg font-bold shadow-lg shadow-blue-600/30 hover:shadow-blue-500/40 hover:scale-[1.02] group"
+                  aria-label={ctaButton.text || ''}
+                >
+                  <span className="relative z-10">{ctaButton.text}</span>
+                  <div className="absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                </PreviewLink>
+              )}
+            </div>
           </div>
         </nav>
       </div>
     </header>
   );
-}
+};
+
+export default Header;

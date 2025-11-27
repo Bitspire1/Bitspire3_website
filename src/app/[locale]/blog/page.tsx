@@ -29,7 +29,7 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
       });
 
     return (
-      <div className="min-h-screen bg-slate-900 pt-24 relative overflow-hidden">
+      <div className="min-h-screen pt-24 relative overflow-hidden">
         <Background />
         <main className="relative z-10 max-w-7xl mx-auto px-6 pb-24">
           <header className="mb-14 text-center">

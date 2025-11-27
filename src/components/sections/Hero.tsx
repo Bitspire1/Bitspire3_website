@@ -19,7 +19,7 @@ interface HeroData {
 
 export const Hero: React.FC<{ data?: HeroData }> = ({ data }) => {
   return (
-    <section className="relative py-24 lg:py-40 overflow-hidden" data-tina-field={tinaField(data, 'hero')}>
+    <section className="relative py-16 lg:py-24 overflow-hidden" data-tina-field={tinaField(data, 'hero')}>
       {/* Spotlight Effect */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-blue-500/20 blur-[120px] rounded-full pointer-events-none" />
       
@@ -27,12 +27,12 @@ export const Hero: React.FC<{ data?: HeroData }> = ({ data }) => {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           
           {/* Left Side - Text */}
-          <div className="text-center lg:text-left">
-            <div className="inline-block px-4 py-1.5 mb-6 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-sm">
-              <span className="text-blue-400 text-sm font-medium tracking-wide uppercase">Next-Gen Development</span>
+          <div className="text-center lg:text-left relative z-20">
+            <div className="inline-block px-4 py-1.5 mb-6 rounded-full border border-blue-500/30 bg-blue-500/20 backdrop-blur-md shadow-lg shadow-blue-500/10">
+              <span className="text-blue-300 text-sm font-bold tracking-wide uppercase drop-shadow-sm">Next-Gen Development</span>
             </div>
             
-            <h1 className="text-5xl lg:text-7xl font-bold text-white mb-8 leading-tight tracking-tight">
+            <h1 className="text-5xl lg:text-7xl font-bold text-white mb-8 leading-tight tracking-tight drop-shadow-lg">
               <span data-tina-field={tinaField(data, 'title')}>
                 {data?.title || 'Nowoczesne'}
               </span>
@@ -60,19 +60,18 @@ export const Hero: React.FC<{ data?: HeroData }> = ({ data }) => {
           </div>
 
           {/* Right Side - Visuals */}
-          <div className="relative h-[500px] lg:h-[600px] flex items-center justify-center">
+          <div className="absolute inset-0 z-0 opacity-20 lg:opacity-100 lg:relative lg:inset-auto lg:z-auto lg:h-[600px] flex items-center justify-center pointer-events-none lg:pointer-events-auto">
             {data?.image ? (
               <div className="relative w-full h-full animate-float">
                  <div className="absolute inset-0 bg-linear-to-tr from-blue-500/20 to-cyan-500/20 rounded-3xl blur-2xl -z-10" />
-                 <div className="tech-border rounded-3xl p-2 h-full w-full bg-slate-900/50 backdrop-blur-sm">
-                    <Image
-                      src={data.image}
-                      alt="Hero illustration"
-                      fill
-                      className="object-contain rounded-2xl"
-                      data-tina-field={tinaField(data, 'image')}
-                    />
-                 </div>
+                 <Image
+                   src={data.image}
+                   alt="Hero illustration"
+                   fill
+                   className="object-contain drop-shadow-2xl"
+                   data-tina-field={tinaField(data, 'image')}
+                   priority
+                 />
               </div>
             ) : (
               <div className="relative w-full h-full flex items-center justify-center">

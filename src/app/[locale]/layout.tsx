@@ -9,6 +9,13 @@ import { CookieBanner } from '@/components/ui/CookieBanner';
 import { AnalyticsGate } from '@/providers/AnalyticsGate';
 import client from '../../../tina/__generated__/client';
 import '../globals.css';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  other: {
+    'X-UA-Compatible': 'IE=edge',
+  },
+};
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -64,7 +71,8 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <head>
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://content.tinajs.io" />
+        <link rel="preconnect" href="https://content.tinajs.io" crossOrigin="anonymous" />
       </head>
       <body className="antialiased bg-slate-900">
         <NextIntlClientProvider messages={messages}>

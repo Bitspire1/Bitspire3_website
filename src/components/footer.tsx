@@ -220,3 +220,5 @@ export const Footer: React.FC<FooterProps> = ({ data, locale }) => {
     </footer>
   );
 };
+
+export default Footer;

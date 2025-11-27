@@ -58,14 +58,14 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
   }, [form]);
 
   return (
-    <section className="py-24 px-4 bg-slate-900/20" id="contact">
+    <section className="py-12 px-4 bg-slate-900/20" id="contact">
       <div className="container mx-auto max-w-7xl">
-        <div className="text-center mb-12">
-          <div className="w-16 h-0.5 bg-linear-to-r from-blue-600 to-cyan-500 mb-6 mx-auto"></div>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4" data-tina-field={tinaField(data, 'title')}>
+        <div className="text-center mb-8">
+          <div className="w-16 h-0.5 bg-linear-to-r from-blue-600 to-cyan-500 mb-4 mx-auto"></div>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-3" data-tina-field={tinaField(data, 'title')}>
             {data?.title || 'Porozmawiajmy o Twoim projekcie'}
           </h2>
-          <p className="text-slate-400 text-lg" data-tina-field={tinaField(data, 'description')}>
+          <p className="text-slate-300 text-base" data-tina-field={tinaField(data, 'description')}>
             {data?.description || 'Wypełnij formularz, a my skontaktujemy się z Tobą w ciągu 24 godzin'}
           </p>
         </div>

@@ -3,10 +3,10 @@
 /* Modern Professional Tech Theme */
 :root {
   /* Backgrounds - Deep Space */
-  --bg-primary: #020410; /* Deepest Blue/Black */
-  --bg-secondary: #0B1021; /* Slightly lighter */
-  --bg-tertiary: #151B33; /* Component background */
-  --bg-glass: rgba(11, 16, 33, 0.7);
+  --bg-primary: #0f172a; /* Slate 900 - lighter for better contrast */
+  --bg-secondary: #1e293b; /* Slate 800 */
+  --bg-tertiary: #334155; /* Slate 700 - Component background */
+  --bg-glass: rgba(30, 41, 59, 0.4);
   
   /* Accents - Electric Blue & Cyan */
   --accent-primary: #3b82f6; /* Blue 500 */
@@ -16,17 +16,17 @@
   
   /* Text */
   --text-primary: #f8fafc; /* Slate 50 */
-  --text-secondary: #94a3b8; /* Slate 400 */
-  --text-muted: #64748b; /* Slate 500 */
+  --text-secondary: #cbd5e1; /* Slate 300 - more visible */
+  --text-muted: #94a3b8; /* Slate 400 */
   
   /* Borders */
-  --border-subtle: rgba(148, 163, 184, 0.1);
-  --border-light: rgba(148, 163, 184, 0.2);
-  --border-accent: rgba(59, 130, 246, 0.3);
+  --border-subtle: rgba(148, 163, 184, 0.15);
+  --border-light: rgba(148, 163, 184, 0.25);
+  --border-accent: rgba(59, 130, 246, 0.4);
   
   /* Shadows */
-  --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.15);
-  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --shadow-glow: 0 0 30px rgba(59, 130, 246, 0.2);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
   
   /* Animations */
   --ease-tech: cubic-bezier(0.22, 1, 0.36, 1);
@@ -39,18 +39,27 @@ html, body, #__next {
   scroll-behavior: smooth;
 }
 
+/* Page shadows for depth */
+.page-top-shadow {
+  box-shadow: inset 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+}
+
+.page-bottom-shadow {
+  box-shadow: inset 0 -10px 30px -10px rgba(0, 0, 0, 0.8);
+}
+
 /* Utilities */
 .glass-panel {
   background: var(--bg-glass);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-light);
   box-shadow: var(--shadow-card);
 }
 
 .tech-border {
   position: relative;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-light);
   background: var(--bg-secondary);
   overflow: hidden;
 }
@@ -63,7 +72,7 @@ html, body, #__next {
   right: 0;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 .text-gradient {

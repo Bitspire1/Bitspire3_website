@@ -42,7 +42,7 @@ export const CookieBanner: React.FC = () => {
     <>
       <div
         className={
-          `fixed bottom-4 left-1/2 -translate-x-1/2 z-[150] w-[min(100%-1rem,760px)]` +
+          `fixed bottom-4 left-1/2 -translate-x-1/2 z-150 w-[min(100%-1rem,760px)]` +
           ` bg-slate-900/95 border border-slate-700 backdrop-blur-md rounded-2xl shadow-2xl p-6 md:p-7` +
           ` transition-all duration-300 ease-out transform` +
           ` ${closing || entering ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'}`
