@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "tinacms dev -c \"next dev\"",
-    "build": "tinacms build && node -r ./shims/alias.js ./node_modules/next/dist/bin/next build",
-    "start": "tinacms build && node -r ./shims/alias.js ./node_modules/next/dist/bin/next start",
+    "build": "tinacms build && node ./scripts/build.js",
+    "start": "tinacms build && node ./scripts/start.js",
     "prod": "cross-env NODE_ENV=production npm run start",
     "lint": "eslint"
   },
