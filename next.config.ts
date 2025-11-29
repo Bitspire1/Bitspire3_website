@@ -35,9 +35,8 @@ const nextConfig: NextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   
-  // Experimental features for better performance
+  // Experimental features (kept minimal to reduce internal worker usage)
   experimental: {
-    optimizePackageImports: ['react', 'react-dom', 'next-intl', 'tinacms'],
     scrollRestoration: true,
   },
   

@@ -3,24 +3,15 @@
 // Production-ready Next.js server starter
 // This file is used by hosting panels as the application entry point
 
-import { createServer } from 'http';
-import next from 'next';
+const { createServer } = require('http');
+const next = require('next');
 
 const port = parseInt(process.env.PORT || '3000', 10);
 const hostname = process.env.HOSTNAME || 'localhost';
 const dev = process.env.NODE_ENV !== 'production';
 
 // Configure Next.js with minimal worker usage for constrained environments
-const app = next({ 
-  dev,
-  hostname,
-  port,
-  // Disable worker threads in production to avoid EPERM on restrictive hosts
-  ...(dev ? {} : {
-    turbo: false,
-    minimalMode: true,
-  })
-});
+const app = next({ dev, hostname, port });
 
 const handle = app.getRequestHandler();
 
