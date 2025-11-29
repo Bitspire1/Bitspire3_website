@@ -1,18 +1,45 @@
-// Simple Next.js custom server starter
+#!/usr/bin/env node
 
-import { createServer } from 'http';
-import next from 'next';
+// Production-ready Next.js server starter
+// This file is used by hosting panels as the application entry point
 
-const port = process.env.PORT || 3000;
+const { createServer } = require('http');
+const next = require('next');
+
+const port = parseInt(process.env.PORT || '3000', 10);
+const hostname = process.env.HOSTNAME || 'localhost';
 const dev = process.env.NODE_ENV !== 'production';
-const app = next({ dev });
+
+// Configure Next.js with minimal worker usage for constrained environments
+const app = next({ 
+  dev,
+  hostname,
+  port,
+  // Disable worker threads in production to avoid EPERM on restrictive hosts
+  ...(dev ? {} : {
+    turbo: false,
+    minimalMode: true,
+  })
+});
+
 const handle = app.getRequestHandler();
 
-app.prepare().then(() => {
-  createServer((req, res) => {
-    handle(req, res);
-  }).listen(port, (err) => {
-    if (err) throw err;
-    console.log(`> Ready on http://localhost:${port}`);
+app.prepare()
+  .then(() => {
+    createServer(async (req, res) => {
+      try {
+        await handle(req, res);
+      } catch (err) {
+        console.error('Error handling request:', err);
+        res.statusCode = 500;
+        res.end('Internal Server Error');
+      }
+    }).listen(port, hostname, () => {
+      console.log(`> Ready on http://${hostname}:${port}`);
+      console.log(`> Environment: ${dev ? 'development' : 'production'}`);
+    });
+  })
+  .catch((err) => {
+    console.error('Failed to start Next.js:', err);
+    process.exit(1);
   });
-});
