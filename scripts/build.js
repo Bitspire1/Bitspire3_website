@@ -1,4 +1,3 @@
-const { spawnSync } = require('child_process');
 const path = require('path');
 
 // Force single-threaded mode for hosts that block pthread_create
@@ -21,12 +20,10 @@ console.log('Building with single-threaded mode (no workers):', {
   NEXT_DISABLE_SWC: process.env.NEXT_DISABLE_SWC,
 });
 
-const res = spawnSync(process.execPath, [nextBin, 'build', '--no-lint'], { 
-  stdio: 'inherit',
-  env: process.env
-});
-if (res.error) {
-  console.error('Build process failed to start:', res.error);
+// Direct require instead of spawn to avoid EPERM on hosts that block process creation
+try {
+  require(nextBin);
+} catch (error) {
+  console.error('Build failed:', error.message);
   process.exit(1);
 }
-process.exit(res.status);
