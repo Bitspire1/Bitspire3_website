@@ -1,10 +1,11 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-require-imports */
 
 // Production-ready Next.js server starter
 // This file is used by hosting panels as the application entry point
 
-import { createServer } from 'http';
-import next from 'next';
+const { createServer } = require('http');
+const next = require('next');
 
 const port = parseInt(process.env.PORT || '3000', 10);
 const hostname = process.env.HOSTNAME || 'localhost';
