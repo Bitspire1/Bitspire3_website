@@ -2,6 +2,7 @@
 
 import React, { useState, lazy, Suspense } from 'react';
 import { tinaField } from 'tinacms/dist/react';
+import { CursorLightCard } from '@/hooks/cursor-light';
 
 // Lazy load formularze
 const WebsiteBrief = lazy(() => import('@/components/brief_forms/WebsiteBrief'));
@@ -122,7 +123,7 @@ export default function Brief({ data }: { data?: BriefData }) {
             </div>
 
             {/* Formularz brief */}
-            <div className="relative rounded-2xl glass-panel p-8 flex-1 min-h-[480px] overflow-y-auto">
+            <CursorLightCard className="relative rounded-2xl glass-panel p-8 flex-1 min-h-[480px] overflow-y-auto">
               <Suspense fallback={
                 <div className="flex items-center justify-center py-20 h-full">
                   <div className="text-center">
@@ -136,7 +137,7 @@ export default function Brief({ data }: { data?: BriefData }) {
                 {activeTab === 'logo' && <LogoBrief />}
                 {activeTab === 'seo' && <SeoBrief />}
               </Suspense>
-            </div>
+            </CursorLightCard>
           </div>
 
           {/* Prawa strona - Kontakt (1 kolumna) */}
