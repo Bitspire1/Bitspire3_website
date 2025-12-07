@@ -31,10 +31,10 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
 .env
 .env.local
 .env.*.local
+.env.production.local
 
 # vercel
 .vercel
@@ -43,20 +43,22 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Ensure node_modules is never committed
-node_modules/
-**/node_modules/
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
 
-# Build artifacts
+# OS
+Thumbs.db
+.DS_Store
 
-# TinaCMS cache
-.tina-cache/
+# TinaCMS - only ignore lock file, NOT the tina/ folder or __generated__/
+tina/tina-lock.json
+
+# Cache
+.cache/
 .next/
-out/
 dist/
 build/
-
-# Cache directories
-.cache/
-.tinacms/
-.tina/
