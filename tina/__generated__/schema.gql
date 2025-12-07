@@ -409,7 +409,6 @@ type PagesOfferServices {
 
 type PagesOffer {
   title: String
-  titleAccent: String
   subtitle: String
   sectionLabel: String
   services: [PagesOfferServices]
@@ -551,7 +550,6 @@ input PagesOfferServicesFilter {
 
 input PagesOfferFilter {
   title: StringFilter
-  titleAccent: StringFilter
   subtitle: StringFilter
   sectionLabel: StringFilter
   services: PagesOfferServicesFilter
@@ -817,7 +815,6 @@ input PagesOfferServicesMutation {
 
 input PagesOfferMutation {
   title: String
-  titleAccent: String
   subtitle: String
   sectionLabel: String
   services: [PagesOfferServicesMutation]

@@ -631,11 +631,6 @@ export default defineConfig({
               },
               {
                 type: "string",
-                name: "titleAccent",
-                label: "Title Accent (Highlighted Text)",
-              },
-              {
-                type: "string",
                 name: "subtitle",
                 label: "Section Subtitle",
                 ui: {

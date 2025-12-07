@@ -123,7 +123,6 @@ fragment PagesParts on Pages {
   offer {
     __typename
     title
-    titleAccent
     subtitle
     sectionLabel
     services {
