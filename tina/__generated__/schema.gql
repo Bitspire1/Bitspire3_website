@@ -175,7 +175,6 @@ type FooterNavigation {
 type FooterSocialMedia {
   platform: String
   url: String
-  icon: String
 }
 
 type FooterLegalLinks {
@@ -211,7 +210,6 @@ input FooterNavigationFilter {
 input FooterSocialMediaFilter {
   platform: StringFilter
   url: StringFilter
-  icon: StringFilter
 }
 
 input FooterLegalLinksFilter {
@@ -736,7 +734,6 @@ input FooterNavigationMutation {
 input FooterSocialMediaMutation {
   platform: String
   url: String
-  icon: String
 }
 
 input FooterLegalLinksMutation {

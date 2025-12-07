@@ -170,11 +170,6 @@ export default defineConfig({
                 name: "url",
                 label: "URL",
               },
-              {
-                type: "string",
-                name: "icon",
-                label: "Icon Name",
-              },
             ],
           },
           {
