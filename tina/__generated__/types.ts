@@ -239,20 +239,20 @@ export type DocumentNode = Header | Footer | Portfolio | Blog | Pages | Folder;
 
 export type HeaderNavigation = {
   __typename?: 'HeaderNavigation';
-  label?: Maybe<Scalars['String']['output']>;
-  href?: Maybe<Scalars['String']['output']>;
+  label: Scalars['String']['output'];
+  href: Scalars['String']['output'];
 };
 
 export type HeaderCtaButton = {
   __typename?: 'HeaderCtaButton';
-  text?: Maybe<Scalars['String']['output']>;
-  href?: Maybe<Scalars['String']['output']>;
+  text: Scalars['String']['output'];
+  href: Scalars['String']['output'];
 };
 
 export type Header = Node & Document & {
   __typename?: 'Header';
-  logo?: Maybe<Scalars['String']['output']>;
-  logoAlt?: Maybe<Scalars['String']['output']>;
+  logo: Scalars['String']['output'];
+  logoAlt: Scalars['String']['output'];
   navigation?: Maybe<Array<Maybe<HeaderNavigation>>>;
   ctaButton?: Maybe<HeaderCtaButton>;
   id: Scalars['ID']['output'];
@@ -1200,7 +1200,7 @@ export type PagesMutation = {
   body?: InputMaybe<Scalars['JSON']['input']>;
 };
 
-export type HeaderPartsFragment = { __typename: 'Header', logo?: string | null, logoAlt?: string | null, navigation?: Array<{ __typename: 'HeaderNavigation', label?: string | null, href?: string | null } | null> | null, ctaButton?: { __typename: 'HeaderCtaButton', text?: string | null, href?: string | null } | null };
+export type HeaderPartsFragment = { __typename: 'Header', logo: string, logoAlt: string, navigation?: Array<{ __typename: 'HeaderNavigation', label: string, href: string } | null> | null, ctaButton?: { __typename: 'HeaderCtaButton', text: string, href: string } | null };
 
 export type FooterPartsFragment = { __typename: 'Footer', companyName?: string | null, description?: string | null, copyright?: string | null, cookieSettingsText?: string | null, contact?: { __typename: 'FooterContact', email?: string | null, phone?: string | null, location?: string | null } | null, navigation?: Array<{ __typename: 'FooterNavigation', label?: string | null, href?: string | null } | null> | null, socialMedia?: Array<{ __typename: 'FooterSocialMedia', platform?: string | null, url?: string | null } | null> | null, legalLinks?: Array<{ __typename: 'FooterLegalLinks', label?: string | null, href?: string | null } | null> | null };
 
@@ -1215,7 +1215,7 @@ export type HeaderQueryVariables = Exact<{
 }>;
 
 
-export type HeaderQuery = { __typename?: 'Query', header: { __typename: 'Header', id: string, logo?: string | null, logoAlt?: string | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, navigation?: Array<{ __typename: 'HeaderNavigation', label?: string | null, href?: string | null } | null> | null, ctaButton?: { __typename: 'HeaderCtaButton', text?: string | null, href?: string | null } | null } };
+export type HeaderQuery = { __typename?: 'Query', header: { __typename: 'Header', id: string, logo: string, logoAlt: string, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, navigation?: Array<{ __typename: 'HeaderNavigation', label: string, href: string } | null> | null, ctaButton?: { __typename: 'HeaderCtaButton', text: string, href: string } | null } };
 
 export type HeaderConnectionQueryVariables = Exact<{
   before?: InputMaybe<Scalars['String']['input']>;
@@ -1227,7 +1227,7 @@ export type HeaderConnectionQueryVariables = Exact<{
 }>;
 
 
-export type HeaderConnectionQuery = { __typename?: 'Query', headerConnection: { __typename?: 'HeaderConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'HeaderConnectionEdges', cursor: string, node?: { __typename: 'Header', id: string, logo?: string | null, logoAlt?: string | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, navigation?: Array<{ __typename: 'HeaderNavigation', label?: string | null, href?: string | null } | null> | null, ctaButton?: { __typename: 'HeaderCtaButton', text?: string | null, href?: string | null } | null } | null } | null> | null } };
+export type HeaderConnectionQuery = { __typename?: 'Query', headerConnection: { __typename?: 'HeaderConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'HeaderConnectionEdges', cursor: string, node?: { __typename: 'Header', id: string, logo: string, logoAlt: string, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, navigation?: Array<{ __typename: 'HeaderNavigation', label: string, href: string } | null> | null, ctaButton?: { __typename: 'HeaderCtaButton', text: string, href: string } | null } | null } | null> | null } };
 
 export type FooterQueryVariables = Exact<{
   relativePath: Scalars['String']['input'];

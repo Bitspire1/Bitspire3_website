@@ -38,12 +38,14 @@ var config_default = defineConfig({
           {
             type: "image",
             name: "logo",
-            label: "Logo"
+            label: "Logo",
+            required: true
           },
           {
             type: "string",
             name: "logoAlt",
-            label: "Logo Alt Text"
+            label: "Logo Alt Text",
+            required: true
           },
           {
             type: "object",
@@ -54,12 +56,14 @@ var config_default = defineConfig({
               {
                 type: "string",
                 name: "label",
-                label: "Label"
+                label: "Label",
+                required: true
               },
               {
                 type: "string",
                 name: "href",
-                label: "Link"
+                label: "Link",
+                required: true
               }
             ]
           },
@@ -71,12 +75,14 @@ var config_default = defineConfig({
               {
                 type: "string",
                 name: "text",
-                label: "Button Text"
+                label: "Button Text",
+                required: true
               },
               {
                 type: "string",
                 name: "href",
-                label: "Button Link"
+                label: "Button Link",
+                required: true
               }
             ]
           }

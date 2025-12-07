@@ -100,18 +100,18 @@ type Collection {
 union DocumentNode = Header | Footer | Portfolio | Blog | Pages | Folder
 
 type HeaderNavigation {
-  label: String
-  href: String
+  label: String!
+  href: String!
 }
 
 type HeaderCtaButton {
-  text: String
-  href: String
+  text: String!
+  href: String!
 }
 
 type Header implements Node & Document {
-  logo: String
-  logoAlt: String
+  logo: String!
+  logoAlt: String!
   navigation: [HeaderNavigation]
   ctaButton: HeaderCtaButton
   id: ID!
