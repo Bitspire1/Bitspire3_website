@@ -1,4 +1,6 @@
 import React from "react";
+import { promises as fs } from "fs";
+import path from "path";
 import client from "@tina/__generated__/client";
 import { Background } from "@/components/background";
 import Link from "next/link";
@@ -8,24 +10,40 @@ import { convertTinaBodyToMarkdown } from "@/lib/tina-utils";
 import { markdownToHtml } from "@/lib/markdown-to-html";
 import { RelatedArticles } from "@/components/blog/RelatedArticles";
 
-export async function generateStaticParams() {
-  const blogConnection = await client.queries.blogConnection();
-  const edges = blogConnection?.data?.blogConnection?.edges;
-
-  if (!edges) {
-    throw new Error("Blog params are missing");
+// Read blog files from content/ directory to generate static params
+// Avoids 403 Forbidden errors with read-only tokens during build
+async function getBlogSlugs() {
+  try {
+    const contentDir = path.join(process.cwd(), "content", "blog");
+    const locales = await fs.readdir(contentDir);
+    
+    const params: { locale: string; slug: string }[] = [];
+    
+    for (const locale of locales) {
+      const localeDir = path.join(contentDir, locale);
+      const stat = await fs.stat(localeDir);
+      
+      if (!stat.isDirectory()) continue;
+      
+      const files = await fs.readdir(localeDir);
+      for (const file of files) {
+        if (file.endsWith(".mdx")) {
+          const slug = file.replace(/\.mdx$/, "");
+          params.push({ locale, slug });
+        }
+      }
+    }
+    
+    return params;
+  } catch (error) {
+    console.warn("[blog/[slug]] Failed to read blog files from filesystem:", error);
+    return [];
   }
+}
 
-  return edges
-    .map(edge => edge?.node)
-    .filter((node): node is NonNullable<typeof node> => !!node && !!node._sys?.relativePath && !!node._sys?.filename)
-    .map((node) => node._sys.relativePath.split('/'))
-    .filter((parts) => Array.isArray(parts) && typeof parts[0] === 'string' && parts[0].length > 0)
-    .map((parts) => ({
-      locale: parts[0],
-      slug: parts[parts.length - 1]?.replace(/\.mdx$/, '') || '',
-    }))
-    .filter((p) => p.locale && p.slug);
+export async function generateStaticParams() {
+  // Read from filesystem (no token required, faster, more reliable)
+  return await getBlogSlugs();
 }
 
 export default async function BlogPostPage({ 

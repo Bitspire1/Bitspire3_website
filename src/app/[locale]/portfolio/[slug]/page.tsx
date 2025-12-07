@@ -1,4 +1,6 @@
 import React from "react";
+import { promises as fs } from "fs";
+import path from "path";
 import client from "@tina/__generated__/client";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -14,24 +16,40 @@ interface PortfolioPostPageProps {
   }>;
 }
 
-export async function generateStaticParams() {
-  const portfolioConnection = await client.queries.portfolioConnection();
-  const edges = portfolioConnection?.data?.portfolioConnection?.edges;
-
-  if (!edges) {
-    throw new Error("Portfolio params are missing");
+// Read portfolio files from content/ directory to generate static params
+// Avoids 403 Forbidden errors with read-only tokens during build
+async function getPortfolioSlugs() {
+  try {
+    const contentDir = path.join(process.cwd(), "content", "portfolio");
+    const locales = await fs.readdir(contentDir);
+    
+    const params: { locale: string; slug: string }[] = [];
+    
+    for (const locale of locales) {
+      const localeDir = path.join(contentDir, locale);
+      const stat = await fs.stat(localeDir);
+      
+      if (!stat.isDirectory()) continue;
+      
+      const files = await fs.readdir(localeDir);
+      for (const file of files) {
+        if (file.endsWith(".mdx")) {
+          const slug = file.replace(/\.mdx$/, "");
+          params.push({ locale, slug });
+        }
+      }
+    }
+    
+    return params;
+  } catch (error) {
+    console.warn("[portfolio/[slug]] Failed to read portfolio files from filesystem:", error);
+    return [];
   }
+}
 
-  return edges
-    .map(edge => edge?.node)
-    .filter((node): node is NonNullable<typeof node> => !!node && !!node._sys?.relativePath && !!node._sys?.filename)
-    .map((node) => node._sys.relativePath.split('/'))
-    .filter((parts) => Array.isArray(parts) && typeof parts[0] === 'string' && parts[0].length > 0)
-    .map((parts) => ({
-      locale: parts[0],
-      slug: parts[parts.length - 1]?.replace(/\.mdx$/, '') || '',
-    }))
-    .filter((p) => p.locale && p.slug);
+export async function generateStaticParams() {
+  // Read from filesystem (no token required, faster, more reliable)
+  return await getPortfolioSlugs();
 }
 
 export default async function PortfolioPostPage({ params }: PortfolioPostPageProps) {
