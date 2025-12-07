@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import Image from 'next/image';
 import { LanguageSwitcher } from './ui/LanguageSwitcher';
 import { PreviewLink } from './ui/PreviewLink';
@@ -14,23 +14,31 @@ interface HeaderProps {
   locale?: string;
 }
 
-export const Header: React.FC<HeaderProps> = ({ data, locale }) => {
+const HeaderContent: React.FC<HeaderProps> = ({ data, locale }) => {
   const [open, setOpen] = useState(false);
-  
-  // Default values if data is not provided
-  const logo = data?.logo || '/logo/Bitspire logo main.svg';
-  const logoAlt = data?.logoAlt || 'Bitspire - strona główna';
-  const navigation = data?.navigation?.filter((item): item is { label: string; href: string } => 
+
+  if (!data) {
+    throw new Error('Header content missing from TinaCMS');
+  }
+
+  const logo = data.logo;
+  const logoAlt = data.logoAlt;
+  const navigation = data.navigation?.filter((item): item is { label: string; href: string } =>
     item !== null && typeof item.label === 'string' && typeof item.href === 'string'
-  ) || [
-    { label: 'Portfolio', href: '/portfolio/' },
-    { label: 'Blog', href: '/blog/' },
-    { label: 'Brief', href: '/brief/' }
-  ];
-  const ctaButton = data?.ctaButton || { 
-    text: locale === 'en' ? 'Get a Quote' : 'Zapytaj o ofertę', 
-    href: '/brief/' 
-  };
+  ) || [];
+  const ctaButton = data.ctaButton;
+
+  if (!logo || !logoAlt) {
+    throw new Error('Header logo or alt text missing in Tina content');
+  }
+
+  if (!navigation.length) {
+    throw new Error('Header navigation missing in Tina content');
+  }
+
+  if (!ctaButton?.text || !ctaButton?.href) {
+    throw new Error('Header CTA missing in Tina content');
+  }
 
   return (
     <header
@@ -172,4 +180,5 @@ export const Header: React.FC<HeaderProps> = ({ data, locale }) => {
   );
 };
 
+export const Header = memo(HeaderContent);
 export default Header;

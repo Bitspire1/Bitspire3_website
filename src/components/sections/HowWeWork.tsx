@@ -25,46 +25,29 @@ interface HowWeWorkProps {
 }
 
 const HowWeWork: React.FC<HowWeWorkProps> = ({ data }) => {
-  const defaultSteps: ProcessStep[] = [
-    {
-      title: 'Brief i analiza',
-      description: 'Wypełniasz brief, a my przeprowadzamy dogłębną analizę Twoich potrzeb, celów biznesowych i grupy docelowej. Określamy zakres projektu i ustalamy harmonogram.',
-      icon: 'clipboard',
-      duration: '1-2 dni'
-    },
-    {
-      title: 'Projektowanie UX/UI',
-      description: 'Tworzymy wireframe\'y i projekt graficzny strony. Dbamy o intuicyjny interfejs i atrakcyjny design. Prezentujemy wizualizacje do akceptacji.',
-      icon: 'design',
-      duration: '3-7 dni'
-    },
-    {
-      title: 'Programowanie',
-      description: 'Zamieniamy projekt w działającą stronę. Używamy najnowszych technologii, dbamy o wydajność, bezpieczeństwo i SEO. Regularnie prezentujemy postępy.',
-      icon: 'code',
-      duration: '7-21 dni'
-    },
-    {
-      title: 'Testy i optymalizacja',
-      description: 'Testujemy stronę na różnych urządzeniach i przeglądarkach. Optymalizujemy szybkość ładowania i doświadczenie użytkownika. Wprowadzamy poprawki.',
-      icon: 'test',
-      duration: '2-5 dni'
-    },
-    {
-      title: 'Wdrożenie',
-      description: 'Publikujemy stronę na serwerze produkcyjnym. Konfigurujemy domenę, certyfikat SSL i narzędzia analityczne. Szkolimy Cię z obsługi panelu.',
-      icon: 'rocket',
-      duration: '1-2 dni'
-    },
-    {
-      title: 'Wsparcie i rozwój',
-      description: 'Po uruchomieniu zapewniamy wsparcie techniczne, monitorujemy działanie strony i wprowadzamy aktualizacje. Pomagamy rozwijać projekt.',
-      icon: 'support',
-      duration: 'Ciągłe'
-    }
-  ];
+  if (!data) {
+    throw new Error('HowWeWork content missing from TinaCMS');
+  }
 
-  const steps = data?.steps && data.steps.length > 0 ? data.steps : defaultSteps;
+  const steps = data.steps && data.steps.length > 0 ? data.steps : [];
+
+  if (!data.title || !data.description) {
+    throw new Error('HowWeWork title/description missing in Tina content');
+  }
+
+  if (!steps.length) {
+    throw new Error('HowWeWork steps missing in Tina content');
+  }
+
+  steps.forEach((step, index) => {
+    if (!step?.title || !step?.description) {
+      throw new Error(`HowWeWork step ${index} missing title/description in Tina content`);
+    }
+  });
+
+  if (!data.ctaTitle || !data.ctaDescription || !data.ctaButton) {
+    throw new Error('HowWeWork CTA fields missing in Tina content');
+  }
 
   const getIcon = (iconName?: string | null) => {
     switch (iconName) {
@@ -108,10 +91,10 @@ const HowWeWork: React.FC<HowWeWorkProps> = ({ data }) => {
         <div className="text-center mb-10">
           <div className="w-16 h-0.5 bg-linear-to-r from-blue-600 to-cyan-500 mb-4 mx-auto"></div>
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-3" data-tina-field={tinaField(data, 'title')}>
-            {data?.title || 'Jak pracujemy?'}
+            {data.title}
           </h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto" data-tina-field={tinaField(data, 'description')}>
-            {data?.description || 'Poznaj nasz sprawdzony proces realizacji projektów'}
+            {data.description}
           </p>
         </div>
 
@@ -145,7 +128,7 @@ const HowWeWork: React.FC<HowWeWorkProps> = ({ data }) => {
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-2">
                               <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors" data-tina-field={tinaField(step, 'title')}>
-                                {step?.title || 'Krok'}
+                                {step?.title}
                               </h3>
                               {step?.duration && (
                                 <span className="text-xs px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 font-medium" data-tina-field={tinaField(step, 'duration')}>
@@ -154,7 +137,7 @@ const HowWeWork: React.FC<HowWeWorkProps> = ({ data }) => {
                               )}
                             </div>
                             <p className="text-slate-400 leading-relaxed" data-tina-field={tinaField(step, 'description')}>
-                              {step?.description || 'Opis kroku'}
+                              {step?.description}
                             </p>
                           </div>
                         </div>
@@ -186,17 +169,17 @@ const HowWeWork: React.FC<HowWeWorkProps> = ({ data }) => {
               
               <div className="relative z-10">
                 <h3 className="text-2xl font-bold text-white mb-4" data-tina-field={tinaField(data, 'ctaTitle')}>
-                  {data?.ctaTitle || 'Gotowy na rozpoczęcie projektu?'}
+                  {data.ctaTitle}
                 </h3>
                 <p className="text-slate-400 mb-6" data-tina-field={tinaField(data, 'ctaDescription')}>
-                  {data?.ctaDescription || 'Wypełnij brief, a my skontaktujemy się z Tobą w ciągu 24 godzin'}
+                  {data.ctaDescription}
                 </p>
                 <Link
                   href="/brief"
                   className="inline-flex items-center gap-2 btn-tech-primary px-8 py-4 rounded-lg font-bold text-sm uppercase tracking-wider"
                   data-tina-field={tinaField(data, 'ctaButton')}
                 >
-                  {data?.ctaButton || 'Wypełnij brief'}
+                  {data.ctaButton}
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>

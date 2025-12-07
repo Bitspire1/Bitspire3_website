@@ -25,8 +25,25 @@ interface PortfolioData {
 }
 
 export default function Portfolio({ data }: { data?: PortfolioData }) {
-  // Filter out null values from projects array
-  const projects = (data?.projects || []).filter((p): p is Project => p !== null);
+  if (!data) {
+    throw new Error('Portfolio content missing from TinaCMS');
+  }
+
+  const projects = (data.projects || []).filter((p): p is Project => p !== null);
+
+  if (!data.title || !data.description || !data.sectionLabel) {
+    throw new Error('Portfolio title/description/sectionLabel missing in Tina content');
+  }
+
+  if (!projects.length) {
+    throw new Error('Portfolio projects missing in Tina content');
+  }
+
+  projects.forEach((project, index) => {
+    if (!project.title || !project.description) {
+      throw new Error(`Portfolio project ${index} missing title/description in Tina content`);
+    }
+  });
 
   return (
     <div className="min-h-screen bg-grid-pattern pt-24 pb-32 relative overflow-hidden">
@@ -35,26 +52,25 @@ export default function Portfolio({ data }: { data?: PortfolioData }) {
           <div className="flex items-center gap-4 mb-6">
             <div className="w-16 h-0.5 bg-linear-to-r from-blue-600 to-cyan-500"></div>
             <span className="text-blue-400 text-xs font-bold tracking-widest uppercase" data-tina-field={tinaField(data, 'sectionLabel')}>
-              {(data && 'sectionLabel' in data ? (data as Record<string, unknown>).sectionLabel : 'Selected Works') as string}
+              {(data as Record<string, unknown>).sectionLabel as string}
             </span>
           </div>
           <h1 
             className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
             data-tina-field={tinaField(data, 'title')}
           >
-            {data?.title || 'Portfolio'}
+            {data?.title}
           </h1>
           <p 
             className="text-lg md:text-xl text-slate-400 max-w-2xl leading-relaxed"
             data-tina-field={tinaField(data, 'description')}
           >
-            {data?.description || 'Nasze realizacje'}
+              {data?.description}
           </p>
         </header>
 
         <section aria-label="Wybrane projekty" className="grid grid-cols-1 lg:grid-cols-12 gap-8 auto-rows-auto">
-          {projects.length > 0 ? (
-            projects.map((project, idx) => {
+          {projects.map((project, idx) => {
               // Asymmetric grid pattern: first full, then alternating 7-5, 5-7
               const getColumnSpan = (index: number) => {
                 if (index === 0) return "lg:col-span-12";
@@ -140,10 +156,7 @@ export default function Portfolio({ data }: { data?: PortfolioData }) {
                   </div>
                 </article>
               ) : null;
-            })
-          ) : (
-            <p className="text-slate-400 col-span-full text-center py-20">Brak projektów do wyświetlenia.</p>
-          )}
+            })}
         </section>
 
         {projects.length > 0 && (

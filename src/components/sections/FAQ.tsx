@@ -22,35 +22,25 @@ interface FAQProps {
 
 const FAQ: React.FC<FAQProps> = ({ data }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  if (!data) {
+    throw new Error('FAQ content missing from TinaCMS');
+  }
 
-  const defaultItems: FAQItem[] = [
-    {
-      question: 'Ile czasu zajmuje realizacja projektu?',
-      answer: 'Czas realizacji zależy od skomplikowania projektu. Standardowa strona internetowa to 2-4 tygodnie, sklep internetowy 4-8 tygodni, a bardziej zaawansowane aplikacje mogą wymagać 2-3 miesięcy.'
-    },
-    {
-      question: 'Czy zapewniacie wsparcie po zakończeniu projektu?',
-      answer: 'Tak! Oferujemy pakiety wsparcia technicznego, które obejmują aktualizacje, naprawy błędów, optymalizację oraz pomoc w rozwoju strony. Możemy również przeszkolić Twój zespół w zakresie zarządzania treścią.'
-    },
-    {
-      question: 'Jakie technologie wykorzystujecie?',
-      answer: 'Pracujemy z najnowszymi technologiami: Next.js, React, TypeScript, Node.js, TailwindCSS. Dla e-commerce wykorzystujemy Shopify, WooCommerce lub rozwiązania custom. Dostosowujemy technologie do potrzeb projektu.'
-    },
-    {
-      question: 'Czy mogę zobaczyć projekt w trakcie realizacji?',
-      answer: 'Oczywiście! Podczas realizacji regularnie prezentujemy postępy prac. Otrzymasz dostęp do wersji testowej strony, gdzie będziesz mógł na bieżąco śledzić rozwój projektu i zgłaszać uwagi.'
-    },
-    {
-      question: 'Jakie są koszty realizacji projektu?',
-      answer: 'Koszt zależy od zakresu i złożoności projektu. Proste strony wizytówkowe zaczynają się od 3000 zł, sklepy internetowe od 8000 zł. Po wypełnieniu briefu przygotujemy szczegółową wycenę dostosowaną do Twoich potrzeb.'
-    },
-    {
-      question: 'Czy strona będzie responsywna?',
-      answer: 'Zdecydowanie tak! Wszystkie nasze projekty są w pełni responsywne i dostosowane do urządzeń mobilnych, tabletów i komputerów. Dbamy o optymalne doświadczenie użytkownika na każdym urządzeniu.'
+  if (!data.items || data.items.length === 0) {
+    throw new Error('FAQ items missing in Tina content');
+  }
+
+  if (!data.title || !data.description) {
+    throw new Error('FAQ title/description missing in Tina content');
+  }
+
+  const items = data.items;
+
+  items.forEach((item, index) => {
+    if (!item?.question || !item?.answer) {
+      throw new Error(`FAQ item ${index} is missing question or answer in Tina content`);
     }
-  ];
-
-  const items = data?.items && data.items.length > 0 ? data.items : defaultItems;
+  });
 
   const toggleItem = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -65,10 +55,10 @@ const FAQ: React.FC<FAQProps> = ({ data }) => {
         <div className="text-center mb-10">
           <div className="w-16 h-0.5 bg-linear-to-r from-blue-600 to-cyan-500 mb-4 mx-auto"></div>
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-3" data-tina-field={tinaField(data, 'title')}>
-            {data?.title || 'Najczęściej zadawane pytania'}
+            {data.title}
           </h2>
           <p className="text-slate-300 text-base" data-tina-field={tinaField(data, 'description')}>
-            {data?.description || 'Odpowiedzi na pytania, które często nam zadajecie'}
+            {data.description}
           </p>
         </div>
 
@@ -86,7 +76,7 @@ const FAQ: React.FC<FAQProps> = ({ data }) => {
                   className="w-full text-left p-6 flex items-center justify-between gap-4"
                 >
                   <span className="text-lg font-semibold text-white group-hover:text-blue-400 transition-colors pr-4" data-tina-field={tinaField(item, 'question')}>
-                    {item?.question || 'Pytanie'}
+                    {item?.question}
                   </span>
                   
                   <div className={`shrink-0 w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center transition-all duration-300 ${openIndex === index ? 'rotate-180 bg-blue-500/20' : ''}`}>
@@ -106,7 +96,7 @@ const FAQ: React.FC<FAQProps> = ({ data }) => {
                   <div className="px-6 pb-6 pt-0">
                     <div className="w-full h-px bg-linear-to-r from-transparent via-slate-700 to-transparent mb-4" />
                     <p className="text-slate-400 leading-relaxed" data-tina-field={tinaField(item, 'answer')}>
-                      {item?.answer || 'Odpowiedź'}
+                      {item?.answer}
                     </p>
                   </div>
                 </div>
@@ -118,14 +108,14 @@ const FAQ: React.FC<FAQProps> = ({ data }) => {
         {/* Contact CTA */}
         <div className="mt-12 text-center">
           <p className="text-slate-400 mb-4" data-tina-field={tinaField(data, 'ctaQuestion')}>
-            {data?.ctaQuestion || 'Nie znalazłeś odpowiedzi na swoje pytanie?'}
+            {data?.ctaQuestion}
           </p>
           <a
             href="#contact"
             className="inline-flex items-center gap-2 btn-tech-primary px-6 py-3 rounded-lg font-bold text-sm uppercase tracking-wider"
             data-tina-field={tinaField(data, 'ctaButton')}
           >
-            {data?.ctaButton || 'Skontaktuj się z nami'}
+            {data?.ctaButton}
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>

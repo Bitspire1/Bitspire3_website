@@ -17,8 +17,7 @@ async function getPageData(locale: string) {
 
     return result.data.pages;
   } catch (error) {
-    console.error('Error loading page data from TinaCMS:', error);
-    return null;
+    throw error;
   }
 }
 
@@ -30,26 +29,15 @@ export default async function BriefPage({
   const { locale } = await params;
   const pageData = await getPageData(locale);
 
-  const fallbackData = {
-    brief: {
-      title: locale === 'pl' ? 'Brief projektowy' : 'Project Brief',
-      description: locale === 'pl' 
-        ? 'Wypełnij brief, aby określić zakres Twojego projektu'
-        : 'Fill out the brief to define your project scope',
-    }
-  };
-
-  const data = pageData || fallbackData;
-
   return (
     <div className="min-h-screen bg-slate-900 pt-20 relative overflow-hidden">
       <Background />
       
       {/* Główna zawartość strony */}
       <main className="relative z-10">
-        {data?.brief && (
+        {pageData?.brief && (
           <div id="brief-section">
-            <Brief data={data.brief} />
+            <Brief data={pageData.brief} />
           </div>
         )}
       </main>

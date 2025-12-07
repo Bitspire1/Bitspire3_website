@@ -24,6 +24,14 @@ const LOGO_WIDTH = 140; // 80px image + 60px gap
 const SPEED = 0.8; // Faster speed
 
 const Technology: React.FC<{ data?: TechnologyData }> = ({ data }) => {
+	if (!data) {
+		throw new Error('Technology content missing from TinaCMS');
+	}
+
+	if (!data.title || !data.description) {
+		throw new Error('Technology title/description missing in Tina content');
+	}
+
   const containerRef = useRef<HTMLDivElement>(null);
 	const [logoCount, setLogoCount] = useState(logos.length * 8);
 	// animation state stored in refs to avoid React re-renders on every frame
@@ -38,9 +46,11 @@ const Technology: React.FC<{ data?: TechnologyData }> = ({ data }) => {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-		// Calculate how many logos are needed to fill the container + buffer
-		const computeCount = () => {
-			const vw = window.visualViewport?.width || window.innerWidth || 2200;
+    if (typeof window === 'undefined') return;  // Guard for SSR
+    
+    // Calculate how many logos are needed to fill the container + buffer
+    const computeCount = () => {
+      const vw = window.visualViewport?.width || window.innerWidth || 2200;
 			// ignore tiny changes that occur when mobile address bar hides/shows
 			if (Math.abs(vw - lastWidthRef.current) < 10 && positionsRef.current.length) return;
 			lastWidthRef.current = vw;
@@ -71,6 +81,8 @@ const Technology: React.FC<{ data?: TechnologyData }> = ({ data }) => {
   }, []);
 
   useEffect(() => {
+		if (typeof window === 'undefined') return;  // Guard for SSR
+		
 		const vw = window.visualViewport?.width || window.innerWidth || 2200;
 		const isMobile = vw < 768;
 		const currentSpeed = isMobile ? 1.2 : SPEED;
@@ -114,6 +126,7 @@ const Technology: React.FC<{ data?: TechnologyData }> = ({ data }) => {
 	}, [visible, logoCount]);
 
   useEffect(() => {
+	if (typeof window === 'undefined') return;  // Guard for SSR
 	if (visible) return;
 	const node = sectionRef.current;
 	if (!node) return;
@@ -140,10 +153,10 @@ const Technology: React.FC<{ data?: TechnologyData }> = ({ data }) => {
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
 		  <div className="w-16 h-0.5 bg-linear-to-r from-blue-600 to-cyan-500 mb-4"></div>
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-3" data-tina-field={tinaField(data, 'title')}>
-            {data?.title || 'Technologie nowej generacji'}
+						{data.title}
           </h2>
           <p className="text-slate-300 text-base" data-tina-field={tinaField(data, 'description')}>
-            {data?.description || 'Wykorzystujemy najnowocześniejsze narzędzia do budowy szybkich i skalowalnych aplikacji'}
+						{data.description}
           </p>
         </div>
       </div>

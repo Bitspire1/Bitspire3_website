@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, { memo } from 'react';
 import Image from 'next/image';
 import {
   FaFacebookF,
@@ -34,33 +34,61 @@ interface FooterProps {
   locale?: string;
 }
 
-export const Footer: React.FC<FooterProps> = ({ data, locale }) => {
-  // Default values
-  const companyName = data?.companyName || 'Bitspire';
-  const description = data?.description || (
-    locale === 'en' 
-      ? 'We create modern websites, online stores and applications. We help businesses grow in the digital world.'
-      : 'Tworzymy nowoczesne strony internetowe, sklepy online i aplikacje. Pomagamy firmom rozwijać się w świecie cyfrowym.'
-  );
-  
+const FooterContent: React.FC<FooterProps> = ({ data, locale }) => {
+  if (!data) {
+    throw new Error('Footer content missing from TinaCMS');
+  }
+
+  const companyName = data.companyName;
+  const description = data.description;
   const contact = {
-    email: data?.contact?.email || 'kontakt@bitspire.pl',
-    phone: data?.contact?.phone || '+48 123 456 789',
-    location: data?.contact?.location || 'Polska'
+    email: data.contact?.email,
+    phone: data.contact?.phone,
+    location: data.contact?.location,
   };
-  
-  const navigation = data?.navigation?.filter((item): item is { label: string; href: string } => 
+
+  const navigation = data.navigation?.filter((item): item is { label: string; href: string } =>
     item !== null && typeof item.label === 'string' && typeof item.href === 'string'
   ) || [];
-  
-  const socialMedia = data?.socialMedia?.filter((item): item is { platform: string; url: string; icon?: string | null } => 
+
+  const socialMedia = data.socialMedia?.filter((item): item is { platform: string; url: string; icon?: string | null } => 
     item !== null && typeof item.platform === 'string' && typeof item.url === 'string'
-  ) || [
-    { platform: 'Facebook', url: 'https://www.facebook.com/profile.php?id=61578556904045', icon: 'facebook' },
-    { platform: 'Instagram', url: 'https://instagram.com/bitspire_', icon: 'instagram' },
-    { platform: 'LinkedIn', url: 'https://linkedin.com/company/bitspire', icon: 'linkedin' },
-    { platform: 'GitHub', url: 'https://github.com/bitspire1', icon: 'github' }
-  ];
+  ) || [];
+
+  const legalLinks = data.legalLinks?.filter((item): item is { label: string; href: string } =>
+    item !== null && typeof item.label === 'string' && typeof item.href === 'string'
+  ) || [];
+
+  const cookieSettingsText = data.cookieSettingsText;
+  const copyrightText = data.copyright;
+
+  if (!companyName || !description) {
+    throw new Error('Footer companyName or description missing in Tina content');
+  }
+
+  if (!contact.email || !contact.phone || !contact.location) {
+    throw new Error('Footer contact details missing in Tina content');
+  }
+
+  if (!navigation.length) {
+    throw new Error('Footer navigation missing in Tina content');
+  }
+
+  if (!socialMedia.length) {
+    throw new Error('Footer social media links missing in Tina content');
+  }
+
+  if (!legalLinks.length) {
+    throw new Error('Footer legal links missing in Tina content');
+  }
+
+  if (!cookieSettingsText) {
+    throw new Error('Footer cookie settings text missing in Tina content');
+  }
+
+  if (!copyrightText) {
+    throw new Error('Footer copyright missing in Tina content');
+  }
 
   return (
     <footer className="bg-slate-900 border-t border-slate-700 text-white">
@@ -175,36 +203,19 @@ export const Footer: React.FC<FooterProps> = ({ data, locale }) => {
         {/* Dolny pasek */}
         <div className="border-t border-slate-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm mb-4 md:mb-0">
-            {data?.copyright?.replace('{year}', new Date().getFullYear().toString()) || 
-              `© ${new Date().getFullYear()} Bitspire. ${locale === 'en' ? 'All rights reserved.' : 'Wszystkie prawa zastrzeżone.'}`}
+            {copyrightText?.replace('{year}', new Date().getFullYear().toString())}
           </p>
           
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm justify-center md:justify-end">
-            {data?.legalLinks && data.legalLinks.length > 0 ? (
-              data.legalLinks.map((link, index) => 
-                link && link.label && link.href ? (
-                  <PreviewLink 
-                    key={index}
-                    href={link.href} 
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </PreviewLink>
-                ) : null
-              )
-            ) : (
-              <>
-                <PreviewLink href={locale === 'en' ? '/privacy-policy/' : '/polityka-prywatnosci/'} className="text-gray-400 hover:text-white transition-colors">
-                  {locale === 'en' ? 'Privacy Policy' : 'Polityka prywatności'}
-                </PreviewLink>
-                <PreviewLink href={locale === 'en' ? '/cookies-policy/' : '/polityka-cookies/'} className="text-gray-400 hover:text-white transition-colors">
-                  {locale === 'en' ? 'Cookies Policy' : 'Polityka cookies'}
-                </PreviewLink>
-                <PreviewLink href={locale === 'en' ? '/terms/' : '/regulamin/'} className="text-gray-400 hover:text-white transition-colors">
-                  {locale === 'en' ? 'Terms' : 'Regulamin'}
-                </PreviewLink>
-              </>
-            )}
+            {legalLinks.map((link, index) => (
+              <PreviewLink 
+                key={index}
+                href={link.href}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                {link.label}
+              </PreviewLink>
+            ))}
             <button
               onClick={() => {
                 const evt = new CustomEvent("open-cookie-settings");
@@ -212,7 +223,7 @@ export const Footer: React.FC<FooterProps> = ({ data, locale }) => {
               }}
               className="text-gray-400 hover:text-white transition-colors underline decoration-dotted underline-offset-4"
             >
-              {data?.cookieSettingsText || (locale === 'en' ? 'Cookie Settings' : 'Ustawienia cookies')}
+              {cookieSettingsText}
             </button>
           </div>
         </div>
@@ -221,4 +232,5 @@ export const Footer: React.FC<FooterProps> = ({ data, locale }) => {
   );
 };
 
+export const Footer = memo(FooterContent);
 export default Footer;

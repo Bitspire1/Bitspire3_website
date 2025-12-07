@@ -4,14 +4,9 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
-  // Disable ESLint during production builds (ESLint is in devDependencies)
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  
-  // Disable TypeScript type checking during builds (faster, types checked in dev)
+  // Enable TypeScript type checking during builds for production safety
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   
   // Performance optimizations
@@ -27,11 +22,12 @@ const nextConfig: NextConfig = {
   // Image optimization
   images: {
     formats: ['image/avif', 'image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60,
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    minimumCacheTTL: 31536000, // 1 year for better caching
     dangerouslyAllowSVG: true,
-    contentDispositionType: 'attachment',
+    // Keep downloads inline (no forced attachment) to avoid unexpected behavior
+    contentDispositionType: 'inline',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   
@@ -40,75 +36,44 @@ const nextConfig: NextConfig = {
     scrollRestoration: true,
   },
   
-  // Force single React instance to prevent version mismatch errors
-  webpack: (config, { isServer }) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      'react/jsx-runtime.js': 'react/jsx-runtime',
-      'react/jsx-dev-runtime.js': 'react/jsx-dev-runtime',
-    };
-    
-    // Optimize bundle size and prevent esbuild memory issues
-    if (!isServer) {
-      config.optimization = {
-        ...config.optimization,
-        moduleIds: 'deterministic',
-        runtimeChunk: 'single',
-        splitChunks: {
-          chunks: 'all',
-          maxInitialRequests: 25,
-          minSize: 20000,
-          maxSize: 244000,
-          cacheGroups: {
-            default: false,
-            vendors: false,
-            framework: {
-              name: 'framework',
-              chunks: 'all',
-              test: /(?<!node_modules.*)[\\/]node_modules[\\/](react|react-dom|scheduler|next)[\\/]/,
-              priority: 40,
-              enforce: true,
-            },
-            commons: {
-              name: 'commons',
-              chunks: 'initial',
-              minChunks: 2,
-              priority: 20,
-            },
-            lib: {
-              test: /[\\/]node_modules[\\/]/,
-              name(module: { context: string }) {
-                const packageName = module.context.match(
-                  /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-                )?.[1];
-                return `npm.${packageName?.replace('@', '')}`;
-              },
-              priority: 30,
-              minChunks: 1,
-              reuseExistingChunk: true,
-            },
-          },
-        },
-      };
-    }
-    
-    // Prevent large file parsing issues
-    config.module = config.module || {};
-    config.module.parser = {
-      ...config.module.parser,
-      javascript: {
-        ...config.module.parser?.javascript,
-        exportsPresence: 'error',
-        importExportsPresence: 'error',
-      },
-    };
-    
-    return config;
-  },
+  // Note: webpack config is intentionally minimal; rely on Next.js defaults
   
-  // Headers for better caching
+  // Headers for better caching and security
   async headers() {
     return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' https://content.tinajs.io https://www.google-analytics.com https://analytics.google.com; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
+          },
+        ],
+      },
       {
         source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif)',
         locale: false,

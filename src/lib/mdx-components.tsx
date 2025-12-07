@@ -1,12 +1,27 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { MDXComponents } from 'mdx/types';
 import Image from 'next/image';
+import type { HTMLAttributes, ImgHTMLAttributes } from 'react';
+
+// Type definitions for MDX component props
+type HeadingProps = HTMLAttributes<HTMLHeadingElement>;
+type ParagraphProps = HTMLAttributes<HTMLParagraphElement>;
+type ListProps = HTMLAttributes<HTMLUListElement | HTMLOListElement>;
+type ListItemProps = HTMLAttributes<HTMLLIElement>;
+type AnchorProps = HTMLAttributes<HTMLAnchorElement>;
+type QuoteProps = HTMLAttributes<HTMLQuoteElement>;
+type CodeProps = HTMLAttributes<HTMLElement> & { className?: string };
+type PreProps = HTMLAttributes<HTMLPreElement>;
+type ImgProps = ImgHTMLAttributes<HTMLImageElement>;
+type TableProps = HTMLAttributes<HTMLTableElement>;
+type TableSectionProps = HTMLAttributes<HTMLTableSectionElement>;
+type TableRowProps = HTMLAttributes<HTMLTableRowElement>;
+type TableCellProps = HTMLAttributes<HTMLTableCellElement>;
 
 /**
  * Shared MDX components for consistent styling across blog and portfolio pages
  */
 export const mdxComponents: MDXComponents = {
-  h1: (props: any) => {
+  h1: (props: HeadingProps) => {
     return (
       <h1 
         className="text-4xl md:text-5xl font-extrabold bg-linear-to-r from-blue-400 via-cyan-400 to-blue-300 bg-clip-text text-transparent tracking-tight mt-12 mb-8 first:mt-0 relative group" 
@@ -17,7 +32,7 @@ export const mdxComponents: MDXComponents = {
       </h1>
     );
   },
-  h2: (props: any) => {
+  h2: (props: HeadingProps) => {
     return (
       <h2 
         className="text-3xl md:text-4xl font-bold bg-linear-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent tracking-tight mt-16 mb-6 pb-3 border-b border-slate-700/50 relative group" 
@@ -28,33 +43,33 @@ export const mdxComponents: MDXComponents = {
       </h2>
     );
   },
-  h3: (props: any) => {
+  h3: (props: HeadingProps) => {
     return <h3 className="text-2xl md:text-3xl font-bold text-slate-100 tracking-tight mt-12 mb-5" {...props} />;
   },
-  h4: (props: any) => {
+  h4: (props: HeadingProps) => {
     return <h4 className="text-xl md:text-2xl font-semibold text-slate-200 mt-8 mb-4" {...props} />;
   },
-  h5: (props: any) => {
+  h5: (props: HeadingProps) => {
     return <h5 className="text-lg md:text-xl font-semibold text-slate-300 mt-6 mb-3" {...props} />;
   },
-  h6: (props: any) => {
+  h6: (props: HeadingProps) => {
     return <h6 className="text-base md:text-lg font-semibold text-slate-400 mt-6 mb-3" {...props} />;
   },
-  p: (props: any) => {
+  p: (props: ParagraphProps) => {
     return <p className="text-slate-300 text-base md:text-lg leading-relaxed mb-6" {...props} />;
   },
-  ul: (props: any) => {
+  ul: (props: ListProps) => {
     return <ul className="list-none ml-0 mb-8 space-y-3 text-slate-300" {...props} />;
   },
-  ol: (props: any) => {
+  ol: (props: ListProps) => {
     return <ol className="list-none ml-0 mb-8 space-y-3 text-slate-300 counter-reset-list" {...props} />;
   },
-  li: (props: any) => {
+  li: (props: ListItemProps) => {
     return (
       <li className="text-slate-300 pl-8 relative before:content-['→'] before:absolute before:left-0 before:text-blue-400 before:font-bold" {...props} />
     );
   },
-  a: (props: any) => {
+  a: (props: AnchorProps) => {
     return (
       <a 
         className="text-blue-400 hover:text-cyan-300 underline decoration-blue-500/30 hover:decoration-cyan-400/50 underline-offset-2 transition-all duration-200 font-medium" 
@@ -62,13 +77,13 @@ export const mdxComponents: MDXComponents = {
       />
     );
   },
-  strong: (props: any) => {
+  strong: (props: HTMLAttributes<HTMLElement>) => {
     return <strong className="text-white font-bold" {...props} />;
   },
-  em: (props: any) => {
+  em: (props: HTMLAttributes<HTMLElement>) => {
     return <em className="text-slate-200 italic" {...props} />;
   },
-  blockquote: (props: any) => {
+  blockquote: (props: QuoteProps) => {
     return (
       <blockquote 
         className="relative border-l-4 border-blue-500 bg-slate-800/40 backdrop-blur-sm py-6 px-8 my-8 rounded-r-xl text-slate-200 italic shadow-lg shadow-blue-500/5" 
@@ -76,7 +91,7 @@ export const mdxComponents: MDXComponents = {
       />
     );
   },
-  code: (props: any) => {
+  code: (props: CodeProps) => {
     const { children, className } = props;
     const isInline = !className;
     
@@ -91,7 +106,7 @@ export const mdxComponents: MDXComponents = {
     
     return <code className="block text-sm font-mono" {...props}>{children}</code>;
   },
-  pre: (props: any) => {
+  pre: (props: PreProps) => {
     return (
       <pre 
         className="bg-slate-800/70 backdrop-blur-sm p-6 rounded-xl overflow-x-auto mb-8 border border-slate-700/50 shadow-xl shadow-blue-500/5 text-slate-200 leading-relaxed" 
@@ -99,41 +114,41 @@ export const mdxComponents: MDXComponents = {
       />
     );
   },
-  img: (props: any) => {
-    const { src, alt, ...rest } = props;
+  img: (props: ImgProps) => {
+    const { src, alt } = props;
+    const imageSrc = (typeof src === 'string' ? src : '') || '';
     return (
       <span className="block my-10 rounded-xl overflow-hidden border border-slate-700/50 shadow-2xl shadow-blue-500/10 group">
         <Image
-          src={src || ''}
+          src={imageSrc}
           alt={alt || 'Article image'}
           width={1200}
           height={675}
           className="w-full h-auto group-hover:scale-105 transition-transform duration-500"
-          {...rest}
         />
       </span>
     );
   },
-  table: (props: any) => {
+  table: (props: TableProps) => {
     return (
       <div className="overflow-x-auto my-8 rounded-xl border border-slate-700/50 shadow-xl shadow-blue-500/5">
         <table className="min-w-full divide-y divide-slate-700/50 bg-slate-800/30 backdrop-blur-sm" {...props} />
       </div>
     );
   },
-  thead: (props: any) => {
+  thead: (props: TableSectionProps) => {
     return <thead className="bg-slate-800/60" {...props} />;
   },
-  tbody: (props: any) => {
+  tbody: (props: TableSectionProps) => {
     return <tbody className="divide-y divide-slate-700/30" {...props} />;
   },
-  tr: (props: any) => {
+  tr: (props: TableRowProps) => {
     return <tr className="hover:bg-slate-700/20 transition-colors" {...props} />;
   },
-  th: (props: any) => {
+  th: (props: TableCellProps) => {
     return <th className="px-6 py-4 text-left text-sm font-bold text-slate-100 uppercase tracking-wider" {...props} />;
   },
-  td: (props: any) => {
+  td: (props: TableCellProps) => {
     return <td className="px-6 py-4 text-base text-slate-300" {...props} />;
   },
   hr: () => {
@@ -142,13 +157,13 @@ export const mdxComponents: MDXComponents = {
     );
   },
   // Dodatkowe komponenty dla lepszego formatowania
-  dl: (props: any) => {
+  dl: (props: HTMLAttributes<HTMLDListElement>) => {
     return <dl className="my-8 space-y-4" {...props} />;
   },
-  dt: (props: any) => {
+  dt: (props: HTMLAttributes<HTMLElement>) => {
     return <dt className="text-lg font-semibold text-white mb-2" {...props} />;
   },
-  dd: (props: any) => {
+  dd: (props: HTMLAttributes<HTMLElement>) => {
     return <dd className="text-slate-300 ml-6 mb-4" {...props} />;
   },
 };

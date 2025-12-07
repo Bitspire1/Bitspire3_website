@@ -29,8 +29,8 @@ export default async function PolitykaCookiesPage({ params }: { params: Promise<
     });
 
     return <LegalPage data={pageData.data.pages} />;
-  } catch (error) {
-    console.error('Error loading cookies policy:', error);
+  } catch {
+    // Failed to load cookies policy
     return <LegalPage data={undefined} />;
   }
 }

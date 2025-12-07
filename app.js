@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable @typescript-eslint/no-require-imports */
-
 // Production-ready Next.js server starter
 // This file is used by hosting panels as the application entry point
 
@@ -22,7 +20,7 @@ app.prepare()
       try {
         await handle(req, res);
       } catch (err) {
-        console.error('Error handling request:', err);
+        // Request error - return 500
         res.statusCode = 500;
         res.end('Internal Server Error');
       }
@@ -32,6 +30,6 @@ app.prepare()
     });
   })
   .catch((err) => {
-    console.error('Failed to start Next.js:', err);
+    // Failed to start server
     process.exit(1);
   });

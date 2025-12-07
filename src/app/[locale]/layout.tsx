@@ -21,27 +21,22 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-// Load Header and Footer data from TinaCMS
+// Load Header and Footer data from TinaCMS and fail hard when missing
 async function getHeaderFooterData(locale: string) {
-  let headerData = null;
-  let footerData = null;
+  const [headerResult, footerResult] = await Promise.all([
+    client.queries.header({ relativePath: `${locale}/header.mdx` }),
+    client.queries.footer({ relativePath: `${locale}/footer.mdx` }),
+  ]);
 
-  try {
-    const headerResult = await client.queries.header({ 
-      relativePath: `${locale}/header.mdx` 
-    });
-    headerData = headerResult?.data?.header;
-  } catch (error) {
-    console.error('Error loading header:', error);
+  const headerData = headerResult?.data?.header;
+  const footerData = footerResult?.data?.footer;
+
+  if (!headerData) {
+    throw new Error(`Missing header content for locale: ${locale}`);
   }
 
-  try {
-    const footerResult = await client.queries.footer({ 
-      relativePath: `${locale}/footer.mdx` 
-    });
-    footerData = footerResult?.data?.footer;
-  } catch (error) {
-    console.error('Error loading footer:', error);
+  if (!footerData) {
+    throw new Error(`Missing footer content for locale: ${locale}`);
   }
 
   return { headerData, footerData };

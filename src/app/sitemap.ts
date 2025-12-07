@@ -26,8 +26,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           priority: 0.7,
         };
       });
-  } catch (error) {
-    console.error('Error fetching portfolio posts for sitemap:', error);
+  } catch {
+    // Failed to fetch portfolio posts
   }
 
   // Fetch all blog posts
@@ -52,8 +52,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           priority: 0.7,
         };
       });
-  } catch (error) {
-    console.error('Error fetching blog posts for sitemap:', error);
+  } catch {
+    // Failed to fetch blog posts
   }
 
   return [

@@ -1,61 +1,30 @@
 ﻿"use client";
 
-import React, { useState, useCallback } from "react";
-import { CursorLightCard } from "../../hooks/cursor-light";
+import React from "react";
 import { tinaField } from 'tinacms/dist/react';
+import { ContactForm, ContactFormData } from "@/components/forms/ContactForm";
 
-interface ContactData {
-  title?: string | null;
-  description?: string | null;
+interface ContactData extends ContactFormData {
   email?: string | null;
   phone?: string | null;
   address?: string | null;
   addressLine2?: string | null;
   city?: string | null;
-  successTitle?: string | null;
-  successMessage?: string | null;
-  nameLabel?: string | null;
-  emailLabel?: string | null;
-  messageLabel?: string | null;
-  buttonText?: string | null;
   contactDataTitle?: string | null;
   [key: string]: unknown;
 }
 
 const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [sent, setSent] = useState(false);
 
-  // Memoize handlers for performance
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  }, []);
+  if (!data) {
+    throw new Error('Contact content missing from TinaCMS');
+  }
 
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Formularz kontaktowy:", form);
+  const { title, description, contactDataTitle, email, phone, address, addressLine2, city } = data;
 
-    try {
-      // Prepare data for Netlify Forms
-      const formData = new URLSearchParams();
-      formData.append("form-name", "contact");
-      formData.append("name", form.name);
-      formData.append("email", form.email);
-      formData.append("message", form.message);
-
-      await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: formData.toString(),
-      });
-
-      console.log("Formularz wysłany pomyślnie");
-      setSent(true);
-    } catch (error) {
-      console.error("Błąd:", error);
-      alert("Wystąpił błąd podczas wysyłania formularza. Spróbuj ponownie.");
-    }
-  }, [form]);
+  if (!title || !description || !contactDataTitle || !email || !phone || !address || !addressLine2 || !city) {
+    throw new Error('Contact fields missing in Tina content');
+  }
 
   return (
     <section className="py-12 px-4 bg-slate-900/20" id="contact">
@@ -63,94 +32,16 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
         <div className="text-center mb-8">
           <div className="w-16 h-0.5 bg-linear-to-r from-blue-600 to-cyan-500 mb-4 mx-auto"></div>
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-3" data-tina-field={tinaField(data, 'title')}>
-            {data?.title || 'Porozmawiajmy o Twoim projekcie'}
+            {title}
           </h2>
           <p className="text-slate-300 text-base" data-tina-field={tinaField(data, 'description')}>
-            {data?.description || 'Wypełnij formularz, a my skontaktujemy się z Tobą w ciągu 24 godzin'}
+            {description}
           </p>
         </div>
 
         <div className="grid lg:grid-cols-[2fr_1fr] gap-8">
           {/* Formularz kontaktowy */}
-          <CursorLightCard className="glass-panel rounded-2xl p-8">
-            {sent ? (
-              <div className="py-12 text-center">
-                <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-500/20">
-                   <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-green-400">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                   </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-3" data-tina-field={tinaField(data, 'successTitle')}>
-                  {data?.successTitle || 'Dziękujemy za kontakt!'}
-                </h3>
-                <p className="text-slate-400" data-tina-field={tinaField(data, 'successMessage')}>
-                  {data?.successMessage || 'Odpowiemy wkrótce na Twoją wiadomość.'}
-                </p>
-              </div>
-            ) : (
-              <form 
-                name="contact" 
-                method="POST" 
-                className="space-y-6" 
-                onSubmit={handleSubmit}
-              >
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                     <label className="text-xs font-medium text-slate-400 uppercase tracking-wider ml-1" data-tina-field={tinaField(data, 'nameLabel')}>
-                       {data?.nameLabel || 'Imię i nazwisko'}
-                     </label>
-                     <input
-                       type="text"
-                       name="name"
-                       value={form.name}
-                       onChange={handleChange}
-                       placeholder="Jan Kowalski"
-                       className="w-full px-4 py-3 rounded-lg bg-slate-900/50 text-white border border-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200 placeholder-slate-600"
-                       required
-                     />
-                  </div>
-                  
-                  <div className="space-y-2">
-                     <label className="text-xs font-medium text-slate-400 uppercase tracking-wider ml-1" data-tina-field={tinaField(data, 'emailLabel')}>
-                       {data?.emailLabel || 'Email'}
-                     </label>
-                     <input
-                       type="email"
-                       name="email"
-                       value={form.email}
-                       onChange={handleChange}
-                       placeholder="jan@example.com"
-                       className="w-full px-4 py-3 rounded-lg bg-slate-900/50 text-white border border-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200 placeholder-slate-600"
-                       required
-                     />
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                   <label className="text-xs font-medium text-slate-400 uppercase tracking-wider ml-1" data-tina-field={tinaField(data, 'messageLabel')}>
-                     {data?.messageLabel || 'Wiadomość'}
-                   </label>
-                   <textarea
-                     name="message"
-                     value={form.message}
-                     onChange={handleChange}
-                     placeholder="Opisz swój projekt..."
-                     rows={6}
-                     className="w-full px-4 py-3 rounded-lg bg-slate-900/50 text-white border border-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200 placeholder-slate-600 resize-none"
-                     required
-                   />
-                </div>
-                
-                <button
-                  type="submit"
-                  className="btn-tech-primary w-full py-4 rounded-lg font-bold text-sm uppercase tracking-wider"
-                  data-tina-field={tinaField(data, 'buttonText')}
-                >
-                  {data?.buttonText || 'Wyślij wiadomość'}
-                </button>
-              </form>
-            )}
-          </CursorLightCard>
+          <ContactForm data={data} />
 
           {/* Dane kontaktowe */}
           <div className="glass-panel rounded-2xl p-8 flex flex-col">
@@ -161,7 +52,7 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                   </svg>
                </div>
                <h3 className="text-xl font-bold text-white" data-tina-field={tinaField(data, 'contactDataTitle')}>
-                 {data?.contactDataTitle || 'Dane kontaktowe'}
+                 {contactDataTitle}
                </h3>
             </div>
             
@@ -176,11 +67,11 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                 <div>
                   <p className="text-slate-500 text-xs uppercase tracking-wider font-bold mb-1">Email</p>
                   <a 
-                    href={`mailto:${data?.email || 'kontakt@bitspire.pl'}`}
+                    href={`mailto:${email}`}
                     className="text-white hover:text-blue-400 font-medium transition-colors"
                     data-tina-field={tinaField(data, 'email')}
                   >
-                    {data?.email || 'kontakt@bitspire.pl'}
+                    {email}
                   </a>
                 </div>
               </div>
@@ -195,11 +86,11 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                 <div>
                   <p className="text-slate-500 text-xs uppercase tracking-wider font-bold mb-1">Telefon</p>
                   <a 
-                    href={`tel:${data?.phone || '+48778768363'}`}
+                    href={`tel:${phone}`}
                     className="text-white hover:text-blue-400 font-medium transition-colors"
                     data-tina-field={tinaField(data, 'phone')}
                   >
-                    {data?.phone || '+48 778 768 363'}
+                    {phone}
                   </a>
                 </div>
               </div>
@@ -216,13 +107,13 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                   <p className="text-slate-500 text-xs uppercase tracking-wider font-bold mb-1">Adres</p>
                   <div className="text-white text-sm">
                     <p className="font-medium" data-tina-field={tinaField(data, 'address')}>
-                      {data?.address || 'Bitspire'}
+                      {address}
                     </p>
                     <p className="text-slate-400" data-tina-field={tinaField(data, 'addressLine2')}>
-                      {data?.addressLine2 || 'ul. Tuwima 22a'}
+                      {addressLine2}
                     </p>
                     <p className="text-slate-400" data-tina-field={tinaField(data, 'city')}>
-                      {data?.city || '76-200 Słupsk'}
+                      {city}
                     </p>
                   </div>
                 </div>

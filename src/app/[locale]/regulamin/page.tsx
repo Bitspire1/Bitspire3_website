@@ -31,8 +31,8 @@ export default async function RegulaminPage({ params }: { params: Promise<{ loca
     });
 
     return <LegalPage data={pageData.data.pages} />;
-  } catch (error) {
-    console.error('Error loading terms:', error);
+  } catch {
+    // Failed to load terms
     return <LegalPage data={undefined} />;
   }
 }

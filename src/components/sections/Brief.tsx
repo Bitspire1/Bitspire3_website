@@ -35,6 +35,20 @@ const TAB_TYPES = [
 ];
 
 export default function Brief({ data }: { data?: BriefData }) {
+  if (!data) {
+    throw new Error('Brief content missing from TinaCMS');
+  }
+
+  const { title, description, buttonText, contact } = data;
+
+  if (!title || !description || !buttonText) {
+    throw new Error('Brief title/description/button text missing in Tina content');
+  }
+
+  if (!contact?.email || !contact.phone || !contact.address || !contact.addressLine2 || !contact.city) {
+    throw new Error('Brief contact details missing in Tina content');
+  }
+
   const [activeTab, setActiveTab] = useState('website');
   const [formData, setFormData] = useState({
     name: '',
@@ -64,8 +78,8 @@ export default function Brief({ data }: { data?: BriefData }) {
       
       setSuccess(true);
       setFormData({ name: '', email: '', message: '' });
-    } catch (err) {
-      console.error('Błąd wysyłania:', err);
+    } catch {
+      // Failed to send form
       setError('Wystąpił błąd. Spróbuj ponownie.');
     } finally {
       setLoading(false);
@@ -95,13 +109,13 @@ export default function Brief({ data }: { data?: BriefData }) {
                 className="text-4xl lg:text-6xl font-bold text-white mb-6"
                 data-tina-field={tinaField(data, 'title')}
               >
-                Określ czego <span className="text-gradient">potrzebujesz</span>
+                {title}
               </h2>
               <p 
                 className="text-xl text-slate-400 leading-relaxed max-w-2xl"
                 data-tina-field={tinaField(data, 'description')}
               >
-                {data?.description || 'Wypełnij brief i pomóż nam lepiej zrozumieć Twoje potrzeby. To pierwszy krok do realizacji Twojego projektu.'}
+                {description}
               </p>
             </div>
 
@@ -242,11 +256,11 @@ export default function Brief({ data }: { data?: BriefData }) {
                   <div>
                     <p className="text-slate-500 text-xs uppercase tracking-wider font-bold mb-1">Email</p>
                     <a 
-                      href={`mailto:${data?.contact?.email || 'kontakt@bitspire.pl'}`}
+                        href={`mailto:${contact.email}`}
                       className="text-white hover:text-blue-400 font-medium transition-colors"
                       data-tina-field={tinaField(data?.contact, 'email')}
                     >
-                      {data?.contact?.email || 'kontakt@bitspire.pl'}
+                        {contact.email}
                     </a>
                   </div>
                 </div>
@@ -261,11 +275,11 @@ export default function Brief({ data }: { data?: BriefData }) {
                   <div>
                     <p className="text-slate-500 text-xs uppercase tracking-wider font-bold mb-1">Telefon</p>
                     <a 
-                      href={`tel:${data?.contact?.phone || '+48778768363'}`}
+                        href={`tel:${contact.phone}`}
                       className="text-white hover:text-blue-400 font-medium transition-colors"
                       data-tina-field={tinaField(data?.contact, 'phone')}
                     >
-                      {data?.contact?.phone || '+48 778 768 363'}
+                        {contact.phone}
                     </a>
                   </div>
                 </div>
@@ -282,13 +296,13 @@ export default function Brief({ data }: { data?: BriefData }) {
                     <p className="text-slate-500 text-xs uppercase tracking-wider font-bold mb-1">Adres</p>
                     <div className="text-white text-sm">
                       <p className="font-medium" data-tina-field={tinaField(data?.contact, 'address')}>
-                        {data?.contact?.address || 'Bitspire'}
+                        {contact.address}
                       </p>
                       <p className="text-slate-400" data-tina-field={tinaField(data?.contact, 'addressLine2')}>
-                        {data?.contact?.addressLine2 || 'ul. Tuwima 22a'}
+                        {contact.addressLine2}
                       </p>
                       <p className="text-slate-400" data-tina-field={tinaField(data?.contact, 'city')}>
-                        {data?.contact?.city || '76-200 Słupsk'}
+                        {contact.city}
                       </p>
                     </div>
                   </div>

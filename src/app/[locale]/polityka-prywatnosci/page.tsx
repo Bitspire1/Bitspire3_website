@@ -31,8 +31,8 @@ export default async function PrivacyPolicyPage({ params }: { params: Promise<{ 
     });
 
     return <LegalPage data={pageData.data.pages} />;
-  } catch (error) {
-    console.error('Error loading privacy policy:', error);
+  } catch {
+    // Failed to load privacy policy
     return <LegalPage data={undefined} />;
   }
 }

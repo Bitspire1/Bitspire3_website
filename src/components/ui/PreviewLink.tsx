@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
+import { isInPreviewMode, getLocaleFromPreviewPath, buildPreviewPath } from '@/lib/preview';
 
 interface PreviewLinkProps {
   href: string;
@@ -14,17 +15,15 @@ interface PreviewLinkProps {
 export function PreviewLink({ href, children, className, onClick }: PreviewLinkProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const isPreview = pathname?.startsWith('/admin/preview');
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (onClick) onClick(e);
     
     // If in preview mode, use Next.js router
-    if (isPreview) {
+    if (isInPreviewMode(pathname)) {
       e.preventDefault();
       
-      const localeMatch = pathname?.match(/\/admin\/preview\/([^\/]+)/);
-      const locale = localeMatch?.[1] || 'pl';
+      const locale = getLocaleFromPreviewPath(pathname);
       
       // Remove leading locale and trailing slash
       const cleanHref = href.replace(/^\/(pl|en)/, '').replace(/\/$/, '');
@@ -57,7 +56,7 @@ export function PreviewLink({ href, children, className, onClick }: PreviewLinkP
       }
       
       // Use Next.js router to navigate within preview
-      router.push(`/admin/preview/${locale}/${newPath}`);
+      router.push(buildPreviewPath(locale, newPath));
     }
   };
 
