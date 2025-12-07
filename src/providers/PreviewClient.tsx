@@ -6,7 +6,7 @@ import { Background } from '@/components/background';
 import { Hero } from '@/components/sections/Hero';
 import Technology from '@/components/sections/Technology';
 import { Offer } from '@/components/sections/Offer';
-import PortfolioHighlights from '@/components/sections/PortfolioHighlights';
+import { PortfolioHighlights } from '@/components/portfolio/PortfolioHighlights';
 import HowWeWork from '@/components/sections/HowWeWork';
 import FAQ from '@/components/sections/FAQ';
 import Contact from '@/components/sections/Contact';
@@ -537,11 +537,14 @@ export default function PreviewClient({
               {/* Portfolio Highlights */}
               {page.portfolioHighlights && portfolioProjects && portfolioProjects.length > 0 && (
                 <div id="portfolio-section">
-                  <PortfolioHighlights data={{
-                    projects: portfolioProjects as never[],
-                    title: page.portfolioHighlights.title,
-                    description: page.portfolioHighlights.description
-                  }} />
+                  <PortfolioHighlights 
+                    mode="tina"
+                    tinaData={{
+                      projects: portfolioProjects as never[],
+                      title: page.portfolioHighlights.title,
+                      description: page.portfolioHighlights.description
+                    }} 
+                  />
                 </div>
               )}
               

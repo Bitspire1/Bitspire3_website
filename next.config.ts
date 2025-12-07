@@ -70,7 +70,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' https://content.tinajs.io https://www.google-analytics.com https://analytics.google.com; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
+            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://*.tinajs.io https://cdn.jsdelivr.net http://localhost:4001; style-src 'self' 'unsafe-inline' https://*.tinajs.io https://cdn.jsdelivr.net https://fonts.googleapis.com; style-src-elem 'self' 'unsafe-inline' https://*.tinajs.io https://cdn.jsdelivr.net https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://content.tinajs.io https://www.google-analytics.com https://analytics.google.com https://*.tinajs.io http://localhost:4001 ws://localhost:4001; frame-src 'self' http://localhost:4001; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self' http://localhost:4001;",
           },
         ],
       },

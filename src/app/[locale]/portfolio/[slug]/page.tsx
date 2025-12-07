@@ -24,21 +24,23 @@ export async function generateStaticParams() {
 
   return edges
     .map(edge => edge?.node)
-    .filter(node => node !== null && node !== undefined)
-    .map(node => {
-      const pathParts = node._sys.relativePath.split('/');
-      return {
-        locale: pathParts[0],
-        slug: node._sys.filename,
-      };
-    });
+    .filter((node): node is NonNullable<typeof node> => !!node && !!node._sys?.relativePath && !!node._sys?.filename)
+    .map((node) => node._sys.relativePath.split('/'))
+    .filter((parts) => Array.isArray(parts) && typeof parts[0] === 'string' && parts[0].length > 0)
+    .map((parts) => ({
+      locale: parts[0],
+      slug: parts[parts.length - 1]?.replace(/\.mdx$/, '') || '',
+    }))
+    .filter((p) => p.locale && p.slug);
 }
 
 export default async function PortfolioPostPage({ params }: PortfolioPostPageProps) {
   const { locale, slug } = await params;
   
+  // On Windows, Tina indexes files with backslashes
+  const separator = process.platform === 'win32' ? '\\' : '/';
   const postData = await client.queries.portfolio({
-    relativePath: `${locale}/${slug}.mdx`,
+    relativePath: `${locale}${separator}${slug}.mdx`,
   });
 
   const post = postData?.data?.portfolio;

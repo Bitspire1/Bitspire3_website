@@ -57,7 +57,7 @@ export function HomeClient({ data, portfolioProjects = [], locale }: HomeClientP
         
         {/* Portfolio Highlights */}
         {portfolioProjects && portfolioProjects.length > 0 && (
-          <PortfolioHighlights locale={locale} projects={portfolioProjects} />
+          <PortfolioHighlights mode="direct" locale={locale} projects={portfolioProjects} />
         )}
         
         {/* FAQ */}

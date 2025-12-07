@@ -23,6 +23,7 @@ export function generateStaticParams() {
 
 // Load Header and Footer data from TinaCMS and fail hard when missing
 async function getHeaderFooterData(locale: string) {
+  // Use forward slashes - TinaCMS pattern matching on Windows handles both
   const [headerResult, footerResult] = await Promise.all([
     client.queries.header({ relativePath: `${locale}/header.mdx` }),
     client.queries.footer({ relativePath: `${locale}/footer.mdx` }),

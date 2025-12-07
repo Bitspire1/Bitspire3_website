@@ -1,7 +1,7 @@
 import { defineConfig } from "tinacms";
 
 export default defineConfig({
-  branch: "main",
+  branch: "master",
   
   // Get this from tina.io
   clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID,
@@ -14,7 +14,7 @@ export default defineConfig({
   },
   media: {
     tina: {
-      mediaRoot: "",
+      mediaRoot: "portfolio",
       publicFolder: "public",
     },
   },
@@ -27,7 +27,7 @@ export default defineConfig({
         path: "content/global",
         format: "mdx",
         match: {
-          include: '*/header',
+          include: '**/*header.mdx',
         },
         ui: {
           router: ({ document }) => {
@@ -90,7 +90,7 @@ export default defineConfig({
         path: "content/global",
         format: "mdx",
         match: {
-          include: '*/footer',
+          include: '**/*footer.mdx',
         },
         ui: {
           router: ({ document }) => {
@@ -628,6 +628,11 @@ export default defineConfig({
                 type: "string",
                 name: "title",
                 label: "Section Title",
+              },
+              {
+                type: "string",
+                name: "titleAccent",
+                label: "Title Accent (Highlighted Text)",
               },
               {
                 type: "string",
