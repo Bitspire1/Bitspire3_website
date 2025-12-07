@@ -35,12 +35,19 @@ interface FooterProps {
 }
 
 const FooterContent: React.FC<FooterProps> = ({ data, locale }) => {
+  // Graceful fallback for missing data
   if (!data) {
-    throw new Error('Footer content missing from TinaCMS');
+    return (
+      <footer className="bg-slate-900 border-t border-slate-800 py-8">
+        <div className="max-w-screen-2xl mx-auto px-4 text-center text-gray-400 text-sm">
+          Footer data unavailable
+        </div>
+      </footer>
+    );
   }
 
-  const companyName = data.companyName;
-  const description = data.description;
+  const companyName = data.companyName || 'Company';
+  const description = data.description || '';
   const contact = {
     email: data.contact?.email,
     phone: data.contact?.phone,
@@ -61,22 +68,6 @@ const FooterContent: React.FC<FooterProps> = ({ data, locale }) => {
 
   const cookieSettingsText = data.cookieSettingsText;
   const copyrightText = data.copyright;
-
-  if (!companyName || !description) {
-    throw new Error('Footer companyName or description missing in Tina content');
-  }
-
-  if (!contact.email || !contact.phone || !contact.location) {
-    throw new Error('Footer contact details missing in Tina content');
-  }
-
-  if (!navigation.length) {
-    throw new Error('Footer navigation missing in Tina content');
-  }
-
-  if (!socialMedia.length) {
-    throw new Error('Footer social media links missing in Tina content');
-  }
 
   if (!legalLinks.length) {
     throw new Error('Footer legal links missing in Tina content');

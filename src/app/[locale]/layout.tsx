@@ -1,13 +1,15 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import fs from 'fs/promises';
+import path from 'path';
+import matter from 'gray-matter';
 import { locales, type Locale } from '@/i18n/request';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { CursorLightProvider } from '@/hooks/cursor-light';
 import { CookieBanner } from '@/components/ui/CookieBanner';
 import { AnalyticsGate } from '@/providers/AnalyticsGate';
-import client from '../../../tina/__generated__/client';
 import '../globals.css';
 import type { Metadata } from 'next';
 
@@ -21,25 +23,30 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-// Load Header and Footer data from TinaCMS and fail hard when missing
+// Load Header and Footer data from filesystem
+// Returns empty defaults if files missing to prevent 500 errors
 async function getHeaderFooterData(locale: string) {
-  const [headerResult, footerResult] = await Promise.all([
-    client.queries.header({ relativePath: `${locale}/header.mdx` }),
-    client.queries.footer({ relativePath: `${locale}/footer.mdx` }),
-  ]);
+  const baseDir = path.join(process.cwd(), 'content', 'global', locale);
+  const headerPath = path.join(baseDir, 'header.mdx');
+  const footerPath = path.join(baseDir, 'footer.mdx');
 
-  const headerData = headerResult?.data?.header;
-  const footerData = footerResult?.data?.footer;
+  const defaultHeader: Record<string, unknown> = { logo: '', logoAlt: '', navigation: [], ctaButton: {} };
+  const defaultFooter: Record<string, unknown> = { copyright: '' };
 
-  if (!headerData) {
-    throw new Error(`Missing header content for locale: ${locale}`);
+  try {
+    const [headerRaw, footerRaw] = await Promise.all([
+      fs.readFile(headerPath, 'utf8'),
+      fs.readFile(footerPath, 'utf8'),
+    ]);
+
+    const headerData = matter(headerRaw).data || defaultHeader;
+    const footerData = matter(footerRaw).data || defaultFooter;
+
+    return { headerData, footerData };
+  } catch (err) {
+    console.warn('[layout] Failed to read header/footer, using defaults:', err);
+    return { headerData: defaultHeader, footerData: defaultFooter };
   }
-
-  if (!footerData) {
-    throw new Error(`Missing footer content for locale: ${locale}`);
-  }
-
-  return { headerData, footerData };
 }
 
 export default async function LocaleLayout({

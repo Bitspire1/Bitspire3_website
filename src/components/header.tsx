@@ -17,27 +17,33 @@ interface HeaderProps {
 const HeaderContent: React.FC<HeaderProps> = ({ data, locale }) => {
   const [open, setOpen] = useState(false);
 
+  // Graceful fallback for missing data
   if (!data) {
-    throw new Error('Header content missing from TinaCMS');
+    return (
+      <header className="fixed top-0 left-0 right-0 z-50 py-4 px-4 sm:px-6">
+        <div className="bg-gray-900/70 border border-gray-700 text-white max-w-screen-2xl mx-auto rounded-xl shadow-xl h-16 flex items-center px-4">
+          <span className="text-sm text-gray-400">Header data unavailable</span>
+        </div>
+      </header>
+    );
   }
 
   const logo = data.logo;
-  const logoAlt = data.logoAlt;
+  const logoAlt = data.logoAlt || 'Logo';
   const navigation = data.navigation?.filter((item): item is { label: string; href: string } =>
     item !== null && typeof item.label === 'string' && typeof item.href === 'string'
   ) || [];
   const ctaButton = data.ctaButton;
 
-  if (!logo || !logoAlt) {
-    throw new Error('Header logo or alt text missing in Tina content');
-  }
-
-  if (!navigation.length) {
-    throw new Error('Header navigation missing in Tina content');
-  }
-
-  if (!ctaButton?.text || !ctaButton?.href) {
-    throw new Error('Header CTA missing in Tina content');
+  // Graceful fallbacks for missing required fields
+  if (!logo) {
+    return (
+      <header className="fixed top-0 left-0 right-0 z-50 py-4 px-4 sm:px-6">
+        <div className="bg-gray-900/70 border border-gray-700 text-white max-w-screen-2xl mx-auto rounded-xl shadow-xl h-16 flex items-center px-4">
+          <span className="text-sm text-gray-400">Logo missing</span>
+        </div>
+      </header>
+    );
   }
 
   return (

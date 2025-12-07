@@ -16,11 +16,11 @@ export default function PreviewLayout({
   return (
     <NextIntlClientProvider locale={currentLocale} messages={{}}>
       <div className="min-h-screen bg-slate-900">
-        <Header />
+        <Header data={null} locale={currentLocale} />
         <div className="pt-20">
           {children}
         </div>
-        <Footer />
+        <Footer data={null} locale={currentLocale} />
       </div>
     </NextIntlClientProvider>
   );

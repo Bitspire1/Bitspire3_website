@@ -3,10 +3,11 @@ import { defineConfig } from "tinacms";
 export default defineConfig({
   branch: "master",
   
-  // Get this from tina.io
-  clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID,
-  // Get this from tina.io
-  token: process.env.TINA_TOKEN,
+  // Only use cloud credentials if available (for production)
+  ...(process.env.NEXT_PUBLIC_TINA_CLIENT_ID && process.env.TINA_TOKEN ? {
+    clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID,
+    token: process.env.TINA_TOKEN,
+  } : {}),
 
   build: {
     outputFolder: "admin",
@@ -27,7 +28,7 @@ export default defineConfig({
         path: "content/global",
         format: "mdx",
         match: {
-          include: '*\\header.mdx',
+          include: '**/header.mdx',
         },
         ui: {
           router: ({ document }) => {
@@ -90,7 +91,7 @@ export default defineConfig({
         path: "content/global",
         format: "mdx",
         match: {
-          include: '*\\footer.mdx',
+          include: '**/footer.mdx',
         },
         ui: {
           router: ({ document }) => {

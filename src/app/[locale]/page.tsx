@@ -1,63 +1,50 @@
+import fs from "fs/promises";
+import path from "path";
+import matter from "gray-matter";
 import { HomeClient } from "@/components/HomeClient";
-// Use relative path because tina/__generated__ is outside src/
-import { client } from "../../../tina/__generated__/client";
 
-// Load page data from TinaCMS
+// Load page data from filesystem frontmatter
 async function getPageData(locale: string) {
-  try {
-    const relativePath = `${locale}/home.mdx`;
-    
-    // Query pages collection with proper parameters
-    const result = await client.queries.pages({
-      relativePath,
-    });
+  const filePath = path.join(process.cwd(), "content", "pages", locale, "home.mdx");
+  const raw = await fs.readFile(filePath, "utf8");
+  const { data } = matter(raw);
 
-    if (!result?.data?.pages) {
-      throw new Error(`Missing home page data for locale: ${locale}`);
-    }
-
-    return result.data.pages;
-  } catch (error) {
-    console.warn(`[page.tsx] Failed to load page data for locale "${locale}":`, error);
-    throw error;
+  if (!data) {
+    throw new Error(`Missing home page data for locale: ${locale}`);
   }
+
+  return data as Record<string, unknown>;
 }
 
-// Load portfolio projects for highlights
+// Load portfolio projects for highlights from filesystem
 async function getPortfolioProjects(locale: string) {
-  try {
-    const portfolioConnection = await client.queries.portfolioConnection();
-    const edges = portfolioConnection?.data?.portfolioConnection?.edges;
+  const dir = path.join(process.cwd(), "content", "portfolio", locale);
+  const entries = await fs.readdir(dir);
 
-    if (!edges) {
-      throw new Error("Portfolio data is missing");
-    }
+  const projects = await Promise.all(
+    entries
+      .filter((file) => file.endsWith(".mdx"))
+      .map(async (file) => {
+        const raw = await fs.readFile(path.join(dir, file), "utf8");
+        const { data } = matter(raw);
+        const slug = file.replace(/\.mdx$/, "");
 
-    return edges
-      .map(edge => edge?.node)
-      .filter((node): node is NonNullable<typeof node> => 
-        node !== null && node !== undefined && node._sys.relativePath.startsWith(`${locale}/`)
-      )
-      .map(node => ({
-        title: node.title || '',
-        slug: node._sys.filename,
-        excerpt: node.excerpt || '',
-        image: node.image || '',
-        imageAlt: node.imageAlt || node.title || '',
-        category: node.category || '',
-        date: node.date || '',
-      }));
-  } catch (error) {
-    console.warn(`[page.tsx] Failed to load portfolio data for locale "${locale}":`, error);
-    throw error;
-  }
+        return {
+          title: String((data as Record<string, unknown>).title || ""),
+          slug,
+          excerpt: String((data as Record<string, unknown>).excerpt || ""),
+          image: String((data as Record<string, unknown>).image || ""),
+          imageAlt: String((data as Record<string, unknown>).imageAlt || (data as Record<string, unknown>).title || ""),
+          category: String((data as Record<string, unknown>).category || ""),
+          date: String((data as Record<string, unknown>).date || ""),
+        };
+      })
+  );
+
+  return projects;
 }
 
-export default async function Home({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const pageData = await getPageData(locale);
   const portfolioProjects = await getPortfolioProjects(locale);

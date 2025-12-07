@@ -21,8 +21,16 @@ interface HomeClientProps {
 }
 
 export function HomeClient({ data, portfolioProjects = [], locale }: HomeClientProps) {
+  // Graceful fallback for missing data
   if (!data) {
-    throw new Error('Home page content missing from TinaCMS');
+    return (
+      <div className="min-h-screen pt-20 relative overflow-hidden flex items-center justify-center">
+        <Background />
+        <main className="relative z-10 text-center">
+          <p className="text-gray-400">Home page content unavailable</p>
+        </main>
+      </div>
+    );
   }
 
   const heroData = 'hero' in data ? data.hero : undefined;
@@ -32,39 +40,37 @@ export function HomeClient({ data, portfolioProjects = [], locale }: HomeClientP
   const faqData = 'faq' in data ? data.faq : undefined;
   const contactData = 'contact' in data ? data.contact : undefined;
 
-  if (!heroData || !technologyData || !offerData || !howWeWorkData || !faqData || !contactData) {
-    throw new Error('Home page sections missing in Tina content');
+  const hasSections = Boolean(heroData || technologyData || offerData || howWeWorkData || faqData || contactData);
+
+  if (!hasSections) {
+    return (
+      <div className="min-h-screen pt-20 relative overflow-hidden flex items-center justify-center">
+        <Background />
+        <main className="relative z-10 text-center">
+          <p className="text-gray-400">Page sections unavailable</p>
+        </main>
+      </div>
+    );
   }
 
   return (
     <div className="min-h-screen pt-20 relative overflow-hidden">
       <Background />
       
-      {/* Główna zawartość strony */}
       <main className="relative z-10">
-        {/* Hero + Technology with continuous grid */}
-        <div className="bg-grid-pattern">
-          <Hero data={heroData as never} />
-          <Technology data={technologyData as never} />
-        </div>
-        
-        <div id="offer-section">
-          <Offer data={offerData as never} />
-        </div>
-        
-        {/* Jak pracujemy */}
-        <HowWeWork data={howWeWorkData as never} />
-        
-        {/* Portfolio Highlights */}
-        {portfolioProjects && portfolioProjects.length > 0 && (
+        {heroData ? <Hero data={heroData as never} /> : null}
+        {technologyData ? <Technology data={technologyData as never} /> : null}
+        {offerData ? (
+          <div id="offer-section">
+            <Offer data={offerData as never} />
+          </div>
+        ) : null}
+        {howWeWorkData ? <HowWeWork data={howWeWorkData as never} /> : null}
+        {portfolioProjects && portfolioProjects.length > 0 ? (
           <PortfolioHighlights mode="direct" locale={locale} projects={portfolioProjects} />
-        )}
-        
-        {/* FAQ */}
-        <FAQ data={faqData as never} />
-        
-        {/* Contact */}
-        <Contact data={contactData as never} />
+        ) : null}
+        {faqData ? <FAQ data={faqData as never} /> : null}
+        {contactData ? <Contact data={contactData as never} /> : null}
       </main>
     </div>
   );

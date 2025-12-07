@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import React from "react";
-import client from "@tina/__generated__/client";
+import fs from "fs/promises";
+import path from "path";
+import matter from "gray-matter";
 import LegalPage from "@/components/sections/LegalPage";
 import { getMdxFileName } from "@/i18n/routing";
 import type { Locale } from "@/i18n/request";
@@ -24,13 +26,12 @@ export default async function PolitykaCookiesPage({ params }: { params: Promise<
   const fileName = getMdxFileName('cookies', locale as Locale);
   
   try {
-    const pageData = await client.queries.pages({
-      relativePath: `${locale}/${fileName}`,
-    });
-
-    return <LegalPage data={pageData.data.pages} />;
-  } catch {
-    // Failed to load cookies policy
+    const filePath = path.join(process.cwd(), "content", "pages", locale, fileName);
+    const raw = await fs.readFile(filePath, "utf8");
+    const { data } = matter(raw);
+    return <LegalPage data={data as Record<string, unknown>} />;
+  } catch (error) {
+    console.warn(`[cookies] Failed to read ${fileName} for ${locale}:`, error);
     return <LegalPage data={undefined} />;
   }
 }

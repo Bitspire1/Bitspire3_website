@@ -1,5 +1,7 @@
 import React from "react";
-import client from "@tina/__generated__/client";
+import fs from "fs/promises";
+import path from "path";
+import matter from "gray-matter";
 import { Background } from "@/components/background";
 import { BlogListClient } from "@/components/blog/BlogListClient";
 
@@ -10,27 +12,34 @@ export const metadata = {
 
 export default async function BlogPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  
-  // Fetch all blog posts for the current locale
-  const blogConnection = await client.queries.blogConnection();
-  const edges = blogConnection?.data?.blogConnection?.edges;
 
-  if (!edges) {
-    throw new Error("Blog data is missing");
-  }
-  
-  // Filter posts by locale and remove null/undefined
-  const posts = edges
-    .map(edge => edge?.node)
-    .filter((node): node is NonNullable<typeof node> => 
-      node !== null && node !== undefined && node._sys.relativePath.startsWith(`${locale}/`)
-    )
-    .sort((a, b) => {
-      // Sort by date, newest first
-      const dateA = a.date ? new Date(a.date).getTime() : 0;
-      const dateB = b.date ? new Date(b.date).getTime() : 0;
-      return dateB - dateA;
-    });
+  const dir = path.join(process.cwd(), "content", "blog", locale);
+  const files = await fs.readdir(dir).catch(() => [] as string[]);
+
+  const posts = (await Promise.all(
+    files
+      .filter((file) => file.endsWith(".mdx"))
+      .map(async (file) => {
+        const raw = await fs.readFile(path.join(dir, file), "utf8");
+        const { data } = matter(raw);
+        const dateValue = (data as Record<string, unknown>).date;
+        const slug = file.replace(/\.mdx$/, "");
+
+        return {
+          ...data,
+          title: String((data as Record<string, unknown>).title || ""),
+          description: String((data as Record<string, unknown>).description || (data as Record<string, unknown>).excerpt || ""),
+          excerpt: String((data as Record<string, unknown>).excerpt || ""),
+          slug,
+          _sys: {
+            filename: slug,
+            relativePath: `${locale}/${file}`,
+          },
+          dateMs: dateValue ? new Date(String(dateValue)).getTime() : 0,
+        };
+      })
+  ))
+    .sort((a, b) => b.dateMs - a.dateMs);
 
   return (
     <div className="min-h-screen pt-24 relative overflow-hidden">

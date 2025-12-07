@@ -1,13 +1,26 @@
 import React from "react";
 import { promises as fs } from "fs";
 import path from "path";
-import client from "@tina/__generated__/client";
+import matter from "gray-matter";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Background } from "@/components/background";
-import { convertTinaBodyToMarkdown } from "@/lib/tina-utils";
 import { markdownToHtml } from "@/lib/markdown-to-html";
+
+type PortfolioFrontmatter = {
+  title?: string;
+  excerpt?: string;
+  description?: string;
+  category?: string;
+  year?: string;
+  image?: string;
+  imageAlt?: string;
+  tags?: string[];
+  link?: string;
+  date?: string;
+  client?: string;
+};
 
 interface PortfolioPostPageProps {
   params: Promise<{
@@ -54,18 +67,38 @@ export async function generateStaticParams() {
 
 export default async function PortfolioPostPage({ params }: PortfolioPostPageProps) {
   const { locale, slug } = await params;
-  
-  // On Windows, Tina indexes files with backslashes
-  const separator = process.platform === 'win32' ? '\\' : '/';
-  const postData = await client.queries.portfolio({
-    relativePath: `${locale}${separator}${slug}.mdx`,
+  const filePath = path.join(process.cwd(), "content", "portfolio", locale, `${slug}.mdx`);
+
+  const fileData = await fs.readFile(filePath, "utf8").catch((error) => {
+    console.warn(`[portfolio/[slug]] Missing file at ${filePath}:`, error);
+    return null;
   });
 
-  const post = postData?.data?.portfolio;
-  
-  if (!post) {
+  if (!fileData) {
     notFound();
   }
+
+  const { data, content } = matter(fileData);
+
+  if (!data) {
+    notFound();
+  }
+
+  type PortfolioFrontmatter = {
+    title?: string;
+    excerpt?: string;
+    description?: string;
+    category?: string;
+    year?: string;
+    image?: string;
+    imageAlt?: string;
+    tags?: string[];
+    link?: string;
+    date?: string;
+    client?: string;
+  };
+
+  const post = data as PortfolioFrontmatter;
 
   // Format date
   const formattedDate = post.date 
@@ -77,10 +110,7 @@ export default async function PortfolioPostPage({ params }: PortfolioPostPagePro
     : '';
   
   // Convert markdown to HTML
-  const markdownContent = post.body && typeof post.body === 'object' && 'children' in post.body 
-    ? convertTinaBodyToMarkdown(post.body) 
-    : '';
-  const htmlContent = await markdownToHtml(markdownContent);
+  const htmlContent = await markdownToHtml(content);
 
   return (
     <div className="min-h-screen bg-slate-900 pt-24 relative overflow-hidden">
@@ -240,15 +270,10 @@ export default async function PortfolioPostPage({ params }: PortfolioPostPagePro
 
 export async function generateMetadata({ params }: PortfolioPostPageProps) {
   const { locale, slug } = await params;
-  const postData = await client.queries.portfolio({
-    relativePath: `${locale}/${slug}.mdx`,
-  });
-
-  const post = postData?.data?.portfolio;
-
-  if (!post) {
-    notFound();
-  }
+  const filePath = path.join(process.cwd(), "content", "portfolio", locale, `${slug}.mdx`);
+  const raw = await fs.readFile(filePath, "utf8");
+  const { data } = matter(raw);
+  const post = data as PortfolioFrontmatter;
 
   return {
     title: post.title || 'Portfolio',

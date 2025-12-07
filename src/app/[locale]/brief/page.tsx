@@ -1,24 +1,23 @@
 import { Background } from "@/components/background";
 import Brief from "@/components/sections/Brief";
-import client from "../../../../tina/__generated__/client";
+import fs from "fs/promises";
+import path from "path";
+import matter from "gray-matter";
 
-// Load page data from TinaCMS
+// Load page data from filesystem (home.mdx frontmatter)
 async function getPageData(locale: string) {
-  try {
-    const relativePath = `${locale}/home.mdx`;
-    
-    const result = await client.queries.pages({
-      relativePath: relativePath
-    });
+  const filePath = path.join(process.cwd(), "content", "pages", locale, "home.mdx");
+  const raw = await fs.readFile(filePath, "utf8").catch((error) => {
+    console.warn(`[brief] Missing home.mdx for ${locale}:`, error);
+    return null;
+  });
 
-    if (!result?.data?.pages) {
-      throw new Error('No data returned from TinaCMS');
-    }
-
-    return result.data.pages;
-  } catch (error) {
-    throw error;
+  if (!raw) {
+    return null;
   }
+
+  const { data } = matter(raw);
+  return data as Record<string, unknown>;
 }
 
 export default async function BriefPage({
@@ -28,6 +27,9 @@ export default async function BriefPage({
 }) {
   const { locale } = await params;
   const pageData = await getPageData(locale);
+  const briefData: Record<string, unknown> | null = pageData && typeof pageData === 'object' && 'brief' in pageData
+    ? ((pageData as { brief?: Record<string, unknown> }).brief ?? null)
+    : null;
 
   return (
     <div className="min-h-screen bg-slate-900 pt-20 relative overflow-hidden">
@@ -35,11 +37,11 @@ export default async function BriefPage({
       
       {/* Główna zawartość strony */}
       <main className="relative z-10">
-        {pageData?.brief && (
+        {briefData ? (
           <div id="brief-section">
-            <Brief data={pageData.brief} />
+            <Brief data={briefData as Record<string, unknown>} />
           </div>
-        )}
+        ) : null}
       </main>
     </div>
   );

@@ -1,12 +1,11 @@
 import React from "react";
 import { promises as fs } from "fs";
 import path from "path";
-import client from "@tina/__generated__/client";
+import matter from "gray-matter";
 import { Background } from "@/components/background";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { convertTinaBodyToMarkdown } from "@/lib/tina-utils";
 import { markdownToHtml } from "@/lib/markdown-to-html";
 import { RelatedArticles } from "@/components/blog/RelatedArticles";
 
@@ -46,56 +45,70 @@ export async function generateStaticParams() {
   return await getBlogSlugs();
 }
 
-export default async function BlogPostPage({ 
-  params 
-}: { 
-  params: Promise<{ locale: string; slug: string }> 
-}) {
+export default async function BlogPostPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params;
-  
-  // On Windows, Tina indexes files with backslashes
-  const separator = process.platform === 'win32' ? '\\' : '/';
-  const response = await client.queries.blog({
-    relativePath: `${locale}${separator}${slug}.mdx`,
+
+  const filePath = path.join(process.cwd(), "content", "blog", locale, `${slug}.mdx`);
+
+  const fileData = await fs.readFile(filePath, "utf8").catch((error) => {
+    console.warn(`[blog/[slug]] Missing file at ${filePath}:`, error);
+    return null;
   });
 
-  const post = response?.data?.blog;
-
-  if (!post) {
+  if (!fileData) {
     notFound();
   }
 
-  const markdownContent = post.body ? convertTinaBodyToMarkdown(post.body) : '';
-  const htmlContent = await markdownToHtml(markdownContent);
+  const { data, content } = matter(fileData);
+
+  if (!data) {
+    notFound();
+  }
+
+  type BlogFrontmatter = {
+    title?: string;
+    excerpt?: string;
+    description?: string;
+    category?: string;
+    author?: string;
+    image?: string;
+    imageAlt?: string;
+    tags?: string[];
+    readTime?: number;
+    date?: string;
+  };
+
+  const post = data as BlogFrontmatter;
+
+  const htmlContent = await markdownToHtml(content);
   
   const formattedDate = post.date 
-    ? new Date(post.date).toLocaleDateString(locale === 'pl' ? 'pl-PL' : 'en-US', {
+    ? new Date(String(post.date)).toLocaleDateString(locale === 'pl' ? 'pl-PL' : 'en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
       })
     : '';
 
-  // Fetch all blog posts for related articles
-  const blogConnection = await client.queries.blogConnection();
-  const relatedEdges = blogConnection?.data?.blogConnection?.edges;
-
-  if (!relatedEdges) {
-    throw new Error("Related blog posts are missing");
-  }
-
-  const allPosts: Array<{ title: string; slug: string; excerpt?: string; image?: string; date?: string; readTime?: string }> = relatedEdges
-    .map(edge => edge?.node)
-    .filter(node => node !== null && node !== undefined)
-    .filter(node => node._sys.relativePath.startsWith(`${locale}/`))
-    .map(node => ({
-      title: node.title || '',
-      slug: node._sys.filename,
-      excerpt: node.excerpt || undefined,
-      image: node.image || undefined,
-      date: node.date || undefined,
-      readTime: node.readTime ? String(node.readTime) : undefined,
-    }));
+  const relatedDir = path.join(process.cwd(), "content", "blog", locale);
+  const relatedFiles = await fs.readdir(relatedDir);
+  const allPosts: Array<{ title: string; slug: string; excerpt?: string; image?: string; date?: string; readTime?: string }> = await Promise.all(
+    relatedFiles
+      .filter((file) => file.endsWith(".mdx"))
+      .map(async (file) => {
+        const raw = await fs.readFile(path.join(relatedDir, file), "utf8");
+        const { data: relatedData } = matter(raw);
+        const relatedSlug = file.replace(/\.mdx$/, "");
+        return {
+          title: (relatedData as Record<string, unknown>).title as string,
+          slug: relatedSlug,
+          excerpt: (relatedData as Record<string, unknown>).excerpt as string | undefined,
+          image: (relatedData as Record<string, unknown>).image as string | undefined,
+          date: (relatedData as Record<string, unknown>).date as string | undefined,
+          readTime: (relatedData as Record<string, unknown>).readTime ? String((relatedData as Record<string, unknown>).readTime) : undefined,
+        };
+      })
+  );
 
   return (
     <div className="min-h-screen bg-slate-900 pt-24 relative overflow-hidden">
