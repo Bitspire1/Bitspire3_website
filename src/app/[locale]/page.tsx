@@ -5,7 +5,6 @@ import { client } from "../../../tina/__generated__/client";
 // Load page data from TinaCMS
 async function getPageData(locale: string) {
   try {
-    // Use forward slashes - TinaCMS pattern matching handles both on Windows
     const relativePath = `${locale}/home.mdx`;
     
     // Query pages collection with proper parameters

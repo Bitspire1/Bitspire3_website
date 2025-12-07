@@ -27,7 +27,7 @@ export default defineConfig({
         path: "content/global",
         format: "mdx",
         match: {
-          include: '**/*header.mdx',
+          include: '*\\header.mdx',
         },
         ui: {
           router: ({ document }) => {
@@ -90,7 +90,7 @@ export default defineConfig({
         path: "content/global",
         format: "mdx",
         match: {
-          include: '**/*footer.mdx',
+          include: '*\\footer.mdx',
         },
         ui: {
           router: ({ document }) => {
