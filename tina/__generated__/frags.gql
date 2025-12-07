@@ -80,6 +80,7 @@ fragment BlogParts on Blog {
 fragment PagesParts on Pages {
   __typename
   title
+  titleAccent
   description
   lastUpdate
   selectedProjects

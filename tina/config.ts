@@ -436,6 +436,11 @@ export default defineConfig({
           },
           {
             type: "string",
+            name: "titleAccent",
+            label: "Title Accent (for legal pages)",
+          },
+          {
+            type: "string",
             name: "description",
             label: "Meta Description",
           },

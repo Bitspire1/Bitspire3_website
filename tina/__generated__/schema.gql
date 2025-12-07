@@ -489,6 +489,7 @@ type PagesContact {
 
 type Pages implements Node & Document {
   title: String!
+  titleAccent: String
   description: String
   lastUpdate: String
   selectedProjects: [String]
@@ -638,6 +639,7 @@ input PagesContactFilter {
 
 input PagesFilter {
   title: StringFilter
+  titleAccent: StringFilter
   description: StringFilter
   lastUpdate: StringFilter
   selectedProjects: StringFilter
@@ -911,6 +913,7 @@ input PagesContactMutation {
 
 input PagesMutation {
   title: String
+  titleAccent: String
   description: String
   lastUpdate: String
   selectedProjects: [String]
