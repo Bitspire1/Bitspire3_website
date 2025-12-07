@@ -572,6 +572,7 @@ export type PagesOfferServices = {
 export type PagesOffer = {
   __typename?: 'PagesOffer';
   title?: Maybe<Scalars['String']['output']>;
+  titleAccent?: Maybe<Scalars['String']['output']>;
   subtitle?: Maybe<Scalars['String']['output']>;
   sectionLabel?: Maybe<Scalars['String']['output']>;
   services?: Maybe<Array<Maybe<PagesOfferServices>>>;
@@ -592,6 +593,13 @@ export type PagesBrief = {
   description?: Maybe<Scalars['String']['output']>;
   buttonText?: Maybe<Scalars['String']['output']>;
   contact?: Maybe<PagesBriefContact>;
+};
+
+export type PagesPortfolio = {
+  __typename?: 'PagesPortfolio';
+  title?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  sectionLabel?: Maybe<Scalars['String']['output']>;
 };
 
 export type PagesPortfolioHighlights = {
@@ -663,6 +671,7 @@ export type Pages = Node & Document & {
   technology?: Maybe<PagesTechnology>;
   offer?: Maybe<PagesOffer>;
   brief?: Maybe<PagesBrief>;
+  portfolio?: Maybe<PagesPortfolio>;
   portfolioHighlights?: Maybe<PagesPortfolioHighlights>;
   howWeWork?: Maybe<PagesHowWeWork>;
   faq?: Maybe<PagesFaq>;
@@ -722,6 +731,7 @@ export type PagesOfferServicesFilter = {
 
 export type PagesOfferFilter = {
   title?: InputMaybe<StringFilter>;
+  titleAccent?: InputMaybe<StringFilter>;
   subtitle?: InputMaybe<StringFilter>;
   sectionLabel?: InputMaybe<StringFilter>;
   services?: InputMaybe<PagesOfferServicesFilter>;
@@ -740,6 +750,12 @@ export type PagesBriefFilter = {
   description?: InputMaybe<StringFilter>;
   buttonText?: InputMaybe<StringFilter>;
   contact?: InputMaybe<PagesBriefContactFilter>;
+};
+
+export type PagesPortfolioFilter = {
+  title?: InputMaybe<StringFilter>;
+  description?: InputMaybe<StringFilter>;
+  sectionLabel?: InputMaybe<StringFilter>;
 };
 
 export type PagesPortfolioHighlightsFilter = {
@@ -804,6 +820,7 @@ export type PagesFilter = {
   technology?: InputMaybe<PagesTechnologyFilter>;
   offer?: InputMaybe<PagesOfferFilter>;
   brief?: InputMaybe<PagesBriefFilter>;
+  portfolio?: InputMaybe<PagesPortfolioFilter>;
   portfolioHighlights?: InputMaybe<PagesPortfolioHighlightsFilter>;
   howWeWork?: InputMaybe<PagesHowWeWorkFilter>;
   faq?: InputMaybe<PagesFaqFilter>;
@@ -1083,6 +1100,7 @@ export type PagesOfferServicesMutation = {
 
 export type PagesOfferMutation = {
   title?: InputMaybe<Scalars['String']['input']>;
+  titleAccent?: InputMaybe<Scalars['String']['input']>;
   subtitle?: InputMaybe<Scalars['String']['input']>;
   sectionLabel?: InputMaybe<Scalars['String']['input']>;
   services?: InputMaybe<Array<InputMaybe<PagesOfferServicesMutation>>>;
@@ -1101,6 +1119,12 @@ export type PagesBriefMutation = {
   description?: InputMaybe<Scalars['String']['input']>;
   buttonText?: InputMaybe<Scalars['String']['input']>;
   contact?: InputMaybe<PagesBriefContactMutation>;
+};
+
+export type PagesPortfolioMutation = {
+  title?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  sectionLabel?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PagesPortfolioHighlightsMutation = {
@@ -1165,6 +1189,7 @@ export type PagesMutation = {
   technology?: InputMaybe<PagesTechnologyMutation>;
   offer?: InputMaybe<PagesOfferMutation>;
   brief?: InputMaybe<PagesBriefMutation>;
+  portfolio?: InputMaybe<PagesPortfolioMutation>;
   portfolioHighlights?: InputMaybe<PagesPortfolioHighlightsMutation>;
   howWeWork?: InputMaybe<PagesHowWeWorkMutation>;
   faq?: InputMaybe<PagesFaqMutation>;
@@ -1180,7 +1205,7 @@ export type PortfolioPartsFragment = { __typename: 'Portfolio', title: string, s
 
 export type BlogPartsFragment = { __typename: 'Blog', title: string, slug: string, description: string, excerpt?: string | null, date: string, author: string, category?: string | null, tags?: Array<string | null> | null, image?: string | null, imageAlt?: string | null, readTime?: number | null, body?: any | null };
 
-export type PagesPartsFragment = { __typename: 'Pages', title: string, description?: string | null, lastUpdate?: string | null, selectedProjects?: Array<string | null> | null, body?: any | null, projects?: Array<{ __typename: 'PagesProjects', title?: string | null, description?: string | null, image?: string | null, imageAlt?: string | null, tags?: Array<string | null> | null, year?: string | null, link?: string | null } | null> | null, sections?: Array<{ __typename: 'PagesSections', id?: string | null, title?: string | null, content?: string | null } | null> | null, hero?: { __typename: 'PagesHero', title?: string | null, titleAccent?: string | null, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null, technology?: { __typename: 'PagesTechnology', title?: string | null, description?: string | null, items?: Array<{ __typename: 'PagesTechnologyItems', name?: string | null, icon?: string | null, useBrightness?: boolean | null } | null> | null } | null, offer?: { __typename: 'PagesOffer', title?: string | null, subtitle?: string | null, sectionLabel?: string | null, services?: Array<{ __typename: 'PagesOfferServices', title?: string | null, description?: string | null, icon?: string | null, features?: Array<string | null> | null, link?: string | null, buttonText?: string | null } | null> | null } | null, brief?: { __typename: 'PagesBrief', title?: string | null, description?: string | null, buttonText?: string | null, contact?: { __typename: 'PagesBriefContact', email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null } | null } | null, portfolioHighlights?: { __typename: 'PagesPortfolioHighlights', title?: string | null, description?: string | null } | null, howWeWork?: { __typename: 'PagesHowWeWork', title?: string | null, description?: string | null, ctaTitle?: string | null, ctaDescription?: string | null, ctaButton?: string | null, steps?: Array<{ __typename: 'PagesHowWeWorkSteps', title?: string | null, description?: string | null, icon?: string | null, duration?: string | null } | null> | null } | null, faq?: { __typename: 'PagesFaq', title?: string | null, description?: string | null, ctaQuestion?: string | null, ctaButton?: string | null, items?: Array<{ __typename: 'PagesFaqItems', question?: string | null, answer?: string | null } | null> | null } | null, contact?: { __typename: 'PagesContact', title?: string | null, description?: string | null, email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null, successTitle?: string | null, successMessage?: string | null, nameLabel?: string | null, emailLabel?: string | null, messageLabel?: string | null, buttonText?: string | null, contactDataTitle?: string | null } | null };
+export type PagesPartsFragment = { __typename: 'Pages', title: string, description?: string | null, lastUpdate?: string | null, selectedProjects?: Array<string | null> | null, body?: any | null, projects?: Array<{ __typename: 'PagesProjects', title?: string | null, description?: string | null, image?: string | null, imageAlt?: string | null, tags?: Array<string | null> | null, year?: string | null, link?: string | null } | null> | null, sections?: Array<{ __typename: 'PagesSections', id?: string | null, title?: string | null, content?: string | null } | null> | null, hero?: { __typename: 'PagesHero', title?: string | null, titleAccent?: string | null, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null, technology?: { __typename: 'PagesTechnology', title?: string | null, description?: string | null, items?: Array<{ __typename: 'PagesTechnologyItems', name?: string | null, icon?: string | null, useBrightness?: boolean | null } | null> | null } | null, offer?: { __typename: 'PagesOffer', title?: string | null, titleAccent?: string | null, subtitle?: string | null, sectionLabel?: string | null, services?: Array<{ __typename: 'PagesOfferServices', title?: string | null, description?: string | null, icon?: string | null, features?: Array<string | null> | null, link?: string | null, buttonText?: string | null } | null> | null } | null, brief?: { __typename: 'PagesBrief', title?: string | null, description?: string | null, buttonText?: string | null, contact?: { __typename: 'PagesBriefContact', email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null } | null } | null, portfolio?: { __typename: 'PagesPortfolio', title?: string | null, description?: string | null, sectionLabel?: string | null } | null, portfolioHighlights?: { __typename: 'PagesPortfolioHighlights', title?: string | null, description?: string | null } | null, howWeWork?: { __typename: 'PagesHowWeWork', title?: string | null, description?: string | null, ctaTitle?: string | null, ctaDescription?: string | null, ctaButton?: string | null, steps?: Array<{ __typename: 'PagesHowWeWorkSteps', title?: string | null, description?: string | null, icon?: string | null, duration?: string | null } | null> | null } | null, faq?: { __typename: 'PagesFaq', title?: string | null, description?: string | null, ctaQuestion?: string | null, ctaButton?: string | null, items?: Array<{ __typename: 'PagesFaqItems', question?: string | null, answer?: string | null } | null> | null } | null, contact?: { __typename: 'PagesContact', title?: string | null, description?: string | null, email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null, successTitle?: string | null, successMessage?: string | null, nameLabel?: string | null, emailLabel?: string | null, messageLabel?: string | null, buttonText?: string | null, contactDataTitle?: string | null } | null };
 
 export type HeaderQueryVariables = Exact<{
   relativePath: Scalars['String']['input'];
@@ -1263,7 +1288,7 @@ export type PagesQueryVariables = Exact<{
 }>;
 
 
-export type PagesQuery = { __typename?: 'Query', pages: { __typename: 'Pages', id: string, title: string, description?: string | null, lastUpdate?: string | null, selectedProjects?: Array<string | null> | null, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, projects?: Array<{ __typename: 'PagesProjects', title?: string | null, description?: string | null, image?: string | null, imageAlt?: string | null, tags?: Array<string | null> | null, year?: string | null, link?: string | null } | null> | null, sections?: Array<{ __typename: 'PagesSections', id?: string | null, title?: string | null, content?: string | null } | null> | null, hero?: { __typename: 'PagesHero', title?: string | null, titleAccent?: string | null, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null, technology?: { __typename: 'PagesTechnology', title?: string | null, description?: string | null, items?: Array<{ __typename: 'PagesTechnologyItems', name?: string | null, icon?: string | null, useBrightness?: boolean | null } | null> | null } | null, offer?: { __typename: 'PagesOffer', title?: string | null, subtitle?: string | null, sectionLabel?: string | null, services?: Array<{ __typename: 'PagesOfferServices', title?: string | null, description?: string | null, icon?: string | null, features?: Array<string | null> | null, link?: string | null, buttonText?: string | null } | null> | null } | null, brief?: { __typename: 'PagesBrief', title?: string | null, description?: string | null, buttonText?: string | null, contact?: { __typename: 'PagesBriefContact', email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null } | null } | null, portfolioHighlights?: { __typename: 'PagesPortfolioHighlights', title?: string | null, description?: string | null } | null, howWeWork?: { __typename: 'PagesHowWeWork', title?: string | null, description?: string | null, ctaTitle?: string | null, ctaDescription?: string | null, ctaButton?: string | null, steps?: Array<{ __typename: 'PagesHowWeWorkSteps', title?: string | null, description?: string | null, icon?: string | null, duration?: string | null } | null> | null } | null, faq?: { __typename: 'PagesFaq', title?: string | null, description?: string | null, ctaQuestion?: string | null, ctaButton?: string | null, items?: Array<{ __typename: 'PagesFaqItems', question?: string | null, answer?: string | null } | null> | null } | null, contact?: { __typename: 'PagesContact', title?: string | null, description?: string | null, email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null, successTitle?: string | null, successMessage?: string | null, nameLabel?: string | null, emailLabel?: string | null, messageLabel?: string | null, buttonText?: string | null, contactDataTitle?: string | null } | null } };
+export type PagesQuery = { __typename?: 'Query', pages: { __typename: 'Pages', id: string, title: string, description?: string | null, lastUpdate?: string | null, selectedProjects?: Array<string | null> | null, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, projects?: Array<{ __typename: 'PagesProjects', title?: string | null, description?: string | null, image?: string | null, imageAlt?: string | null, tags?: Array<string | null> | null, year?: string | null, link?: string | null } | null> | null, sections?: Array<{ __typename: 'PagesSections', id?: string | null, title?: string | null, content?: string | null } | null> | null, hero?: { __typename: 'PagesHero', title?: string | null, titleAccent?: string | null, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null, technology?: { __typename: 'PagesTechnology', title?: string | null, description?: string | null, items?: Array<{ __typename: 'PagesTechnologyItems', name?: string | null, icon?: string | null, useBrightness?: boolean | null } | null> | null } | null, offer?: { __typename: 'PagesOffer', title?: string | null, titleAccent?: string | null, subtitle?: string | null, sectionLabel?: string | null, services?: Array<{ __typename: 'PagesOfferServices', title?: string | null, description?: string | null, icon?: string | null, features?: Array<string | null> | null, link?: string | null, buttonText?: string | null } | null> | null } | null, brief?: { __typename: 'PagesBrief', title?: string | null, description?: string | null, buttonText?: string | null, contact?: { __typename: 'PagesBriefContact', email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null } | null } | null, portfolio?: { __typename: 'PagesPortfolio', title?: string | null, description?: string | null, sectionLabel?: string | null } | null, portfolioHighlights?: { __typename: 'PagesPortfolioHighlights', title?: string | null, description?: string | null } | null, howWeWork?: { __typename: 'PagesHowWeWork', title?: string | null, description?: string | null, ctaTitle?: string | null, ctaDescription?: string | null, ctaButton?: string | null, steps?: Array<{ __typename: 'PagesHowWeWorkSteps', title?: string | null, description?: string | null, icon?: string | null, duration?: string | null } | null> | null } | null, faq?: { __typename: 'PagesFaq', title?: string | null, description?: string | null, ctaQuestion?: string | null, ctaButton?: string | null, items?: Array<{ __typename: 'PagesFaqItems', question?: string | null, answer?: string | null } | null> | null } | null, contact?: { __typename: 'PagesContact', title?: string | null, description?: string | null, email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null, successTitle?: string | null, successMessage?: string | null, nameLabel?: string | null, emailLabel?: string | null, messageLabel?: string | null, buttonText?: string | null, contactDataTitle?: string | null } | null } };
 
 export type PagesConnectionQueryVariables = Exact<{
   before?: InputMaybe<Scalars['String']['input']>;
@@ -1275,7 +1300,7 @@ export type PagesConnectionQueryVariables = Exact<{
 }>;
 
 
-export type PagesConnectionQuery = { __typename?: 'Query', pagesConnection: { __typename?: 'PagesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'PagesConnectionEdges', cursor: string, node?: { __typename: 'Pages', id: string, title: string, description?: string | null, lastUpdate?: string | null, selectedProjects?: Array<string | null> | null, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, projects?: Array<{ __typename: 'PagesProjects', title?: string | null, description?: string | null, image?: string | null, imageAlt?: string | null, tags?: Array<string | null> | null, year?: string | null, link?: string | null } | null> | null, sections?: Array<{ __typename: 'PagesSections', id?: string | null, title?: string | null, content?: string | null } | null> | null, hero?: { __typename: 'PagesHero', title?: string | null, titleAccent?: string | null, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null, technology?: { __typename: 'PagesTechnology', title?: string | null, description?: string | null, items?: Array<{ __typename: 'PagesTechnologyItems', name?: string | null, icon?: string | null, useBrightness?: boolean | null } | null> | null } | null, offer?: { __typename: 'PagesOffer', title?: string | null, subtitle?: string | null, sectionLabel?: string | null, services?: Array<{ __typename: 'PagesOfferServices', title?: string | null, description?: string | null, icon?: string | null, features?: Array<string | null> | null, link?: string | null, buttonText?: string | null } | null> | null } | null, brief?: { __typename: 'PagesBrief', title?: string | null, description?: string | null, buttonText?: string | null, contact?: { __typename: 'PagesBriefContact', email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null } | null } | null, portfolioHighlights?: { __typename: 'PagesPortfolioHighlights', title?: string | null, description?: string | null } | null, howWeWork?: { __typename: 'PagesHowWeWork', title?: string | null, description?: string | null, ctaTitle?: string | null, ctaDescription?: string | null, ctaButton?: string | null, steps?: Array<{ __typename: 'PagesHowWeWorkSteps', title?: string | null, description?: string | null, icon?: string | null, duration?: string | null } | null> | null } | null, faq?: { __typename: 'PagesFaq', title?: string | null, description?: string | null, ctaQuestion?: string | null, ctaButton?: string | null, items?: Array<{ __typename: 'PagesFaqItems', question?: string | null, answer?: string | null } | null> | null } | null, contact?: { __typename: 'PagesContact', title?: string | null, description?: string | null, email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null, successTitle?: string | null, successMessage?: string | null, nameLabel?: string | null, emailLabel?: string | null, messageLabel?: string | null, buttonText?: string | null, contactDataTitle?: string | null } | null } | null } | null> | null } };
+export type PagesConnectionQuery = { __typename?: 'Query', pagesConnection: { __typename?: 'PagesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'PagesConnectionEdges', cursor: string, node?: { __typename: 'Pages', id: string, title: string, description?: string | null, lastUpdate?: string | null, selectedProjects?: Array<string | null> | null, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, projects?: Array<{ __typename: 'PagesProjects', title?: string | null, description?: string | null, image?: string | null, imageAlt?: string | null, tags?: Array<string | null> | null, year?: string | null, link?: string | null } | null> | null, sections?: Array<{ __typename: 'PagesSections', id?: string | null, title?: string | null, content?: string | null } | null> | null, hero?: { __typename: 'PagesHero', title?: string | null, titleAccent?: string | null, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null, technology?: { __typename: 'PagesTechnology', title?: string | null, description?: string | null, items?: Array<{ __typename: 'PagesTechnologyItems', name?: string | null, icon?: string | null, useBrightness?: boolean | null } | null> | null } | null, offer?: { __typename: 'PagesOffer', title?: string | null, titleAccent?: string | null, subtitle?: string | null, sectionLabel?: string | null, services?: Array<{ __typename: 'PagesOfferServices', title?: string | null, description?: string | null, icon?: string | null, features?: Array<string | null> | null, link?: string | null, buttonText?: string | null } | null> | null } | null, brief?: { __typename: 'PagesBrief', title?: string | null, description?: string | null, buttonText?: string | null, contact?: { __typename: 'PagesBriefContact', email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null } | null } | null, portfolio?: { __typename: 'PagesPortfolio', title?: string | null, description?: string | null, sectionLabel?: string | null } | null, portfolioHighlights?: { __typename: 'PagesPortfolioHighlights', title?: string | null, description?: string | null } | null, howWeWork?: { __typename: 'PagesHowWeWork', title?: string | null, description?: string | null, ctaTitle?: string | null, ctaDescription?: string | null, ctaButton?: string | null, steps?: Array<{ __typename: 'PagesHowWeWorkSteps', title?: string | null, description?: string | null, icon?: string | null, duration?: string | null } | null> | null } | null, faq?: { __typename: 'PagesFaq', title?: string | null, description?: string | null, ctaQuestion?: string | null, ctaButton?: string | null, items?: Array<{ __typename: 'PagesFaqItems', question?: string | null, answer?: string | null } | null> | null } | null, contact?: { __typename: 'PagesContact', title?: string | null, description?: string | null, email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null, successTitle?: string | null, successMessage?: string | null, nameLabel?: string | null, emailLabel?: string | null, messageLabel?: string | null, buttonText?: string | null, contactDataTitle?: string | null } | null } | null } | null> | null } };
 
 export const HeaderPartsFragmentDoc = gql`
     fragment HeaderParts on Header {
@@ -1407,6 +1432,7 @@ export const PagesPartsFragmentDoc = gql`
   offer {
     __typename
     title
+    titleAccent
     subtitle
     sectionLabel
     services {
@@ -1432,6 +1458,12 @@ export const PagesPartsFragmentDoc = gql`
       addressLine2
       city
     }
+  }
+  portfolio {
+    __typename
+    title
+    description
+    sectionLabel
   }
   portfolioHighlights {
     __typename

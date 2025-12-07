@@ -123,6 +123,7 @@ fragment PagesParts on Pages {
   offer {
     __typename
     title
+    titleAccent
     subtitle
     sectionLabel
     services {
@@ -148,6 +149,12 @@ fragment PagesParts on Pages {
       addressLine2
       city
     }
+  }
+  portfolio {
+    __typename
+    title
+    description
+    sectionLabel
   }
   portfolioHighlights {
     __typename

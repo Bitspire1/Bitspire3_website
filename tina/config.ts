@@ -451,9 +451,6 @@ export default defineConfig({
             label: "Selected Portfolio Projects",
             description: "Choose which portfolio projects to display (max 3 for highlights)",
             list: true,
-            ui: {
-              component: "list",
-            },
           },
           // Portfolio listing page projects
           {
@@ -632,6 +629,11 @@ export default defineConfig({
               },
               {
                 type: "string",
+                name: "titleAccent",
+                label: "Title Accent",
+              },
+              {
+                type: "string",
                 name: "subtitle",
                 label: "Section Subtitle",
                 ui: {
@@ -741,6 +743,28 @@ export default defineConfig({
                     label: "City & Postal Code",
                   },
                 ],
+              },
+            ],
+          },
+          {
+            type: "object",
+            name: "portfolio",
+            label: "Portfolio Section",
+            fields: [
+              {
+                type: "string",
+                name: "title",
+                label: "Section Title",
+              },
+              {
+                type: "string",
+                name: "description",
+                label: "Section Description",
+              },
+              {
+                type: "string",
+                name: "sectionLabel",
+                label: "Section Label",
               },
             ],
           },

@@ -409,6 +409,7 @@ type PagesOfferServices {
 
 type PagesOffer {
   title: String
+  titleAccent: String
   subtitle: String
   sectionLabel: String
   services: [PagesOfferServices]
@@ -427,6 +428,12 @@ type PagesBrief {
   description: String
   buttonText: String
   contact: PagesBriefContact
+}
+
+type PagesPortfolio {
+  title: String
+  description: String
+  sectionLabel: String
 }
 
 type PagesPortfolioHighlights {
@@ -491,6 +498,7 @@ type Pages implements Node & Document {
   technology: PagesTechnology
   offer: PagesOffer
   brief: PagesBrief
+  portfolio: PagesPortfolio
   portfolioHighlights: PagesPortfolioHighlights
   howWeWork: PagesHowWeWork
   faq: PagesFaq
@@ -550,6 +558,7 @@ input PagesOfferServicesFilter {
 
 input PagesOfferFilter {
   title: StringFilter
+  titleAccent: StringFilter
   subtitle: StringFilter
   sectionLabel: StringFilter
   services: PagesOfferServicesFilter
@@ -568,6 +577,12 @@ input PagesBriefFilter {
   description: StringFilter
   buttonText: StringFilter
   contact: PagesBriefContactFilter
+}
+
+input PagesPortfolioFilter {
+  title: StringFilter
+  description: StringFilter
+  sectionLabel: StringFilter
 }
 
 input PagesPortfolioHighlightsFilter {
@@ -632,6 +647,7 @@ input PagesFilter {
   technology: PagesTechnologyFilter
   offer: PagesOfferFilter
   brief: PagesBriefFilter
+  portfolio: PagesPortfolioFilter
   portfolioHighlights: PagesPortfolioHighlightsFilter
   howWeWork: PagesHowWeWorkFilter
   faq: PagesFaqFilter
@@ -815,6 +831,7 @@ input PagesOfferServicesMutation {
 
 input PagesOfferMutation {
   title: String
+  titleAccent: String
   subtitle: String
   sectionLabel: String
   services: [PagesOfferServicesMutation]
@@ -833,6 +850,12 @@ input PagesBriefMutation {
   description: String
   buttonText: String
   contact: PagesBriefContactMutation
+}
+
+input PagesPortfolioMutation {
+  title: String
+  description: String
+  sectionLabel: String
 }
 
 input PagesPortfolioHighlightsMutation {
@@ -897,6 +920,7 @@ input PagesMutation {
   technology: PagesTechnologyMutation
   offer: PagesOfferMutation
   brief: PagesBriefMutation
+  portfolio: PagesPortfolioMutation
   portfolioHighlights: PagesPortfolioHighlightsMutation
   howWeWork: PagesHowWeWorkMutation
   faq: PagesFaqMutation
