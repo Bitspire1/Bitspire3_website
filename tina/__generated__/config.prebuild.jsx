@@ -13,7 +13,7 @@ var config_default = defineConfig({
   },
   media: {
     tina: {
-      mediaRoot: "portfolio",
+      mediaRoot: "",
       publicFolder: "public"
     }
   },
@@ -205,7 +205,7 @@ var config_default = defineConfig({
         path: "content/portfolio",
         format: "mdx",
         match: {
-          include: "**/*"
+          include: "**/*.mdx"
         },
         ui: {
           router: ({ document }) => {
@@ -309,7 +309,7 @@ var config_default = defineConfig({
         path: "content/blog",
         format: "mdx",
         match: {
-          include: "**/*"
+          include: "**/*.mdx"
         },
         ui: {
           router: ({ document }) => {
@@ -401,7 +401,7 @@ var config_default = defineConfig({
         path: "content/pages",
         format: "mdx",
         match: {
-          include: "**/*"
+          include: "**/*.mdx"
         },
         ui: {
           router: ({ document }) => {

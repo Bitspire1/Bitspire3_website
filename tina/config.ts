@@ -15,7 +15,7 @@ export default defineConfig({
   },
   media: {
     tina: {
-      mediaRoot: "portfolio",
+      mediaRoot: "",
       publicFolder: "public",
     },
   },
@@ -208,7 +208,7 @@ export default defineConfig({
         path: "content/portfolio",
         format: "mdx",
         match: {
-          include: '**/*',
+          include: '**/*.mdx',
         },
         ui: {
           router: ({ document }) => {
@@ -315,7 +315,7 @@ export default defineConfig({
         path: "content/blog",
         format: "mdx",
         match: {
-          include: '**/*',
+          include: '**/*.mdx',
         },
         ui: {
           router: ({ document }) => {
@@ -410,7 +410,7 @@ export default defineConfig({
         path: "content/pages",
         format: "mdx",
         match: {
-          include: '**/*',
+          include: '**/*.mdx',
         },
         ui: {
           router: ({ document }) => {
