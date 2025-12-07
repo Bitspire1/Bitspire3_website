@@ -166,6 +166,11 @@ var config_default = defineConfig({
                 type: "string",
                 name: "url",
                 label: "URL"
+              },
+              {
+                type: "string",
+                name: "icon",
+                label: "Icon Name"
               }
             ]
           },

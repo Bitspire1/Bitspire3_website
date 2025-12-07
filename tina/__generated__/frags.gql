@@ -33,6 +33,7 @@ fragment FooterParts on Footer {
     __typename
     platform
     url
+    icon
   }
   copyright
   legalLinks {
