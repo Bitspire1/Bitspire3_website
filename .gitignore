@@ -54,8 +54,7 @@ next-env.d.ts
 Thumbs.db
 .DS_Store
 
-# TinaCMS - only ignore lock file, NOT the tina/ folder or __generated__/
-tina/tina-lock.json
+# TinaCMS - track lock file for schema sync
 
 # Cache
 .cache/
