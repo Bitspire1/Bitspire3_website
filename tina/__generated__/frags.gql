@@ -110,6 +110,17 @@ fragment PagesParts on Pages {
     __typename
     title
     description
+    projects {
+      __typename
+      title
+      slug
+      excerpt
+      image
+      imageAlt
+      category
+      date
+      featured
+    }
   }
   howWeWork {
     __typename

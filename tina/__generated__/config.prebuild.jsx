@@ -170,35 +170,30 @@ var config_default = defineConfig({
           {
             type: "string",
             name: "copyright",
-            label: "Copyright Text",
-            required: true
+            label: "Copyright Text"
           },
           {
             type: "object",
             name: "legalLinks",
             label: "Legal Links",
             list: true,
-            required: true,
             fields: [
               {
                 type: "string",
                 name: "label",
-                label: "Label",
-                required: true
+                label: "Label"
               },
               {
                 type: "string",
                 name: "href",
-                label: "Link",
-                required: true
+                label: "Link"
               }
             ]
           },
           {
             type: "string",
             name: "cookieSettingsText",
-            label: "Cookie Settings Button Text",
-            required: true
+            label: "Cookie Settings Button Text"
           }
         ]
       },
@@ -317,7 +312,23 @@ var config_default = defineConfig({
             label: "Portfolio Highlights",
             fields: [
               { type: "string", name: "title", label: "Title" },
-              { type: "string", name: "description", label: "Description", ui: { component: "textarea" } }
+              { type: "string", name: "description", label: "Description", ui: { component: "textarea" } },
+              {
+                type: "object",
+                name: "projects",
+                label: "Projects",
+                list: true,
+                fields: [
+                  { type: "string", name: "title", label: "Title" },
+                  { type: "string", name: "slug", label: "Slug" },
+                  { type: "string", name: "excerpt", label: "Excerpt", ui: { component: "textarea" } },
+                  { type: "image", name: "image", label: "Image" },
+                  { type: "string", name: "imageAlt", label: "Image Alt" },
+                  { type: "string", name: "category", label: "Category" },
+                  { type: "string", name: "date", label: "Date" },
+                  { type: "boolean", name: "featured", label: "Featured" }
+                ]
+              }
             ]
           },
           {

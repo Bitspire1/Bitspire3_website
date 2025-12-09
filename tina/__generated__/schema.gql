@@ -178,8 +178,8 @@ type FooterSocialMedia {
 }
 
 type FooterLegalLinks {
-  label: String!
-  href: String!
+  label: String
+  href: String
 }
 
 type Footer implements Node & Document {
@@ -188,9 +188,9 @@ type Footer implements Node & Document {
   contact: FooterContact
   navigation: [FooterNavigation]
   socialMedia: [FooterSocialMedia]
-  copyright: String!
-  legalLinks: [FooterLegalLinks!]!
-  cookieSettingsText: String!
+  copyright: String
+  legalLinks: [FooterLegalLinks]
+  cookieSettingsText: String
   id: ID!
   _sys: SystemInfo!
   _values: JSON!
@@ -299,9 +299,21 @@ type PagesPortfolio {
   sectionLabel: String
 }
 
+type PagesPortfolioHighlightsProjects {
+  title: String
+  slug: String
+  excerpt: String
+  image: String
+  imageAlt: String
+  category: String
+  date: String
+  featured: Boolean
+}
+
 type PagesPortfolioHighlights {
   title: String
   description: String
+  projects: [PagesPortfolioHighlightsProjects]
 }
 
 type PagesHowWeWorkSteps {
@@ -435,9 +447,21 @@ input PagesPortfolioFilter {
   sectionLabel: StringFilter
 }
 
+input PagesPortfolioHighlightsProjectsFilter {
+  title: StringFilter
+  slug: StringFilter
+  excerpt: StringFilter
+  image: ImageFilter
+  imageAlt: StringFilter
+  category: StringFilter
+  date: StringFilter
+  featured: BooleanFilter
+}
+
 input PagesPortfolioHighlightsFilter {
   title: StringFilter
   description: StringFilter
+  projects: PagesPortfolioHighlightsProjectsFilter
 }
 
 input PagesHowWeWorkStepsFilter {
@@ -772,9 +796,21 @@ input PagesPortfolioMutation {
   sectionLabel: String
 }
 
+input PagesPortfolioHighlightsProjectsMutation {
+  title: String
+  slug: String
+  excerpt: String
+  image: String
+  imageAlt: String
+  category: String
+  date: String
+  featured: Boolean
+}
+
 input PagesPortfolioHighlightsMutation {
   title: String
   description: String
+  projects: [PagesPortfolioHighlightsProjectsMutation]
 }
 
 input PagesHowWeWorkStepsMutation {

@@ -176,26 +176,22 @@ export default defineConfig({
             type: "string",
             name: "copyright",
             label: "Copyright Text",
-            required: true,
           },
           {
             type: "object",
             name: "legalLinks",
             label: "Legal Links",
             list: true,
-            required: true,
             fields: [
               {
                 type: "string",
                 name: "label",
                 label: "Label",
-                required: true,
               },
               {
                 type: "string",
                 name: "href",
                 label: "Link",
-                required: true,
               },
             ],
           },
@@ -203,7 +199,6 @@ export default defineConfig({
             type: "string",
             name: "cookieSettingsText",
             label: "Cookie Settings Button Text",
-            required: true,
           },
         ],
       },
@@ -323,6 +318,22 @@ export default defineConfig({
             fields: [
               { type: "string", name: "title", label: "Title" },
               { type: "string", name: "description", label: "Description", ui: { component: "textarea" } },
+              {
+                type: "object",
+                name: "projects",
+                label: "Projects",
+                list: true,
+                fields: [
+                  { type: "string", name: "title", label: "Title" },
+                  { type: "string", name: "slug", label: "Slug" },
+                  { type: "string", name: "excerpt", label: "Excerpt", ui: { component: "textarea" } },
+                  { type: "image", name: "image", label: "Image" },
+                  { type: "string", name: "imageAlt", label: "Image Alt" },
+                  { type: "string", name: "category", label: "Category" },
+                  { type: "string", name: "date", label: "Date" },
+                  { type: "boolean", name: "featured", label: "Featured" },
+                ],
+              },
             ],
           },
           {

@@ -2,11 +2,12 @@
 'use client';
 
 import { useEffect } from 'react';
+import { redirect } from 'next/navigation';
 
 export default function AdminIndex() {
   useEffect(() => {
-    // Redirect to TinaCMS admin with preview mode
-    window.location.href = '/admin/index.html#/~/admin/pl/home';
+    // Redirect to default locale admin page
+    window.location.href = '/admin/pl';
   }, []);
 
   return (
