@@ -1,76 +1,46 @@
 import { useState, useCallback } from 'react';
 
 interface UseBriefFormProps {
-  formName: 'brief-website' | 'brief-shop' | 'brief-logo' | 'brief-seo';
+  formName: string;
   requiredFields: string[];
 }
 
 interface UseBriefFormReturn {
   form: Record<string, string>;
-  setForm: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  setForm: (value: Record<string, string> | ((prev: Record<string, string>) => Record<string, string>)) => void;
   loading: boolean;
   success: boolean;
-  error: string;
-  setSuccess: React.Dispatch<React.SetStateAction<boolean>>;
-  setError: React.Dispatch<React.SetStateAction<string>>;
-  handleSubmit: (extraData?: Record<string, string>) => Promise<void>;
+  error: string | null;
+  handleSubmit: () => Promise<void>;
 }
 
 export const useBriefForm = ({ formName, requiredFields }: UseBriefFormProps): UseBriefFormReturn => {
   const [form, setForm] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
-  const encodeFormData = useCallback((data: Record<string, string>) => {
-    return Object.keys(data)
-      .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
-      .join("&");
-  }, []);
-
-  const handleSubmit = useCallback(async (extraData?: Record<string, string>) => {
-    const missing = requiredFields.filter((key) => !form[key] || form[key].trim() === "");
-    if (missing.length > 0) {
-      setError("Uzupełnij wszystkie wymagane pola oznaczone gwiazdką.");
-      return;
-    }
-
+  const handleSubmit = useCallback(async () => {
     setLoading(true);
-    setError("");
-
+    setError(null);
     try {
-      const formData = {
-        "form-name": formName,
-        ...form,
-        ...(extraData || {}),
-      };
-
-      await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: encodeFormData(formData),
+      const response = await fetch('/forms.html', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, formName }),
       });
-
-      setSuccess(true);
-    } catch (e: unknown) {
-      if (e instanceof Error) {
-        setError(e.message || "Błąd podczas wysyłania.");
+      if (response.ok) {
+        setSuccess(true);
+        setForm({});
       } else {
-        setError("Błąd podczas wysyłania.");
+        setError('Submission failed');
       }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
-  }, [form, requiredFields, formName, encodeFormData]);
+  }, [form, formName]);
 
-  return {
-    form,
-    setForm,
-    loading,
-    success,
-    error,
-    setSuccess,
-    setError,
-    handleSubmit,
-  };
+  return { form, setForm, loading, success, error, handleSubmit };
 };

@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import React from "react";
-import fs from "fs/promises";
-import path from "path";
-import matter from "gray-matter";
 import LegalPage from "@/components/sections/LegalPage";
+import { getPageData } from "@/lib/content/loader";
 import { getMdxFileName } from "@/i18n/routing";
 import type { Locale } from "@/i18n/request";
 
@@ -26,14 +24,7 @@ export default async function PrivacyPolicyPage({ params }: { params: Promise<{ 
   const { locale } = await params;
   
   const fileName = getMdxFileName('privacy', locale as Locale);
+  const data = await getPageData(locale, fileName.replace(/\.mdx$/, ''), 'pages');
   
-  try {
-    const filePath = path.join(process.cwd(), "content", "pages", locale, fileName);
-    const raw = await fs.readFile(filePath, "utf8");
-    const { data } = matter(raw);
-    return <LegalPage data={data as Record<string, unknown>} />;
-  } catch (error) {
-    console.warn(`[privacy] Failed to read ${fileName} for ${locale}:`, error);
-    return <LegalPage data={undefined} />;
-  }
+  return <LegalPage data={data as Record<string, unknown>} />;
 }

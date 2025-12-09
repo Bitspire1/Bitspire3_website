@@ -19,7 +19,7 @@ export function LanguageSwitcher() {
   const switchLanguage = (newLocale: string) => {
     // Check if we're in preview mode
     if (isInPreviewMode(pathname)) {
-      // Extract current path from pathname: /admin/preview/pl/home -> home
+      // Extract current path from pathname: /admin/pl/home -> home
       const currentPath = getPathFromPreviewPathname(pathname);
       
       // Use Next.js router to change only the locale, keeping the path

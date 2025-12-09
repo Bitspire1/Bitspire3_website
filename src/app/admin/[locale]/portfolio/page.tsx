@@ -1,16 +1,22 @@
+'use client';
+
+import { useTina } from 'tinacms/dist/react';
 import React from "react";
 import { Background } from "@/components/layout/background";
 import { PortfolioListClient } from "@/components/sections/Portfolio/PortfolioListClient";
 import { getPortfolioProjects } from "@/lib/content/loader";
 
-export const metadata = {
-  title: "Portfolio",
-  description: "Wybrane realizacje i projekty tworzone przez Bitspire.",
-};
-
 export default async function PortfolioPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const posts = await getPortfolioProjects(locale);
+
+  const { data } = useTina({
+    query: `query GetPortfolio { portfolioConnection { edges { node { _sys { filename relativePath } title slug excerpt image imageAlt category date } } } }`,
+    variables: {},
+    data: { portfolioConnection: { edges: (posts || []).map(project => ({ node: { _sys: { filename: project.slug, relativePath: `${locale}/${project.slug}.mdx` }, ...project } })) } }
+  });
+
+  const liveData = (data.portfolioConnection as any)?.edges || [];
 
   return (
     <div className="min-h-screen pt-24 relative overflow-hidden">
@@ -33,9 +39,9 @@ export default async function PortfolioPage({ params }: { params: Promise<{ loca
           </p>
         </header>
 
-        <PortfolioListClient posts={posts} locale={locale} />
+        <PortfolioListClient posts={liveData.map((edge: any) => edge.node)} locale={locale} />
 
-        {posts.length > 0 && (
+        {liveData.length > 0 && (
           <div className="mt-20 text-center">
             <p className="text-slate-400 text-sm">
               {locale === 'pl' 
@@ -48,4 +54,3 @@ export default async function PortfolioPage({ params }: { params: Promise<{ loca
     </div>
   );
 }
-

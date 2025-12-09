@@ -217,5 +217,6 @@ const Technology: React.FC<{ data?: TechnologyData }> = ({ data }) => {
 };
 
 
+export { Technology };
 export default Technology;
 

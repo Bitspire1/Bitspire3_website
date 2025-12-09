@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import { promises as fs } from "fs";
 import path from "path";
@@ -8,6 +10,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { markdownToHtml } from "@/lib/markdown-to-html";
 import { RelatedArticles } from "@/components/sections/Blog/RelatedArticles";
+import { useTina } from "tinacms/dist/react";
 
 // Read blog files from content/ directory to generate static params
 // Avoids 403 Forbidden errors with read-only tokens during build
@@ -45,7 +48,11 @@ export async function generateStaticParams() {
   return await getBlogSlugs();
 }
 
-export default async function BlogPostPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+interface BlogPostPageProps {
+  params: Promise<{ locale: string; slug: string }>;
+}
+
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { locale, slug } = await params;
 
   const filePath = path.join(process.cwd(), "content", "blog", locale, `${slug}.mdx`);
@@ -110,6 +117,42 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
       })
   );
 
+  const { data: liveData } = useTina({
+    query: `
+      query GetBlogPost($relativePath: String!) {
+        blog(relativePath: $relativePath) {
+          title
+          excerpt
+          category
+          author
+          image
+          imageAlt
+          tags
+          readTime
+          date
+          body
+        }
+      }
+    `,
+    variables: {
+      relativePath: `${locale}/${slug}.mdx`,
+    },
+    data: {
+      blog: {
+        title: post.title,
+        excerpt: post.excerpt,
+        category: post.category,
+        author: post.author,
+        image: post.image,
+        imageAlt: post.imageAlt,
+        tags: post.tags,
+        readTime: post.readTime,
+        date: post.date,
+        body: content,
+      },
+    },
+  });
+
   return (
     <div className="min-h-screen bg-slate-900 pt-24 relative overflow-hidden">
       <Background />
@@ -133,52 +176,52 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
 
         {/* Header */}
         <header className="mb-12">
-          {post.category && (
+          {liveData.blog.category && (
             <div className="mb-6">
               <span className="inline-block px-4 py-1.5 text-xs uppercase tracking-wider font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/30 rounded-full backdrop-blur-sm">
-                {post.category}
+                {liveData.blog.category}
               </span>
             </div>
           )}
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight tracking-tight">
-            {post.title}
+            {liveData.blog.title}
           </h1>
           
-          {post.excerpt && (
+          {liveData.blog.excerpt && (
             <p className="text-xl text-slate-400 leading-relaxed mb-8">
-              {post.excerpt}
+              {liveData.blog.excerpt}
             </p>
           )}
 
           <div className="flex flex-wrap items-center gap-4 text-sm text-slate-400 border-t border-slate-800 pt-6">
-            {formattedDate && (
-              <time dateTime={post.date || undefined} className="flex items-center gap-2">
+            {liveData.blog.date && (
+              <time dateTime={liveData.blog.date} className="flex items-center gap-2">
                 <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 {formattedDate}
               </time>
             )}
-            {post.author && (
+            {liveData.blog.author && (
               <>
                 <span className="text-slate-700">•</span>
                 <span className="flex items-center gap-2">
                   <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
-                  {post.author}
+                  {liveData.blog.author}
                 </span>
               </>
             )}
-            {post.readTime && (
+            {liveData.blog.readTime && (
               <>
                 <span className="text-slate-700">•</span>
                 <span className="flex items-center gap-2">
                   <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  {post.readTime} {locale === 'pl' ? 'min' : 'min'}
+                  {liveData.blog.readTime} {locale === 'pl' ? 'min' : 'min'}
                 </span>
               </>
             )}
@@ -186,12 +229,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
         </header>
 
         {/* Featured Image */}
-        {post.image && (
+        {liveData.blog.image && (
           <div className="relative w-full aspect-video mb-16 rounded-2xl overflow-hidden border border-blue-500/20 shadow-[0_0_50px_rgba(59,130,246,0.1)]">
             <div className="absolute inset-0 bg-linear-to-tr from-blue-500/10 to-emerald-500/10 rounded-3xl blur-2xl -z-10" />
             <Image
-              src={post.image}
-              alt={post.imageAlt || post.title || 'Blog post image'}
+              src={liveData.blog.image}
+              alt={liveData.blog.imageAlt || liveData.blog.title || 'Blog post image'}
               fill
               className="object-cover"
               priority
@@ -226,7 +269,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
         />
 
         {/* Tags */}
-        {post.tags && post.tags.length > 0 && (
+        {liveData.blog.tags && liveData.blog.tags.length > 0 && (
           <div className="mt-16 pt-8 border-t border-slate-800/50">
             <h3 className="text-sm font-semibold text-blue-400 uppercase tracking-wider mb-4 flex items-center gap-2">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -235,7 +278,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
               {locale === 'pl' ? 'Tagi' : 'Tags'}
             </h3>
             <div className="flex flex-wrap gap-3">
-              {post.tags.map((tag: string | null) => tag && (
+              {liveData.blog.tags.map((tag: string | null) => tag && (
                 <span
                   key={tag}
                   className="px-4 py-2 text-sm bg-slate-800/50 text-slate-300 rounded-full border border-blue-500/20 hover:border-blue-500/40 hover:bg-slate-800/70 transition-all cursor-default"

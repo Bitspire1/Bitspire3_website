@@ -5,9 +5,7 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
-  );
+  // Admin layout without duplicate html/body tags
+  // Root layout handles the HTML structure
+  return <>{children}</>;
 }

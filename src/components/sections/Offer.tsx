@@ -166,4 +166,5 @@ export const Offer: React.FC<{ data?: OfferData }> = ({ data }) => {
   );
 };
 
+export { Offer };
 export default Offer;

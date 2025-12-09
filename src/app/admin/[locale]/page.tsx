@@ -1,3 +1,6 @@
+'use client';
+
+import { useTina } from 'tinacms/dist/react';
 import { Background } from "@/components/layout/background";
 import { Hero } from "@/components/sections/Hero";
 import { Technology } from "@/components/sections/Technology";
@@ -13,12 +16,19 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const pageData = await getPageData(locale, "home", "pages");
   const portfolioProjects = await getPortfolioProjects(locale);
 
-  const heroData = pageData && "hero" in pageData ? pageData.hero : undefined;
-  const technologyData = pageData && "technology" in pageData ? pageData.technology : undefined;
-  const offerData = pageData && "offer" in pageData ? pageData.offer : undefined;
-  const howWeWorkData = pageData && "howWeWork" in pageData ? pageData.howWeWork : undefined;
-  const faqData = pageData && "faq" in pageData ? pageData.faq : undefined;
-  const contactData = pageData && "contact" in pageData ? pageData.contact : undefined;
+  const { data } = useTina({
+    query: `query GetPage($relativePath: String!) { pages(relativePath: $relativePath) { _sys { relativePath } _values } }`,
+    variables: { relativePath: `${locale}/home.mdx` },
+    data: { pages: { _sys: { relativePath: `${locale}/home.mdx` }, _values: pageData } }
+  });
+
+  const liveData = (data.pages as any)?._values ?? pageData;
+  const heroData = liveData && "hero" in liveData ? liveData.hero : undefined;
+  const technologyData = liveData && "technology" in liveData ? liveData.technology : undefined;
+  const offerData = liveData && "offer" in liveData ? liveData.offer : undefined;
+  const howWeWorkData = liveData && "howWeWork" in liveData ? liveData.howWeWork : undefined;
+  const faqData = liveData && "faq" in liveData ? liveData.faq : undefined;
+  const contactData = liveData && "contact" in liveData ? liveData.contact : undefined;
 
   return (
     <div className="min-h-screen pt-20 relative overflow-hidden">

@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import { promises as fs } from "fs";
 import path from "path";
@@ -7,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Background } from "@/components/layout/background";
 import { markdownToHtml } from "@/lib/markdown-to-html";
+import { useTina } from "tinacms/dist/react";
 
 type PortfolioFrontmatter = {
   title?: string;
@@ -84,20 +87,6 @@ export default async function PortfolioPostPage({ params }: PortfolioPostPagePro
     notFound();
   }
 
-  type PortfolioFrontmatter = {
-    title?: string;
-    excerpt?: string;
-    description?: string;
-    category?: string;
-    year?: string;
-    image?: string;
-    imageAlt?: string;
-    tags?: string[];
-    link?: string;
-    date?: string;
-    client?: string;
-  };
-
   const post = data as PortfolioFrontmatter;
 
   // Format date
@@ -111,6 +100,46 @@ export default async function PortfolioPostPage({ params }: PortfolioPostPagePro
   
   // Convert markdown to HTML
   const htmlContent = await markdownToHtml(content);
+
+  const { data: liveData } = useTina({
+    query: `
+      query GetPortfolioProject($relativePath: String!) {
+        portfolio(relativePath: $relativePath) {
+          title
+          excerpt
+          description
+          category
+          year
+          image
+          imageAlt
+          tags
+          link
+          date
+          client
+          body
+        }
+      }
+    `,
+    variables: {
+      relativePath: `${locale}/${slug}.mdx`,
+    },
+    data: {
+      portfolio: {
+        title: post.title,
+        excerpt: post.excerpt,
+        description: post.description,
+        category: post.category,
+        year: post.year,
+        image: post.image,
+        imageAlt: post.imageAlt,
+        tags: post.tags,
+        link: post.link,
+        date: post.date,
+        client: post.client,
+        body: content,
+      },
+    },
+  });
 
   return (
     <div className="min-h-screen bg-slate-900 pt-24 relative overflow-hidden">
@@ -134,45 +163,45 @@ export default async function PortfolioPostPage({ params }: PortfolioPostPagePro
         {/* Header */}
         <header className="mb-12">
           <div className="flex flex-wrap items-center gap-3 mb-6">
-            {post.category && (
+            {liveData.portfolio.category && (
               <span className="inline-block px-4 py-1.5 text-xs uppercase tracking-wider font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/30 rounded-full backdrop-blur-sm">
-                {post.category}
+                {liveData.portfolio.category}
               </span>
             )}
-            {post.year && (
+            {liveData.portfolio.year && (
               <span className="inline-block px-4 py-1.5 text-xs uppercase tracking-wider font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full backdrop-blur-sm">
-                {post.year}
+                {liveData.portfolio.year}
               </span>
             )}
           </div>
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight tracking-tight">
-            {post.title}
+            {liveData.portfolio.title}
           </h1>
 
-          {post.excerpt && (
+          {liveData.portfolio.excerpt && (
             <p className="text-xl text-slate-400 leading-relaxed mb-8">
-              {post.excerpt}
+              {liveData.portfolio.excerpt}
             </p>
           )}
 
           <div className="flex flex-wrap items-center gap-4 text-sm text-slate-400 border-t border-slate-800 pt-6">
             {formattedDate && (
-              <time dateTime={post.date || undefined} className="flex items-center gap-2">
+              <time dateTime={liveData.portfolio.date || undefined} className="flex items-center gap-2">
                 <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 {formattedDate}
               </time>
             )}
-            {post.client && (
+            {liveData.portfolio.client && (
               <>
                 <span className="text-slate-700">•</span>
                 <span className="flex items-center gap-2">
                   <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  {post.client}
+                  {liveData.portfolio.client}
                 </span>
               </>
             )}
@@ -180,12 +209,12 @@ export default async function PortfolioPostPage({ params }: PortfolioPostPagePro
         </header>
 
         {/* Featured image */}
-        {post.image && (
+        {liveData.portfolio.image && (
           <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-12 border border-blue-500/20 shadow-[0_0_50px_rgba(59,130,246,0.1)]">
             <div className="absolute inset-0 bg-linear-to-tr from-blue-500/10 to-emerald-500/10 rounded-3xl blur-2xl -z-10" />
             <Image
-              src={post.image}
-              alt={post.imageAlt || post.title || 'Project image'}
+              src={liveData.portfolio.image}
+              alt={liveData.portfolio.imageAlt || liveData.portfolio.title || 'Project image'}
               fill
               className="object-cover"
               priority
@@ -194,9 +223,9 @@ export default async function PortfolioPostPage({ params }: PortfolioPostPagePro
         )}
 
         {/* Tags */}
-        {post.tags && post.tags.length > 0 && (
+        {liveData.portfolio.tags && liveData.portfolio.tags.length > 0 && (
           <div className="flex flex-wrap gap-3 mb-12">
-            {post.tags.map((tag: string | null) => tag && (
+            {liveData.portfolio.tags.map((tag: string | null) => tag && (
               <span
                 key={tag}
                 className="px-4 py-2 text-sm bg-slate-800/50 text-slate-300 rounded-full border border-blue-500/20 hover:border-blue-500/40 hover:bg-slate-800/70 transition-all cursor-default"
@@ -234,10 +263,10 @@ export default async function PortfolioPostPage({ params }: PortfolioPostPagePro
         />
 
         {/* Project link */}
-        {post.link && (
+        {liveData.portfolio.link && (
           <div className="mt-16 pt-8 border-t border-slate-800/50">
             <a
-              href={post.link}
+              href={liveData.portfolio.link}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-3 rounded-xl bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-emerald-500 text-white text-base font-semibold px-8 py-4 shadow-lg shadow-blue-600/30 transition-all hover:shadow-blue-500/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-400 focus-visible:ring-offset-slate-900 group"
@@ -266,20 +295,4 @@ export default async function PortfolioPostPage({ params }: PortfolioPostPagePro
       </article>
     </div>
   );
-}
-
-export async function generateMetadata({ params }: PortfolioPostPageProps) {
-  const { locale, slug } = await params;
-  const filePath = path.join(process.cwd(), "content", "portfolio", locale, `${slug}.mdx`);
-  const raw = await fs.readFile(filePath, "utf8");
-  const { data } = matter(raw);
-  const post = data as PortfolioFrontmatter;
-
-  return {
-    title: post.title || 'Portfolio',
-    description: post.description || post.excerpt || '',
-    openGraph: post.image ? {
-      images: [post.image],
-    } : undefined,
-  };
 }

@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "tinacms dev -c \"next dev\"",
-    "build": "tinacms build --skip-cloud-checks && next build",
-    "start": "tinacms build --skip-cloud-checks && next start",
+    "build": "tinacms build && next build",
+    "start": "tinacms build && next start",
     "prod": "cross-env NODE_ENV=production npm run start",
     "lint": "eslint",
     "test": "vitest",
@@ -60,8 +60,8 @@
   "overrides": {
     "dompurify": "^3.2.4",
     "jsonpath-plus": "^10.2.1",
-    "esbuild": "^0.27.1",
+    "esbuild": "0.24.2",
     "mermaid": "^11.4.1",
-    "vite": "^5.4.21"
+    "vite": "4.5.9"
   }
 }

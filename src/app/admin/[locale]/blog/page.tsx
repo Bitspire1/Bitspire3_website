@@ -1,16 +1,22 @@
+'use client';
+
+import { useTina } from 'tinacms/dist/react';
 import React from "react";
 import { Background } from "@/components/layout/background";
 import { BlogListClient } from "@/components/sections/Blog/BlogListClient";
 import { getBlogPosts } from "@/lib/content/loader";
 
-export const metadata = {
-  title: "Blog",
-  description: "Artykuły, poradniki i najnowsze trendy w web development od zespołu Bitspire.",
-};
-
 export default async function BlogPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const posts = await getBlogPosts(locale);
+
+  const { data } = useTina({
+    query: `query GetBlog { blogConnection { edges { node { _sys { filename relativePath } title slug excerpt description image imageAlt category date } } } }`,
+    variables: {},
+    data: { blogConnection: { edges: (posts || []).map(post => ({ node: post as any })) } }
+  });
+
+  const liveData = (data.blogConnection as any)?.edges || [];
 
   return (
     <div className="min-h-screen pt-24 relative overflow-hidden">
@@ -33,9 +39,9 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
           </p>
         </header>
 
-        <BlogListClient posts={posts} locale={locale} />
+        <BlogListClient posts={liveData.map((edge: any) => edge.node)} locale={locale} />
 
-        {posts.length > 0 && (
+        {liveData.length > 0 && (
           <div className="mt-20 text-center">
             <p className="text-slate-400 text-sm">
               {locale === 'pl' 

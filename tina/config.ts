@@ -3,8 +3,9 @@ import { defineConfig } from "tinacms";
 export default defineConfig({
   branch: "master",
   
-  // Only use cloud credentials if available (for production)
-  ...(process.env.NEXT_PUBLIC_TINA_CLIENT_ID && process.env.TINA_TOKEN ? {
+  // In development (no env vars), use LOCAL file system indexing
+  // Only use cloud credentials in production builds
+  ...(process.env.NODE_ENV === "production" && process.env.NEXT_PUBLIC_TINA_CLIENT_ID && process.env.TINA_TOKEN ? {
     clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID,
     token: process.env.TINA_TOKEN,
   } : {}),
@@ -34,7 +35,7 @@ export default defineConfig({
           router: ({ document }) => {
             const pathParts = document._sys.relativePath.split('/');
             const locale = pathParts[0]; // 'pl' or 'en'
-            return `preview/${locale}/home`;
+            return `/admin/${locale}/home`;
           },
         },
         fields: [
@@ -103,7 +104,7 @@ export default defineConfig({
           router: ({ document }) => {
             const pathParts = document._sys.relativePath.split('/');
             const locale = pathParts[0];
-            return `preview/${locale}/home`;
+            return `/admin/${locale}/home`;
           },
         },
         fields: [
@@ -225,9 +226,9 @@ export default defineConfig({
               const locale = pathParts[0]; // 'pl' or 'en'
               const slug = pathParts[1].replace('.mdx', '');
               
-              return `preview/${locale}/portfolio/${slug}`;
+              return `/admin/${locale}/portfolio/${slug}`;
             }
-            return 'preview/pl/portfolio';
+            return '/admin/pl/portfolio';
           },
         },
         fields: [
@@ -332,9 +333,9 @@ export default defineConfig({
               const locale = pathParts[0]; // 'pl' or 'en'
               const slug = pathParts[1].replace('.mdx', '');
               
-              return `preview/${locale}/blog/${slug}`;
+              return `/admin/${locale}/blog/${slug}`;
             }
-            return 'preview/pl/blog';
+            return '/admin/pl/blog';
           },
         },
         fields: [
@@ -428,9 +429,9 @@ export default defineConfig({
               const slug = pathParts[1].replace('.mdx', '');
               
               // Always include slug in URL for consistency
-              return `preview/${locale}/${slug}`;
+              return `/admin/${locale}/${slug}`;
             }
-            return 'preview/pl/home';
+            return '/admin/pl/home';
           },
         },
         fields: [

@@ -137,4 +137,5 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
   );
 };
 
+export { Contact };
 export default Contact;

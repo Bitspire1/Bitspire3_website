@@ -193,4 +193,5 @@ const HowWeWork: React.FC<HowWeWorkProps> = ({ data }) => {
   );
 };
 
+export { HowWeWork };
 export default HowWeWork;

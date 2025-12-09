@@ -126,4 +126,5 @@ const FAQ: React.FC<FAQProps> = ({ data }) => {
   );
 };
 
+export { FAQ };
 export default FAQ;
