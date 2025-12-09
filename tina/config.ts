@@ -13,29 +13,30 @@ export default defineConfig({
     outputFolder: "admin",
     publicFolder: "public",
   },
+  
   media: {
     tina: {
-      mediaRoot: "",
+      mediaRoot: "images",
       publicFolder: "public",
     },
+  },
+  
+  search: {
+    tina: {
+      indexerToken: process.env.TINA_SEARCH_TOKEN || '',
+      stopwordLanguages: ['eng']
+    }
   },
   
   schema: {
     collections: [
       {
-        name: "header",
         label: "Header",
+        name: "header",
         path: "content/global",
         format: "mdx",
         match: {
-          include: '**/header.mdx',
-        },
-        ui: {
-          router: ({ document }) => {
-            const pathParts = document._sys.relativePath.split(/[\/\\]/);
-            const locale = pathParts[0]; // 'pl' or 'en'
-            return `/admin/${locale}/home`;
-          },
+          include: "**/header",
         },
         fields: [
           {
@@ -92,19 +93,12 @@ export default defineConfig({
         ],
       },
       {
-        name: "footer",
         label: "Footer",
+        name: "footer",
         path: "content/global",
         format: "mdx",
         match: {
-          include: '**/footer.mdx',
-        },
-        ui: {
-          router: ({ document }) => {
-            const pathParts = document._sys.relativePath.split(/[\/\\]/);
-            const locale = pathParts[0];
-            return `/admin/${locale}/home`;
-          },
+          include: "**/footer",
         },
         fields: [
           {
@@ -209,133 +203,204 @@ export default defineConfig({
         ],
       },
       {
-        name: "portfolio",
-        label: "Portfolio",
-        path: "content/portfolio",
+        label: "Pages",
+        name: "pages",
+        path: "content/pages",
         format: "mdx",
         match: {
-          include: '**/*.mdx',
-        },
-        ui: {
-          router: ({ document }) => {
-            // Extract locale and slug from the path
-            // document._sys.relativePath format: "pl/skladamy.mdx" or "en/eduvantage.mdx"
-            const pathParts = document._sys.relativePath.split(/[\/\\]/);
-            if (pathParts.length >= 2) {
-              const locale = pathParts[0]; // 'pl' or 'en'
-              const slug = pathParts[1].replace('.mdx', '');
-              
-              return `/admin/${locale}/portfolio/${slug}`;
-            }
-            return '/admin/pl/portfolio';
-          },
+          include: "**/*",
         },
         fields: [
-          {
-            type: "string",
-            name: "title",
-            label: "Project Title",
-            required: true,
-          },
-          {
-            type: "string",
-            name: "slug",
-            label: "URL Slug",
-            required: true,
-          },
+          { type: "string", name: "title", label: "Page Title" },
           {
             type: "string",
             name: "description",
-            label: "Project Description",
-            required: true,
-            ui: {
-              component: "textarea",
-            },
+            label: "Meta Description",
+            ui: { component: "textarea" },
+          },
+          { type: "string", name: "lastUpdate", label: "Last Update" },
+          { type: "string", name: "selectedProjects", label: "Selected Projects", list: true },
+          {
+            type: "object",
+            name: "hero",
+            label: "Hero Section",
+            fields: [
+              { type: "string", name: "title", label: "Title" },
+              { type: "string", name: "titleAccent", label: "Title Accent" },
+              { type: "string", name: "titleEnd", label: "Title End" },
+              { type: "string", name: "subtitle", label: "Subtitle", ui: { component: "textarea" } },
+              { type: "string", name: "ctaButton", label: "CTA Button" },
+              { type: "string", name: "briefButton", label: "Brief Button" },
+              { type: "image", name: "image", label: "Image" },
+            ],
           },
           {
-            type: "datetime",
-            name: "date",
-            label: "Publication Date",
+            type: "object",
+            name: "technology",
+            label: "Technology Section",
+            fields: [
+              { type: "string", name: "title", label: "Title" },
+              { type: "string", name: "description", label: "Description", ui: { component: "textarea" } },
+              {
+                type: "object",
+                name: "items",
+                label: "Items",
+                list: true,
+                fields: [
+                  { type: "string", name: "name", label: "Name" },
+                  { type: "image", name: "icon", label: "Icon" },
+                  { type: "boolean", name: "useBrightness", label: "Use Brightness" },
+                ],
+              },
+            ],
           },
           {
-            type: "string",
-            name: "excerpt",
-            label: "Short Excerpt",
-            ui: {
-              component: "textarea",
-            },
+            type: "object",
+            name: "offer",
+            label: "Offer Section",
+            fields: [
+              { type: "string", name: "title", label: "Title" },
+              { type: "string", name: "titleAccent", label: "Title Accent" },
+              { type: "string", name: "subtitle", label: "Subtitle", ui: { component: "textarea" } },
+              { type: "string", name: "sectionLabel", label: "Section Label" },
+              {
+                type: "object",
+                name: "services",
+                label: "Services",
+                list: true,
+                fields: [
+                  { type: "string", name: "title", label: "Title" },
+                  { type: "string", name: "description", label: "Description", ui: { component: "textarea" } },
+                  { type: "string", name: "icon", label: "Icon" },
+                  { type: "string", name: "features", label: "Features", list: true },
+                  { type: "string", name: "link", label: "Link" },
+                  { type: "string", name: "buttonText", label: "Button Text" },
+                ],
+              },
+            ],
           },
           {
-            type: "string",
-            name: "category",
-            label: "Category",
+            type: "object",
+            name: "brief",
+            label: "Brief Section",
+            fields: [
+              { type: "string", name: "title", label: "Title" },
+              { type: "string", name: "description", label: "Description", ui: { component: "textarea" } },
+              { type: "string", name: "buttonText", label: "Button Text" },
+              {
+                type: "object",
+                name: "contact",
+                label: "Contact",
+                fields: [
+                  { type: "string", name: "email", label: "Email" },
+                  { type: "string", name: "phone", label: "Phone" },
+                  { type: "string", name: "address", label: "Address" },
+                  { type: "string", name: "addressLine2", label: "Address Line 2" },
+                  { type: "string", name: "city", label: "City" },
+                ],
+              },
+            ],
           },
           {
-            type: "string",
-            name: "tags",
-            label: "Tags",
-            list: true,
+            type: "object",
+            name: "portfolio",
+            label: "Portfolio Section",
+            fields: [
+              { type: "string", name: "title", label: "Title" },
+              { type: "string", name: "description", label: "Description", ui: { component: "textarea" } },
+              { type: "string", name: "sectionLabel", label: "Section Label" },
+            ],
           },
           {
-            type: "string",
-            name: "year",
-            label: "Year",
+            type: "object",
+            name: "portfolioHighlights",
+            label: "Portfolio Highlights",
+            fields: [
+              { type: "string", name: "title", label: "Title" },
+              { type: "string", name: "description", label: "Description", ui: { component: "textarea" } },
+            ],
           },
           {
-            type: "string",
-            name: "client",
-            label: "Client Name",
+            type: "object",
+            name: "howWeWork",
+            label: "How We Work",
+            fields: [
+              { type: "string", name: "title", label: "Title" },
+              { type: "string", name: "description", label: "Description", ui: { component: "textarea" } },
+              {
+                type: "object",
+                name: "steps",
+                label: "Steps",
+                list: true,
+                fields: [
+                  { type: "string", name: "title", label: "Title" },
+                  { type: "string", name: "description", label: "Description", ui: { component: "textarea" } },
+                  { type: "string", name: "icon", label: "Icon" },
+                  { type: "string", name: "duration", label: "Duration" },
+                ],
+              },
+              { type: "string", name: "ctaTitle", label: "CTA Title" },
+              { type: "string", name: "ctaDescription", label: "CTA Description", ui: { component: "textarea" } },
+              { type: "string", name: "ctaButton", label: "CTA Button" },
+            ],
           },
           {
-            type: "image",
-            name: "image",
-            label: "Project Image",
+            type: "object",
+            name: "faq",
+            label: "FAQ Section",
+            fields: [
+              { type: "string", name: "title", label: "Title" },
+              { type: "string", name: "description", label: "Description", ui: { component: "textarea" } },
+              {
+                type: "object",
+                name: "items",
+                label: "Items",
+                list: true,
+                fields: [
+                  { type: "string", name: "question", label: "Question" },
+                  { type: "string", name: "answer", label: "Answer", ui: { component: "textarea" } },
+                ],
+              },
+              { type: "string", name: "ctaQuestion", label: "CTA Question" },
+              { type: "string", name: "ctaButton", label: "CTA Button" },
+            ],
           },
           {
-            type: "string",
-            name: "imageAlt",
-            label: "Image Alt Text",
-          },
-          {
-            type: "string",
-            name: "link",
-            label: "Project URL",
-          },
-          {
-            type: "boolean",
-            name: "featured",
-            label: "Featured Project",
-            description: "Show this project on homepage",
+            type: "object",
+            name: "contact",
+            label: "Contact Section",
+            fields: [
+              { type: "string", name: "title", label: "Title" },
+              { type: "string", name: "description", label: "Description", ui: { component: "textarea" } },
+              { type: "string", name: "email", label: "Email" },
+              { type: "string", name: "phone", label: "Phone" },
+              { type: "string", name: "address", label: "Address" },
+              { type: "string", name: "addressLine2", label: "Address Line 2" },
+              { type: "string", name: "city", label: "City" },
+              { type: "string", name: "successTitle", label: "Success Title" },
+              { type: "string", name: "successMessage", label: "Success Message", ui: { component: "textarea" } },
+              { type: "string", name: "nameLabel", label: "Name Label" },
+              { type: "string", name: "emailLabel", label: "Email Label" },
+              { type: "string", name: "messageLabel", label: "Message Label" },
+              { type: "string", name: "buttonText", label: "Button Text" },
+              { type: "string", name: "contactDataTitle", label: "Contact Data Title" },
+            ],
           },
           {
             type: "rich-text",
             name: "body",
-            label: "Content",
+            label: "Body",
             isBody: true,
           },
         ],
       },
       {
-        name: "blog",
         label: "Blog",
+        name: "blog",
         path: "content/blog",
         format: "mdx",
         match: {
-          include: '**/*.mdx',
-        },
-        ui: {
-          router: ({ document }) => {
-            // Extract locale and slug from the path
-            // document._sys.relativePath format: "pl/post-slug.mdx" or "en/post-slug.mdx"
-            const pathParts = document._sys.relativePath.split(/[\/\\]/);
-            if (pathParts.length >= 2) {
-              const locale = pathParts[0]; // 'pl' or 'en'
-              const slug = pathParts[1].replace('.mdx', '');
-              
-              return `/admin/${locale}/blog/${slug}`;
-            }
-            return '/admin/pl/blog';
-          },
+          include: "**/*",
         },
         fields: [
           {
@@ -351,30 +416,14 @@ export default defineConfig({
             required: true,
           },
           {
-            type: "string",
-            name: "description",
-            label: "Meta Description",
-            required: true,
-          },
-          {
-            type: "string",
-            name: "excerpt",
-            label: "Short Excerpt",
-            ui: {
-              component: "textarea",
-            },
-          },
-          {
             type: "datetime",
             name: "date",
             label: "Publication Date",
-            required: true,
           },
           {
             type: "string",
             name: "author",
-            label: "Author Name",
-            required: true,
+            label: "Author",
           },
           {
             type: "string",
@@ -383,9 +432,11 @@ export default defineConfig({
           },
           {
             type: "string",
-            name: "tags",
-            label: "Tags",
-            list: true,
+            name: "excerpt",
+            label: "Excerpt",
+            ui: {
+              component: "textarea",
+            },
           },
           {
             type: "image",
@@ -403,6 +454,12 @@ export default defineConfig({
             label: "Read Time (minutes)",
           },
           {
+            type: "string",
+            name: "tags",
+            label: "Tags",
+            list: true,
+          },
+          {
             type: "rich-text",
             name: "body",
             label: "Content",
@@ -411,585 +468,92 @@ export default defineConfig({
         ],
       },
       {
-        name: "pages",
-        label: "Pages",
-        path: "content/pages",
+        label: "Portfolio",
+        name: "portfolio",
+        path: "content/portfolio",
         format: "mdx",
         match: {
-          include: '**/*.mdx',
-        },
-        ui: {
-          router: ({ document }) => {
-            // Extract locale and slug from the path
-            // document._sys.relativePath format: "pl/home.mdx" or "en/portfolio.mdx"
-            const pathParts = document._sys.relativePath.split(/[\/\\]/);
-            if (pathParts.length >= 2) {
-              const locale = pathParts[0]; // 'pl' or 'en'
-              const slug = pathParts[1].replace('.mdx', '');
-              
-              // Always include slug in URL for consistency
-              return `/admin/${locale}/${slug}`;
-            }
-            return '/admin/pl/home';
-          },
+          include: "**/*",
         },
         fields: [
           {
             type: "string",
             name: "title",
-            label: "Page Title",
+            label: "Project Title",
             required: true,
           },
           {
             type: "string",
-            name: "titleAccent",
-            label: "Title Accent (for legal pages)",
+            name: "slug",
+            label: "URL Slug",
+            required: true,
           },
           {
             type: "string",
             name: "description",
-            label: "Meta Description",
+            label: "Description",
+            ui: {
+              component: "textarea",
+            },
+          },
+          {
+            type: "datetime",
+            name: "date",
+            label: "Date",
           },
           {
             type: "string",
-            name: "lastUpdate",
-            label: "Last Update Date",
-            description: "For legal pages (YYYY-MM-DD)",
+            name: "category",
+            label: "Category",
           },
           {
             type: "string",
-            name: "selectedProjects",
-            label: "Selected Portfolio Projects",
-            description: "Choose which portfolio projects to display (max 3 for highlights)",
+            name: "year",
+            label: "Year",
+          },
+          {
+            type: "string",
+            name: "client",
+            label: "Client",
+          },
+          {
+            type: "string",
+            name: "excerpt",
+            label: "Short Excerpt",
+            ui: {
+              component: "textarea",
+            },
+          },
+          {
+            type: "image",
+            name: "image",
+            label: "Project Image",
+          },
+          {
+            type: "string",
+            name: "imageAlt",
+            label: "Image Alt Text",
+          },
+          {
+            type: "string",
+            name: "link",
+            label: "Project Link",
+          },
+          {
+            type: "string",
+            name: "tags",
+            label: "Tags",
             list: true,
           },
-          // Portfolio listing page projects
           {
-            type: "object",
-            name: "projects",
-            label: "Portfolio Projects",
-            description: "List of projects for portfolio listing page",
-            list: true,
-            fields: [
-              {
-                type: "string",
-                name: "title",
-                label: "Project Title",
-              },
-              {
-                type: "string",
-                name: "description",
-                label: "Project Description",
-                ui: {
-                  component: "textarea",
-                },
-              },
-              {
-                type: "image",
-                name: "image",
-                label: "Project Image",
-              },
-              {
-                type: "string",
-                name: "imageAlt",
-                label: "Image Alt Text",
-              },
-              {
-                type: "string",
-                name: "tags",
-                label: "Technologies/Tags",
-                list: true,
-              },
-              {
-                type: "string",
-                name: "year",
-                label: "Year",
-              },
-              {
-                type: "string",
-                name: "link",
-                label: "Project Link (URL)",
-              },
-            ],
+            type: "boolean",
+            name: "featured",
+            label: "Featured Project",
           },
-          // Legal pages sections
-          {
-            type: "object",
-            name: "sections",
-            label: "Legal Sections",
-            list: true,
-            fields: [
-              {
-                type: "string",
-                name: "id",
-                label: "Section ID (for anchor links)",
-              },
-              {
-                type: "string",
-                name: "title",
-                label: "Section Title",
-              },
-              {
-                type: "string",
-                name: "content",
-                label: "Section Content",
-                ui: {
-                  component: "textarea",
-                },
-              },
-            ],
-          },
-          // Home page fields
-          {
-            type: "object",
-            name: "hero",
-            label: "Hero Section",
-            fields: [
-              {
-                type: "string",
-                name: "title",
-                label: "Title",
-              },
-              {
-                type: "string",
-                name: "titleAccent",
-                label: "Title Accent (Highlighted Text)",
-              },
-              {
-                type: "string",
-                name: "titleEnd",
-                label: "Title End",
-              },
-              {
-                type: "string",
-                name: "subtitle",
-                label: "Subtitle",
-                ui: {
-                  component: "textarea",
-                },
-              },
-              {
-                type: "string",
-                name: "ctaButton",
-                label: "CTA Button Text",
-              },
-              {
-                type: "string",
-                name: "briefButton",
-                label: "Brief Button Text",
-              },
-              {
-                type: "image",
-                name: "image",
-                label: "Hero Image",
-              },
-            ],
-          },
-          {
-            type: "object",
-            name: "technology",
-            label: "Technology Section",
-            fields: [
-              {
-                type: "string",
-                name: "title",
-                label: "Section Title",
-              },
-              {
-                type: "string",
-                name: "description",
-                label: "Section Description",
-                ui: {
-                  component: "textarea",
-                },
-              },
-              {
-                type: "object",
-                name: "items",
-                label: "Technology Items",
-                list: true,
-                fields: [
-                  {
-                    type: "string",
-                    name: "name",
-                    label: "Technology Name",
-                  },
-                  {
-                    type: "image",
-                    name: "icon",
-                    label: "Icon",
-                  },
-                  {
-                    type: "boolean",
-                    name: "useBrightness",
-                    label: "Use Brightness Filter",
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            type: "object",
-            name: "offer",
-            label: "Offer Section",
-            fields: [
-              {
-                type: "string",
-                name: "title",
-                label: "Section Title",
-              },
-              {
-                type: "string",
-                name: "titleAccent",
-                label: "Title Accent",
-              },
-              {
-                type: "string",
-                name: "subtitle",
-                label: "Section Subtitle",
-                ui: {
-                  component: "textarea",
-                },
-              },
-              {
-                type: "string",
-                name: "sectionLabel",
-                label: "Section Label",
-              },
-              {
-                type: "object",
-                name: "services",
-                label: "Services",
-                list: true,
-                fields: [
-                  {
-                    type: "string",
-                    name: "title",
-                    label: "Service Title",
-                  },
-                  {
-                    type: "string",
-                    name: "description",
-                    label: "Service Description",
-                    ui: {
-                      component: "textarea",
-                    },
-                  },
-                  {
-                    type: "string",
-                    name: "icon",
-                    label: "Icon (emoji)",
-                  },
-                  {
-                    type: "string",
-                    name: "features",
-                    label: "Features",
-                    list: true,
-                  },
-                  {
-                    type: "string",
-                    name: "link",
-                    label: "Link URL",
-                  },
-                  {
-                    type: "string",
-                    name: "buttonText",
-                    label: "Button Text",
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            type: "object",
-            name: "brief",
-            label: "Brief CTA Section",
-            fields: [
-              {
-                type: "string",
-                name: "title",
-                label: "Title",
-              },
-              {
-                type: "string",
-                name: "description",
-                label: "Description",
-                ui: {
-                  component: "textarea",
-                },
-              },
-              {
-                type: "string",
-                name: "buttonText",
-                label: "Button Text",
-              },
-              {
-                type: "object",
-                name: "contact",
-                label: "Contact Information",
-                fields: [
-                  {
-                    type: "string",
-                    name: "email",
-                    label: "Email",
-                  },
-                  {
-                    type: "string",
-                    name: "phone",
-                    label: "Phone",
-                  },
-                  {
-                    type: "string",
-                    name: "address",
-                    label: "Company Name",
-                  },
-                  {
-                    type: "string",
-                    name: "addressLine2",
-                    label: "Street Address",
-                  },
-                  {
-                    type: "string",
-                    name: "city",
-                    label: "City & Postal Code",
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            type: "object",
-            name: "portfolio",
-            label: "Portfolio Section",
-            fields: [
-              {
-                type: "string",
-                name: "title",
-                label: "Section Title",
-              },
-              {
-                type: "string",
-                name: "description",
-                label: "Section Description",
-              },
-              {
-                type: "string",
-                name: "sectionLabel",
-                label: "Section Label",
-              },
-            ],
-          },
-          {
-            type: "object",
-            name: "portfolioHighlights",
-            label: "Portfolio Highlights Section",
-            fields: [
-              {
-                type: "string",
-                name: "title",
-                label: "Section Title",
-              },
-              {
-                type: "string",
-                name: "description",
-                label: "Section Description",
-              },
-            ],
-          },
-          {
-            type: "object",
-            name: "howWeWork",
-            label: "How We Work Section",
-            fields: [
-              {
-                type: "string",
-                name: "title",
-                label: "Section Title",
-              },
-              {
-                type: "string",
-                name: "description",
-                label: "Section Description",
-              },
-              {
-                type: "object",
-                name: "steps",
-                label: "Process Steps",
-                list: true,
-                fields: [
-                  {
-                    type: "string",
-                    name: "title",
-                    label: "Step Title",
-                  },
-                  {
-                    type: "string",
-                    name: "description",
-                    label: "Step Description",
-                    ui: {
-                      component: "textarea",
-                    },
-                  },
-                  {
-                    type: "string",
-                    name: "icon",
-                    label: "Icon Name (clipboard, design, code, test, rocket, support)",
-                  },
-                  {
-                    type: "string",
-                    name: "duration",
-                    label: "Duration",
-                  },
-                ],
-              },
-              {
-                type: "string",
-                name: "ctaTitle",
-                label: "CTA Title",
-              },
-              {
-                type: "string",
-                name: "ctaDescription",
-                label: "CTA Description",
-              },
-              {
-                type: "string",
-                name: "ctaButton",
-                label: "CTA Button Text",
-              },
-            ],
-          },
-          {
-            type: "object",
-            name: "faq",
-            label: "FAQ Section",
-            fields: [
-              {
-                type: "string",
-                name: "title",
-                label: "Section Title",
-              },
-              {
-                type: "string",
-                name: "description",
-                label: "Section Description",
-              },
-              {
-                type: "object",
-                name: "items",
-                label: "FAQ Items",
-                list: true,
-                fields: [
-                  {
-                    type: "string",
-                    name: "question",
-                    label: "Question",
-                  },
-                  {
-                    type: "string",
-                    name: "answer",
-                    label: "Answer",
-                    ui: {
-                      component: "textarea",
-                    },
-                  },
-                ],
-              },
-              {
-                type: "string",
-                name: "ctaQuestion",
-                label: "CTA Question",
-              },
-              {
-                type: "string",
-                name: "ctaButton",
-                label: "CTA Button Text",
-              },
-            ],
-          },
-          {
-            type: "object",
-            name: "contact",
-            label: "Contact Section",
-            fields: [
-              {
-                type: "string",
-                name: "title",
-                label: "Section Title",
-              },
-              {
-                type: "string",
-                name: "description",
-                label: "Section Description",
-              },
-              {
-                type: "string",
-                name: "email",
-                label: "Email",
-              },
-              {
-                type: "string",
-                name: "phone",
-                label: "Phone",
-              },
-              {
-                type: "string",
-                name: "address",
-                label: "Company Name",
-              },
-              {
-                type: "string",
-                name: "addressLine2",
-                label: "Street Address",
-              },
-              {
-                type: "string",
-                name: "city",
-                label: "City & Postal Code",
-              },
-              {
-                type: "string",
-                name: "successTitle",
-                label: "Success Message Title",
-              },
-              {
-                type: "string",
-                name: "successMessage",
-                label: "Success Message Text",
-              },
-              {
-                type: "string",
-                name: "nameLabel",
-                label: "Name Field Label",
-              },
-              {
-                type: "string",
-                name: "emailLabel",
-                label: "Email Field Label",
-              },
-              {
-                type: "string",
-                name: "messageLabel",
-                label: "Message Field Label",
-              },
-              {
-                type: "string",
-                name: "buttonText",
-                label: "Submit Button Text",
-              },
-              {
-                type: "string",
-                name: "contactDataTitle",
-                label: "Contact Data Section Title",
-              },
-            ],
-          },
-          // Rich-text body for simple pages (brief, blog listing, etc.)
           {
             type: "rich-text",
             name: "body",
-            label: "Page Content",
-            description: "Rich text content for simple pages like Brief, Blog listing, etc.",
+            label: "Content",
             isBody: true,
           },
         ],

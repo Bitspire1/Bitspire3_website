@@ -43,63 +43,12 @@ fragment FooterParts on Footer {
   cookieSettingsText
 }
 
-fragment PortfolioParts on Portfolio {
-  __typename
-  title
-  slug
-  description
-  date
-  excerpt
-  category
-  tags
-  year
-  client
-  image
-  imageAlt
-  link
-  featured
-  body
-}
-
-fragment BlogParts on Blog {
-  __typename
-  title
-  slug
-  description
-  excerpt
-  date
-  author
-  category
-  tags
-  image
-  imageAlt
-  readTime
-  body
-}
-
 fragment PagesParts on Pages {
   __typename
   title
-  titleAccent
   description
   lastUpdate
   selectedProjects
-  projects {
-    __typename
-    title
-    description
-    image
-    imageAlt
-    tags
-    year
-    link
-  }
-  sections {
-    __typename
-    id
-    title
-    content
-  }
   hero {
     __typename
     title
@@ -206,5 +155,38 @@ fragment PagesParts on Pages {
     buttonText
     contactDataTitle
   }
+  body
+}
+
+fragment BlogParts on Blog {
+  __typename
+  title
+  slug
+  date
+  author
+  category
+  excerpt
+  image
+  imageAlt
+  readTime
+  tags
+  body
+}
+
+fragment PortfolioParts on Portfolio {
+  __typename
+  title
+  slug
+  description
+  date
+  category
+  year
+  client
+  excerpt
+  image
+  imageAlt
+  link
+  tags
+  featured
   body
 }

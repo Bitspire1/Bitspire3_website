@@ -32,9 +32,13 @@ interface FooterProps {
     cookieSettingsText?: string | null;
   } | null;
   locale?: string;
+  /**
+   * When false, missing legal/cookie/copyright data will fall back instead of throwing.
+   */
+  strictValidation?: boolean;
 }
 
-const FooterContent: React.FC<FooterProps> = ({ data, locale }) => {
+const FooterContent: React.FC<FooterProps> = ({ data, locale, strictValidation = true }) => {
   // Graceful fallback for missing data
   if (!data) {
     return (
@@ -69,17 +73,24 @@ const FooterContent: React.FC<FooterProps> = ({ data, locale }) => {
   const cookieSettingsText = data.cookieSettingsText;
   const copyrightText = data.copyright;
 
-  if (!legalLinks.length) {
+  const isStrict = strictValidation !== false;
+
+  if (isStrict && !legalLinks.length) {
     throw new Error('Footer legal links missing in Tina content');
   }
 
-  if (!cookieSettingsText) {
+  if (isStrict && !cookieSettingsText) {
     throw new Error('Footer cookie settings text missing in Tina content');
   }
 
-  if (!copyrightText) {
+  if (isStrict && !copyrightText) {
     throw new Error('Footer copyright missing in Tina content');
   }
+
+  const legalLinksToRender = legalLinks.length ? legalLinks : [];
+  const safeCookieText = cookieSettingsText || (locale === 'en' ? 'Cookie settings' : 'Ustawienia ciasteczek');
+  const safeCopyrightText =
+    copyrightText || `© ${new Date().getFullYear()} ${companyName}. All rights reserved.`;
 
   return (
     <footer className="bg-slate-900 border-t border-slate-700 text-white">
@@ -194,11 +205,11 @@ const FooterContent: React.FC<FooterProps> = ({ data, locale }) => {
         {/* Dolny pasek */}
         <div className="border-t border-slate-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm mb-4 md:mb-0">
-            {copyrightText?.replace('{year}', new Date().getFullYear().toString())}
+            {safeCopyrightText.replace('{year}', new Date().getFullYear().toString())}
           </p>
           
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm justify-center md:justify-end">
-            {legalLinks.map((link, index) => (
+            {legalLinksToRender.map((link, index) => (
               <PreviewLink 
                 key={index}
                 href={link.href}
@@ -214,7 +225,7 @@ const FooterContent: React.FC<FooterProps> = ({ data, locale }) => {
               }}
               className="text-gray-400 hover:text-white transition-colors underline decoration-dotted underline-offset-4"
             >
-              {cookieSettingsText}
+              {safeCookieText}
             </button>
           </div>
         </div>

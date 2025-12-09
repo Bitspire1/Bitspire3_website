@@ -86,12 +86,12 @@ export type Query = {
   headerConnection: HeaderConnection;
   footer: Footer;
   footerConnection: FooterConnection;
-  portfolio: Portfolio;
-  portfolioConnection: PortfolioConnection;
-  blog: Blog;
-  blogConnection: BlogConnection;
   pages: Pages;
   pagesConnection: PagesConnection;
+  blog: Blog;
+  blogConnection: BlogConnection;
+  portfolio: Portfolio;
+  portfolioConnection: PortfolioConnection;
 };
 
 
@@ -146,18 +146,18 @@ export type QueryFooterConnectionArgs = {
 };
 
 
-export type QueryPortfolioArgs = {
+export type QueryPagesArgs = {
   relativePath?: InputMaybe<Scalars['String']['input']>;
 };
 
 
-export type QueryPortfolioConnectionArgs = {
+export type QueryPagesConnectionArgs = {
   before?: InputMaybe<Scalars['String']['input']>;
   after?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Float']['input']>;
   last?: InputMaybe<Scalars['Float']['input']>;
   sort?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<PortfolioFilter>;
+  filter?: InputMaybe<PagesFilter>;
 };
 
 
@@ -176,26 +176,26 @@ export type QueryBlogConnectionArgs = {
 };
 
 
-export type QueryPagesArgs = {
+export type QueryPortfolioArgs = {
   relativePath?: InputMaybe<Scalars['String']['input']>;
 };
 
 
-export type QueryPagesConnectionArgs = {
+export type QueryPortfolioConnectionArgs = {
   before?: InputMaybe<Scalars['String']['input']>;
   after?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Float']['input']>;
   last?: InputMaybe<Scalars['Float']['input']>;
   sort?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<PagesFilter>;
+  filter?: InputMaybe<PortfolioFilter>;
 };
 
 export type DocumentFilter = {
   header?: InputMaybe<HeaderFilter>;
   footer?: InputMaybe<FooterFilter>;
-  portfolio?: InputMaybe<PortfolioFilter>;
-  blog?: InputMaybe<BlogFilter>;
   pages?: InputMaybe<PagesFilter>;
+  blog?: InputMaybe<BlogFilter>;
+  portfolio?: InputMaybe<PortfolioFilter>;
 };
 
 export type DocumentConnectionEdges = {
@@ -235,7 +235,7 @@ export type CollectionDocumentsArgs = {
   folder?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type DocumentNode = Header | Footer | Portfolio | Blog | Pages | Folder;
+export type DocumentNode = Header | Footer | Pages | Blog | Portfolio | Folder;
 
 export type HeaderNavigation = {
   __typename?: 'HeaderNavigation';
@@ -389,151 +389,6 @@ export type FooterConnection = Connection & {
   edges?: Maybe<Array<Maybe<FooterConnectionEdges>>>;
 };
 
-export type Portfolio = Node & Document & {
-  __typename?: 'Portfolio';
-  title: Scalars['String']['output'];
-  slug: Scalars['String']['output'];
-  description: Scalars['String']['output'];
-  date?: Maybe<Scalars['String']['output']>;
-  excerpt?: Maybe<Scalars['String']['output']>;
-  category?: Maybe<Scalars['String']['output']>;
-  tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  year?: Maybe<Scalars['String']['output']>;
-  client?: Maybe<Scalars['String']['output']>;
-  image?: Maybe<Scalars['String']['output']>;
-  imageAlt?: Maybe<Scalars['String']['output']>;
-  link?: Maybe<Scalars['String']['output']>;
-  featured?: Maybe<Scalars['Boolean']['output']>;
-  body?: Maybe<Scalars['JSON']['output']>;
-  id: Scalars['ID']['output'];
-  _sys: SystemInfo;
-  _values: Scalars['JSON']['output'];
-};
-
-export type DatetimeFilter = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  eq?: InputMaybe<Scalars['String']['input']>;
-  exists?: InputMaybe<Scalars['Boolean']['input']>;
-  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-export type BooleanFilter = {
-  eq?: InputMaybe<Scalars['Boolean']['input']>;
-  exists?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type RichTextFilter = {
-  startsWith?: InputMaybe<Scalars['String']['input']>;
-  eq?: InputMaybe<Scalars['String']['input']>;
-  exists?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type PortfolioFilter = {
-  title?: InputMaybe<StringFilter>;
-  slug?: InputMaybe<StringFilter>;
-  description?: InputMaybe<StringFilter>;
-  date?: InputMaybe<DatetimeFilter>;
-  excerpt?: InputMaybe<StringFilter>;
-  category?: InputMaybe<StringFilter>;
-  tags?: InputMaybe<StringFilter>;
-  year?: InputMaybe<StringFilter>;
-  client?: InputMaybe<StringFilter>;
-  image?: InputMaybe<ImageFilter>;
-  imageAlt?: InputMaybe<StringFilter>;
-  link?: InputMaybe<StringFilter>;
-  featured?: InputMaybe<BooleanFilter>;
-  body?: InputMaybe<RichTextFilter>;
-};
-
-export type PortfolioConnectionEdges = {
-  __typename?: 'PortfolioConnectionEdges';
-  cursor: Scalars['String']['output'];
-  node?: Maybe<Portfolio>;
-};
-
-export type PortfolioConnection = Connection & {
-  __typename?: 'PortfolioConnection';
-  pageInfo: PageInfo;
-  totalCount: Scalars['Float']['output'];
-  edges?: Maybe<Array<Maybe<PortfolioConnectionEdges>>>;
-};
-
-export type Blog = Node & Document & {
-  __typename?: 'Blog';
-  title: Scalars['String']['output'];
-  slug: Scalars['String']['output'];
-  description: Scalars['String']['output'];
-  excerpt?: Maybe<Scalars['String']['output']>;
-  date: Scalars['String']['output'];
-  author: Scalars['String']['output'];
-  category?: Maybe<Scalars['String']['output']>;
-  tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  image?: Maybe<Scalars['String']['output']>;
-  imageAlt?: Maybe<Scalars['String']['output']>;
-  readTime?: Maybe<Scalars['Float']['output']>;
-  body?: Maybe<Scalars['JSON']['output']>;
-  id: Scalars['ID']['output'];
-  _sys: SystemInfo;
-  _values: Scalars['JSON']['output'];
-};
-
-export type NumberFilter = {
-  lt?: InputMaybe<Scalars['Float']['input']>;
-  lte?: InputMaybe<Scalars['Float']['input']>;
-  gte?: InputMaybe<Scalars['Float']['input']>;
-  gt?: InputMaybe<Scalars['Float']['input']>;
-  eq?: InputMaybe<Scalars['Float']['input']>;
-  exists?: InputMaybe<Scalars['Boolean']['input']>;
-  in?: InputMaybe<Array<InputMaybe<Scalars['Float']['input']>>>;
-};
-
-export type BlogFilter = {
-  title?: InputMaybe<StringFilter>;
-  slug?: InputMaybe<StringFilter>;
-  description?: InputMaybe<StringFilter>;
-  excerpt?: InputMaybe<StringFilter>;
-  date?: InputMaybe<DatetimeFilter>;
-  author?: InputMaybe<StringFilter>;
-  category?: InputMaybe<StringFilter>;
-  tags?: InputMaybe<StringFilter>;
-  image?: InputMaybe<ImageFilter>;
-  imageAlt?: InputMaybe<StringFilter>;
-  readTime?: InputMaybe<NumberFilter>;
-  body?: InputMaybe<RichTextFilter>;
-};
-
-export type BlogConnectionEdges = {
-  __typename?: 'BlogConnectionEdges';
-  cursor: Scalars['String']['output'];
-  node?: Maybe<Blog>;
-};
-
-export type BlogConnection = Connection & {
-  __typename?: 'BlogConnection';
-  pageInfo: PageInfo;
-  totalCount: Scalars['Float']['output'];
-  edges?: Maybe<Array<Maybe<BlogConnectionEdges>>>;
-};
-
-export type PagesProjects = {
-  __typename?: 'PagesProjects';
-  title?: Maybe<Scalars['String']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  image?: Maybe<Scalars['String']['output']>;
-  imageAlt?: Maybe<Scalars['String']['output']>;
-  tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  year?: Maybe<Scalars['String']['output']>;
-  link?: Maybe<Scalars['String']['output']>;
-};
-
-export type PagesSections = {
-  __typename?: 'PagesSections';
-  id?: Maybe<Scalars['String']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
-  content?: Maybe<Scalars['String']['output']>;
-};
-
 export type PagesHero = {
   __typename?: 'PagesHero';
   title?: Maybe<Scalars['String']['output']>;
@@ -661,13 +516,10 @@ export type PagesContact = {
 
 export type Pages = Node & Document & {
   __typename?: 'Pages';
-  title: Scalars['String']['output'];
-  titleAccent?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   lastUpdate?: Maybe<Scalars['String']['output']>;
   selectedProjects?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  projects?: Maybe<Array<Maybe<PagesProjects>>>;
-  sections?: Maybe<Array<Maybe<PagesSections>>>;
   hero?: Maybe<PagesHero>;
   technology?: Maybe<PagesTechnology>;
   offer?: Maybe<PagesOffer>;
@@ -683,22 +535,6 @@ export type Pages = Node & Document & {
   _values: Scalars['JSON']['output'];
 };
 
-export type PagesProjectsFilter = {
-  title?: InputMaybe<StringFilter>;
-  description?: InputMaybe<StringFilter>;
-  image?: InputMaybe<ImageFilter>;
-  imageAlt?: InputMaybe<StringFilter>;
-  tags?: InputMaybe<StringFilter>;
-  year?: InputMaybe<StringFilter>;
-  link?: InputMaybe<StringFilter>;
-};
-
-export type PagesSectionsFilter = {
-  id?: InputMaybe<StringFilter>;
-  title?: InputMaybe<StringFilter>;
-  content?: InputMaybe<StringFilter>;
-};
-
 export type PagesHeroFilter = {
   title?: InputMaybe<StringFilter>;
   titleAccent?: InputMaybe<StringFilter>;
@@ -707,6 +543,11 @@ export type PagesHeroFilter = {
   ctaButton?: InputMaybe<StringFilter>;
   briefButton?: InputMaybe<StringFilter>;
   image?: InputMaybe<ImageFilter>;
+};
+
+export type BooleanFilter = {
+  eq?: InputMaybe<Scalars['Boolean']['input']>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type PagesTechnologyItemsFilter = {
@@ -810,14 +651,17 @@ export type PagesContactFilter = {
   contactDataTitle?: InputMaybe<StringFilter>;
 };
 
+export type RichTextFilter = {
+  startsWith?: InputMaybe<Scalars['String']['input']>;
+  eq?: InputMaybe<Scalars['String']['input']>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export type PagesFilter = {
   title?: InputMaybe<StringFilter>;
-  titleAccent?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
   lastUpdate?: InputMaybe<StringFilter>;
   selectedProjects?: InputMaybe<StringFilter>;
-  projects?: InputMaybe<PagesProjectsFilter>;
-  sections?: InputMaybe<PagesSectionsFilter>;
   hero?: InputMaybe<PagesHeroFilter>;
   technology?: InputMaybe<PagesTechnologyFilter>;
   offer?: InputMaybe<PagesOfferFilter>;
@@ -843,6 +687,120 @@ export type PagesConnection = Connection & {
   edges?: Maybe<Array<Maybe<PagesConnectionEdges>>>;
 };
 
+export type Blog = Node & Document & {
+  __typename?: 'Blog';
+  title: Scalars['String']['output'];
+  slug: Scalars['String']['output'];
+  date?: Maybe<Scalars['String']['output']>;
+  author?: Maybe<Scalars['String']['output']>;
+  category?: Maybe<Scalars['String']['output']>;
+  excerpt?: Maybe<Scalars['String']['output']>;
+  image?: Maybe<Scalars['String']['output']>;
+  imageAlt?: Maybe<Scalars['String']['output']>;
+  readTime?: Maybe<Scalars['Float']['output']>;
+  tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  body?: Maybe<Scalars['JSON']['output']>;
+  id: Scalars['ID']['output'];
+  _sys: SystemInfo;
+  _values: Scalars['JSON']['output'];
+};
+
+export type DatetimeFilter = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  eq?: InputMaybe<Scalars['String']['input']>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type NumberFilter = {
+  lt?: InputMaybe<Scalars['Float']['input']>;
+  lte?: InputMaybe<Scalars['Float']['input']>;
+  gte?: InputMaybe<Scalars['Float']['input']>;
+  gt?: InputMaybe<Scalars['Float']['input']>;
+  eq?: InputMaybe<Scalars['Float']['input']>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['Float']['input']>>>;
+};
+
+export type BlogFilter = {
+  title?: InputMaybe<StringFilter>;
+  slug?: InputMaybe<StringFilter>;
+  date?: InputMaybe<DatetimeFilter>;
+  author?: InputMaybe<StringFilter>;
+  category?: InputMaybe<StringFilter>;
+  excerpt?: InputMaybe<StringFilter>;
+  image?: InputMaybe<ImageFilter>;
+  imageAlt?: InputMaybe<StringFilter>;
+  readTime?: InputMaybe<NumberFilter>;
+  tags?: InputMaybe<StringFilter>;
+  body?: InputMaybe<RichTextFilter>;
+};
+
+export type BlogConnectionEdges = {
+  __typename?: 'BlogConnectionEdges';
+  cursor: Scalars['String']['output'];
+  node?: Maybe<Blog>;
+};
+
+export type BlogConnection = Connection & {
+  __typename?: 'BlogConnection';
+  pageInfo: PageInfo;
+  totalCount: Scalars['Float']['output'];
+  edges?: Maybe<Array<Maybe<BlogConnectionEdges>>>;
+};
+
+export type Portfolio = Node & Document & {
+  __typename?: 'Portfolio';
+  title: Scalars['String']['output'];
+  slug: Scalars['String']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  date?: Maybe<Scalars['String']['output']>;
+  category?: Maybe<Scalars['String']['output']>;
+  year?: Maybe<Scalars['String']['output']>;
+  client?: Maybe<Scalars['String']['output']>;
+  excerpt?: Maybe<Scalars['String']['output']>;
+  image?: Maybe<Scalars['String']['output']>;
+  imageAlt?: Maybe<Scalars['String']['output']>;
+  link?: Maybe<Scalars['String']['output']>;
+  tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  featured?: Maybe<Scalars['Boolean']['output']>;
+  body?: Maybe<Scalars['JSON']['output']>;
+  id: Scalars['ID']['output'];
+  _sys: SystemInfo;
+  _values: Scalars['JSON']['output'];
+};
+
+export type PortfolioFilter = {
+  title?: InputMaybe<StringFilter>;
+  slug?: InputMaybe<StringFilter>;
+  description?: InputMaybe<StringFilter>;
+  date?: InputMaybe<DatetimeFilter>;
+  category?: InputMaybe<StringFilter>;
+  year?: InputMaybe<StringFilter>;
+  client?: InputMaybe<StringFilter>;
+  excerpt?: InputMaybe<StringFilter>;
+  image?: InputMaybe<ImageFilter>;
+  imageAlt?: InputMaybe<StringFilter>;
+  link?: InputMaybe<StringFilter>;
+  tags?: InputMaybe<StringFilter>;
+  featured?: InputMaybe<BooleanFilter>;
+  body?: InputMaybe<RichTextFilter>;
+};
+
+export type PortfolioConnectionEdges = {
+  __typename?: 'PortfolioConnectionEdges';
+  cursor: Scalars['String']['output'];
+  node?: Maybe<Portfolio>;
+};
+
+export type PortfolioConnection = Connection & {
+  __typename?: 'PortfolioConnection';
+  pageInfo: PageInfo;
+  totalCount: Scalars['Float']['output'];
+  edges?: Maybe<Array<Maybe<PortfolioConnectionEdges>>>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addPendingDocument: DocumentNode;
@@ -854,12 +812,12 @@ export type Mutation = {
   createHeader: Header;
   updateFooter: Footer;
   createFooter: Footer;
-  updatePortfolio: Portfolio;
-  createPortfolio: Portfolio;
-  updateBlog: Blog;
-  createBlog: Blog;
   updatePages: Pages;
   createPages: Pages;
+  updateBlog: Blog;
+  createBlog: Blog;
+  updatePortfolio: Portfolio;
+  createPortfolio: Portfolio;
 };
 
 
@@ -920,15 +878,15 @@ export type MutationCreateFooterArgs = {
 };
 
 
-export type MutationUpdatePortfolioArgs = {
+export type MutationUpdatePagesArgs = {
   relativePath: Scalars['String']['input'];
-  params: PortfolioMutation;
+  params: PagesMutation;
 };
 
 
-export type MutationCreatePortfolioArgs = {
+export type MutationCreatePagesArgs = {
   relativePath: Scalars['String']['input'];
-  params: PortfolioMutation;
+  params: PagesMutation;
 };
 
 
@@ -944,32 +902,32 @@ export type MutationCreateBlogArgs = {
 };
 
 
-export type MutationUpdatePagesArgs = {
+export type MutationUpdatePortfolioArgs = {
   relativePath: Scalars['String']['input'];
-  params: PagesMutation;
+  params: PortfolioMutation;
 };
 
 
-export type MutationCreatePagesArgs = {
+export type MutationCreatePortfolioArgs = {
   relativePath: Scalars['String']['input'];
-  params: PagesMutation;
+  params: PortfolioMutation;
 };
 
 export type DocumentUpdateMutation = {
   header?: InputMaybe<HeaderMutation>;
   footer?: InputMaybe<FooterMutation>;
-  portfolio?: InputMaybe<PortfolioMutation>;
-  blog?: InputMaybe<BlogMutation>;
   pages?: InputMaybe<PagesMutation>;
+  blog?: InputMaybe<BlogMutation>;
+  portfolio?: InputMaybe<PortfolioMutation>;
   relativePath?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type DocumentMutation = {
   header?: InputMaybe<HeaderMutation>;
   footer?: InputMaybe<FooterMutation>;
-  portfolio?: InputMaybe<PortfolioMutation>;
-  blog?: InputMaybe<BlogMutation>;
   pages?: InputMaybe<PagesMutation>;
+  blog?: InputMaybe<BlogMutation>;
+  portfolio?: InputMaybe<PortfolioMutation>;
 };
 
 export type HeaderNavigationMutation = {
@@ -1019,54 +977,6 @@ export type FooterMutation = {
   copyright?: InputMaybe<Scalars['String']['input']>;
   legalLinks?: InputMaybe<Array<InputMaybe<FooterLegalLinksMutation>>>;
   cookieSettingsText?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type PortfolioMutation = {
-  title?: InputMaybe<Scalars['String']['input']>;
-  slug?: InputMaybe<Scalars['String']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  date?: InputMaybe<Scalars['String']['input']>;
-  excerpt?: InputMaybe<Scalars['String']['input']>;
-  category?: InputMaybe<Scalars['String']['input']>;
-  tags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  year?: InputMaybe<Scalars['String']['input']>;
-  client?: InputMaybe<Scalars['String']['input']>;
-  image?: InputMaybe<Scalars['String']['input']>;
-  imageAlt?: InputMaybe<Scalars['String']['input']>;
-  link?: InputMaybe<Scalars['String']['input']>;
-  featured?: InputMaybe<Scalars['Boolean']['input']>;
-  body?: InputMaybe<Scalars['JSON']['input']>;
-};
-
-export type BlogMutation = {
-  title?: InputMaybe<Scalars['String']['input']>;
-  slug?: InputMaybe<Scalars['String']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  excerpt?: InputMaybe<Scalars['String']['input']>;
-  date?: InputMaybe<Scalars['String']['input']>;
-  author?: InputMaybe<Scalars['String']['input']>;
-  category?: InputMaybe<Scalars['String']['input']>;
-  tags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  image?: InputMaybe<Scalars['String']['input']>;
-  imageAlt?: InputMaybe<Scalars['String']['input']>;
-  readTime?: InputMaybe<Scalars['Float']['input']>;
-  body?: InputMaybe<Scalars['JSON']['input']>;
-};
-
-export type PagesProjectsMutation = {
-  title?: InputMaybe<Scalars['String']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  image?: InputMaybe<Scalars['String']['input']>;
-  imageAlt?: InputMaybe<Scalars['String']['input']>;
-  tags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  year?: InputMaybe<Scalars['String']['input']>;
-  link?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type PagesSectionsMutation = {
-  id?: InputMaybe<Scalars['String']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
-  content?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PagesHeroMutation = {
@@ -1182,12 +1092,9 @@ export type PagesContactMutation = {
 
 export type PagesMutation = {
   title?: InputMaybe<Scalars['String']['input']>;
-  titleAccent?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   lastUpdate?: InputMaybe<Scalars['String']['input']>;
   selectedProjects?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  projects?: InputMaybe<Array<InputMaybe<PagesProjectsMutation>>>;
-  sections?: InputMaybe<Array<InputMaybe<PagesSectionsMutation>>>;
   hero?: InputMaybe<PagesHeroMutation>;
   technology?: InputMaybe<PagesTechnologyMutation>;
   offer?: InputMaybe<PagesOfferMutation>;
@@ -1200,15 +1107,46 @@ export type PagesMutation = {
   body?: InputMaybe<Scalars['JSON']['input']>;
 };
 
+export type BlogMutation = {
+  title?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+  date?: InputMaybe<Scalars['String']['input']>;
+  author?: InputMaybe<Scalars['String']['input']>;
+  category?: InputMaybe<Scalars['String']['input']>;
+  excerpt?: InputMaybe<Scalars['String']['input']>;
+  image?: InputMaybe<Scalars['String']['input']>;
+  imageAlt?: InputMaybe<Scalars['String']['input']>;
+  readTime?: InputMaybe<Scalars['Float']['input']>;
+  tags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  body?: InputMaybe<Scalars['JSON']['input']>;
+};
+
+export type PortfolioMutation = {
+  title?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  date?: InputMaybe<Scalars['String']['input']>;
+  category?: InputMaybe<Scalars['String']['input']>;
+  year?: InputMaybe<Scalars['String']['input']>;
+  client?: InputMaybe<Scalars['String']['input']>;
+  excerpt?: InputMaybe<Scalars['String']['input']>;
+  image?: InputMaybe<Scalars['String']['input']>;
+  imageAlt?: InputMaybe<Scalars['String']['input']>;
+  link?: InputMaybe<Scalars['String']['input']>;
+  tags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  featured?: InputMaybe<Scalars['Boolean']['input']>;
+  body?: InputMaybe<Scalars['JSON']['input']>;
+};
+
 export type HeaderPartsFragment = { __typename: 'Header', logo: string, logoAlt: string, navigation?: Array<{ __typename: 'HeaderNavigation', label: string, href: string } | null> | null, ctaButton?: { __typename: 'HeaderCtaButton', text: string, href: string } | null };
 
 export type FooterPartsFragment = { __typename: 'Footer', companyName?: string | null, description?: string | null, copyright?: string | null, cookieSettingsText?: string | null, contact?: { __typename: 'FooterContact', email?: string | null, phone?: string | null, location?: string | null } | null, navigation?: Array<{ __typename: 'FooterNavigation', label?: string | null, href?: string | null } | null> | null, socialMedia?: Array<{ __typename: 'FooterSocialMedia', platform?: string | null, url?: string | null } | null> | null, legalLinks?: Array<{ __typename: 'FooterLegalLinks', label?: string | null, href?: string | null } | null> | null };
 
-export type PortfolioPartsFragment = { __typename: 'Portfolio', title: string, slug: string, description: string, date?: string | null, excerpt?: string | null, category?: string | null, tags?: Array<string | null> | null, year?: string | null, client?: string | null, image?: string | null, imageAlt?: string | null, link?: string | null, featured?: boolean | null, body?: any | null };
+export type PagesPartsFragment = { __typename: 'Pages', title?: string | null, description?: string | null, lastUpdate?: string | null, selectedProjects?: Array<string | null> | null, body?: any | null, hero?: { __typename: 'PagesHero', title?: string | null, titleAccent?: string | null, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null, technology?: { __typename: 'PagesTechnology', title?: string | null, description?: string | null, items?: Array<{ __typename: 'PagesTechnologyItems', name?: string | null, icon?: string | null, useBrightness?: boolean | null } | null> | null } | null, offer?: { __typename: 'PagesOffer', title?: string | null, titleAccent?: string | null, subtitle?: string | null, sectionLabel?: string | null, services?: Array<{ __typename: 'PagesOfferServices', title?: string | null, description?: string | null, icon?: string | null, features?: Array<string | null> | null, link?: string | null, buttonText?: string | null } | null> | null } | null, brief?: { __typename: 'PagesBrief', title?: string | null, description?: string | null, buttonText?: string | null, contact?: { __typename: 'PagesBriefContact', email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null } | null } | null, portfolio?: { __typename: 'PagesPortfolio', title?: string | null, description?: string | null, sectionLabel?: string | null } | null, portfolioHighlights?: { __typename: 'PagesPortfolioHighlights', title?: string | null, description?: string | null } | null, howWeWork?: { __typename: 'PagesHowWeWork', title?: string | null, description?: string | null, ctaTitle?: string | null, ctaDescription?: string | null, ctaButton?: string | null, steps?: Array<{ __typename: 'PagesHowWeWorkSteps', title?: string | null, description?: string | null, icon?: string | null, duration?: string | null } | null> | null } | null, faq?: { __typename: 'PagesFaq', title?: string | null, description?: string | null, ctaQuestion?: string | null, ctaButton?: string | null, items?: Array<{ __typename: 'PagesFaqItems', question?: string | null, answer?: string | null } | null> | null } | null, contact?: { __typename: 'PagesContact', title?: string | null, description?: string | null, email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null, successTitle?: string | null, successMessage?: string | null, nameLabel?: string | null, emailLabel?: string | null, messageLabel?: string | null, buttonText?: string | null, contactDataTitle?: string | null } | null };
 
-export type BlogPartsFragment = { __typename: 'Blog', title: string, slug: string, description: string, excerpt?: string | null, date: string, author: string, category?: string | null, tags?: Array<string | null> | null, image?: string | null, imageAlt?: string | null, readTime?: number | null, body?: any | null };
+export type BlogPartsFragment = { __typename: 'Blog', title: string, slug: string, date?: string | null, author?: string | null, category?: string | null, excerpt?: string | null, image?: string | null, imageAlt?: string | null, readTime?: number | null, tags?: Array<string | null> | null, body?: any | null };
 
-export type PagesPartsFragment = { __typename: 'Pages', title: string, titleAccent?: string | null, description?: string | null, lastUpdate?: string | null, selectedProjects?: Array<string | null> | null, body?: any | null, projects?: Array<{ __typename: 'PagesProjects', title?: string | null, description?: string | null, image?: string | null, imageAlt?: string | null, tags?: Array<string | null> | null, year?: string | null, link?: string | null } | null> | null, sections?: Array<{ __typename: 'PagesSections', id?: string | null, title?: string | null, content?: string | null } | null> | null, hero?: { __typename: 'PagesHero', title?: string | null, titleAccent?: string | null, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null, technology?: { __typename: 'PagesTechnology', title?: string | null, description?: string | null, items?: Array<{ __typename: 'PagesTechnologyItems', name?: string | null, icon?: string | null, useBrightness?: boolean | null } | null> | null } | null, offer?: { __typename: 'PagesOffer', title?: string | null, titleAccent?: string | null, subtitle?: string | null, sectionLabel?: string | null, services?: Array<{ __typename: 'PagesOfferServices', title?: string | null, description?: string | null, icon?: string | null, features?: Array<string | null> | null, link?: string | null, buttonText?: string | null } | null> | null } | null, brief?: { __typename: 'PagesBrief', title?: string | null, description?: string | null, buttonText?: string | null, contact?: { __typename: 'PagesBriefContact', email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null } | null } | null, portfolio?: { __typename: 'PagesPortfolio', title?: string | null, description?: string | null, sectionLabel?: string | null } | null, portfolioHighlights?: { __typename: 'PagesPortfolioHighlights', title?: string | null, description?: string | null } | null, howWeWork?: { __typename: 'PagesHowWeWork', title?: string | null, description?: string | null, ctaTitle?: string | null, ctaDescription?: string | null, ctaButton?: string | null, steps?: Array<{ __typename: 'PagesHowWeWorkSteps', title?: string | null, description?: string | null, icon?: string | null, duration?: string | null } | null> | null } | null, faq?: { __typename: 'PagesFaq', title?: string | null, description?: string | null, ctaQuestion?: string | null, ctaButton?: string | null, items?: Array<{ __typename: 'PagesFaqItems', question?: string | null, answer?: string | null } | null> | null } | null, contact?: { __typename: 'PagesContact', title?: string | null, description?: string | null, email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null, successTitle?: string | null, successMessage?: string | null, nameLabel?: string | null, emailLabel?: string | null, messageLabel?: string | null, buttonText?: string | null, contactDataTitle?: string | null } | null };
+export type PortfolioPartsFragment = { __typename: 'Portfolio', title: string, slug: string, description?: string | null, date?: string | null, category?: string | null, year?: string | null, client?: string | null, excerpt?: string | null, image?: string | null, imageAlt?: string | null, link?: string | null, tags?: Array<string | null> | null, featured?: boolean | null, body?: any | null };
 
 export type HeaderQueryVariables = Exact<{
   relativePath: Scalars['String']['input'];
@@ -1248,50 +1186,12 @@ export type FooterConnectionQueryVariables = Exact<{
 
 export type FooterConnectionQuery = { __typename?: 'Query', footerConnection: { __typename?: 'FooterConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'FooterConnectionEdges', cursor: string, node?: { __typename: 'Footer', id: string, companyName?: string | null, description?: string | null, copyright?: string | null, cookieSettingsText?: string | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, contact?: { __typename: 'FooterContact', email?: string | null, phone?: string | null, location?: string | null } | null, navigation?: Array<{ __typename: 'FooterNavigation', label?: string | null, href?: string | null } | null> | null, socialMedia?: Array<{ __typename: 'FooterSocialMedia', platform?: string | null, url?: string | null } | null> | null, legalLinks?: Array<{ __typename: 'FooterLegalLinks', label?: string | null, href?: string | null } | null> | null } | null } | null> | null } };
 
-export type PortfolioQueryVariables = Exact<{
-  relativePath: Scalars['String']['input'];
-}>;
-
-
-export type PortfolioQuery = { __typename?: 'Query', portfolio: { __typename: 'Portfolio', id: string, title: string, slug: string, description: string, date?: string | null, excerpt?: string | null, category?: string | null, tags?: Array<string | null> | null, year?: string | null, client?: string | null, image?: string | null, imageAlt?: string | null, link?: string | null, featured?: boolean | null, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } };
-
-export type PortfolioConnectionQueryVariables = Exact<{
-  before?: InputMaybe<Scalars['String']['input']>;
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Float']['input']>;
-  last?: InputMaybe<Scalars['Float']['input']>;
-  sort?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<PortfolioFilter>;
-}>;
-
-
-export type PortfolioConnectionQuery = { __typename?: 'Query', portfolioConnection: { __typename?: 'PortfolioConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'PortfolioConnectionEdges', cursor: string, node?: { __typename: 'Portfolio', id: string, title: string, slug: string, description: string, date?: string | null, excerpt?: string | null, category?: string | null, tags?: Array<string | null> | null, year?: string | null, client?: string | null, image?: string | null, imageAlt?: string | null, link?: string | null, featured?: boolean | null, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null> | null } };
-
-export type BlogQueryVariables = Exact<{
-  relativePath: Scalars['String']['input'];
-}>;
-
-
-export type BlogQuery = { __typename?: 'Query', blog: { __typename: 'Blog', id: string, title: string, slug: string, description: string, excerpt?: string | null, date: string, author: string, category?: string | null, tags?: Array<string | null> | null, image?: string | null, imageAlt?: string | null, readTime?: number | null, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } };
-
-export type BlogConnectionQueryVariables = Exact<{
-  before?: InputMaybe<Scalars['String']['input']>;
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Float']['input']>;
-  last?: InputMaybe<Scalars['Float']['input']>;
-  sort?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<BlogFilter>;
-}>;
-
-
-export type BlogConnectionQuery = { __typename?: 'Query', blogConnection: { __typename?: 'BlogConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'BlogConnectionEdges', cursor: string, node?: { __typename: 'Blog', id: string, title: string, slug: string, description: string, excerpt?: string | null, date: string, author: string, category?: string | null, tags?: Array<string | null> | null, image?: string | null, imageAlt?: string | null, readTime?: number | null, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null> | null } };
-
 export type PagesQueryVariables = Exact<{
   relativePath: Scalars['String']['input'];
 }>;
 
 
-export type PagesQuery = { __typename?: 'Query', pages: { __typename: 'Pages', id: string, title: string, titleAccent?: string | null, description?: string | null, lastUpdate?: string | null, selectedProjects?: Array<string | null> | null, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, projects?: Array<{ __typename: 'PagesProjects', title?: string | null, description?: string | null, image?: string | null, imageAlt?: string | null, tags?: Array<string | null> | null, year?: string | null, link?: string | null } | null> | null, sections?: Array<{ __typename: 'PagesSections', id?: string | null, title?: string | null, content?: string | null } | null> | null, hero?: { __typename: 'PagesHero', title?: string | null, titleAccent?: string | null, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null, technology?: { __typename: 'PagesTechnology', title?: string | null, description?: string | null, items?: Array<{ __typename: 'PagesTechnologyItems', name?: string | null, icon?: string | null, useBrightness?: boolean | null } | null> | null } | null, offer?: { __typename: 'PagesOffer', title?: string | null, titleAccent?: string | null, subtitle?: string | null, sectionLabel?: string | null, services?: Array<{ __typename: 'PagesOfferServices', title?: string | null, description?: string | null, icon?: string | null, features?: Array<string | null> | null, link?: string | null, buttonText?: string | null } | null> | null } | null, brief?: { __typename: 'PagesBrief', title?: string | null, description?: string | null, buttonText?: string | null, contact?: { __typename: 'PagesBriefContact', email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null } | null } | null, portfolio?: { __typename: 'PagesPortfolio', title?: string | null, description?: string | null, sectionLabel?: string | null } | null, portfolioHighlights?: { __typename: 'PagesPortfolioHighlights', title?: string | null, description?: string | null } | null, howWeWork?: { __typename: 'PagesHowWeWork', title?: string | null, description?: string | null, ctaTitle?: string | null, ctaDescription?: string | null, ctaButton?: string | null, steps?: Array<{ __typename: 'PagesHowWeWorkSteps', title?: string | null, description?: string | null, icon?: string | null, duration?: string | null } | null> | null } | null, faq?: { __typename: 'PagesFaq', title?: string | null, description?: string | null, ctaQuestion?: string | null, ctaButton?: string | null, items?: Array<{ __typename: 'PagesFaqItems', question?: string | null, answer?: string | null } | null> | null } | null, contact?: { __typename: 'PagesContact', title?: string | null, description?: string | null, email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null, successTitle?: string | null, successMessage?: string | null, nameLabel?: string | null, emailLabel?: string | null, messageLabel?: string | null, buttonText?: string | null, contactDataTitle?: string | null } | null } };
+export type PagesQuery = { __typename?: 'Query', pages: { __typename: 'Pages', id: string, title?: string | null, description?: string | null, lastUpdate?: string | null, selectedProjects?: Array<string | null> | null, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero?: { __typename: 'PagesHero', title?: string | null, titleAccent?: string | null, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null, technology?: { __typename: 'PagesTechnology', title?: string | null, description?: string | null, items?: Array<{ __typename: 'PagesTechnologyItems', name?: string | null, icon?: string | null, useBrightness?: boolean | null } | null> | null } | null, offer?: { __typename: 'PagesOffer', title?: string | null, titleAccent?: string | null, subtitle?: string | null, sectionLabel?: string | null, services?: Array<{ __typename: 'PagesOfferServices', title?: string | null, description?: string | null, icon?: string | null, features?: Array<string | null> | null, link?: string | null, buttonText?: string | null } | null> | null } | null, brief?: { __typename: 'PagesBrief', title?: string | null, description?: string | null, buttonText?: string | null, contact?: { __typename: 'PagesBriefContact', email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null } | null } | null, portfolio?: { __typename: 'PagesPortfolio', title?: string | null, description?: string | null, sectionLabel?: string | null } | null, portfolioHighlights?: { __typename: 'PagesPortfolioHighlights', title?: string | null, description?: string | null } | null, howWeWork?: { __typename: 'PagesHowWeWork', title?: string | null, description?: string | null, ctaTitle?: string | null, ctaDescription?: string | null, ctaButton?: string | null, steps?: Array<{ __typename: 'PagesHowWeWorkSteps', title?: string | null, description?: string | null, icon?: string | null, duration?: string | null } | null> | null } | null, faq?: { __typename: 'PagesFaq', title?: string | null, description?: string | null, ctaQuestion?: string | null, ctaButton?: string | null, items?: Array<{ __typename: 'PagesFaqItems', question?: string | null, answer?: string | null } | null> | null } | null, contact?: { __typename: 'PagesContact', title?: string | null, description?: string | null, email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null, successTitle?: string | null, successMessage?: string | null, nameLabel?: string | null, emailLabel?: string | null, messageLabel?: string | null, buttonText?: string | null, contactDataTitle?: string | null } | null } };
 
 export type PagesConnectionQueryVariables = Exact<{
   before?: InputMaybe<Scalars['String']['input']>;
@@ -1303,7 +1203,45 @@ export type PagesConnectionQueryVariables = Exact<{
 }>;
 
 
-export type PagesConnectionQuery = { __typename?: 'Query', pagesConnection: { __typename?: 'PagesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'PagesConnectionEdges', cursor: string, node?: { __typename: 'Pages', id: string, title: string, titleAccent?: string | null, description?: string | null, lastUpdate?: string | null, selectedProjects?: Array<string | null> | null, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, projects?: Array<{ __typename: 'PagesProjects', title?: string | null, description?: string | null, image?: string | null, imageAlt?: string | null, tags?: Array<string | null> | null, year?: string | null, link?: string | null } | null> | null, sections?: Array<{ __typename: 'PagesSections', id?: string | null, title?: string | null, content?: string | null } | null> | null, hero?: { __typename: 'PagesHero', title?: string | null, titleAccent?: string | null, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null, technology?: { __typename: 'PagesTechnology', title?: string | null, description?: string | null, items?: Array<{ __typename: 'PagesTechnologyItems', name?: string | null, icon?: string | null, useBrightness?: boolean | null } | null> | null } | null, offer?: { __typename: 'PagesOffer', title?: string | null, titleAccent?: string | null, subtitle?: string | null, sectionLabel?: string | null, services?: Array<{ __typename: 'PagesOfferServices', title?: string | null, description?: string | null, icon?: string | null, features?: Array<string | null> | null, link?: string | null, buttonText?: string | null } | null> | null } | null, brief?: { __typename: 'PagesBrief', title?: string | null, description?: string | null, buttonText?: string | null, contact?: { __typename: 'PagesBriefContact', email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null } | null } | null, portfolio?: { __typename: 'PagesPortfolio', title?: string | null, description?: string | null, sectionLabel?: string | null } | null, portfolioHighlights?: { __typename: 'PagesPortfolioHighlights', title?: string | null, description?: string | null } | null, howWeWork?: { __typename: 'PagesHowWeWork', title?: string | null, description?: string | null, ctaTitle?: string | null, ctaDescription?: string | null, ctaButton?: string | null, steps?: Array<{ __typename: 'PagesHowWeWorkSteps', title?: string | null, description?: string | null, icon?: string | null, duration?: string | null } | null> | null } | null, faq?: { __typename: 'PagesFaq', title?: string | null, description?: string | null, ctaQuestion?: string | null, ctaButton?: string | null, items?: Array<{ __typename: 'PagesFaqItems', question?: string | null, answer?: string | null } | null> | null } | null, contact?: { __typename: 'PagesContact', title?: string | null, description?: string | null, email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null, successTitle?: string | null, successMessage?: string | null, nameLabel?: string | null, emailLabel?: string | null, messageLabel?: string | null, buttonText?: string | null, contactDataTitle?: string | null } | null } | null } | null> | null } };
+export type PagesConnectionQuery = { __typename?: 'Query', pagesConnection: { __typename?: 'PagesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'PagesConnectionEdges', cursor: string, node?: { __typename: 'Pages', id: string, title?: string | null, description?: string | null, lastUpdate?: string | null, selectedProjects?: Array<string | null> | null, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero?: { __typename: 'PagesHero', title?: string | null, titleAccent?: string | null, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null, technology?: { __typename: 'PagesTechnology', title?: string | null, description?: string | null, items?: Array<{ __typename: 'PagesTechnologyItems', name?: string | null, icon?: string | null, useBrightness?: boolean | null } | null> | null } | null, offer?: { __typename: 'PagesOffer', title?: string | null, titleAccent?: string | null, subtitle?: string | null, sectionLabel?: string | null, services?: Array<{ __typename: 'PagesOfferServices', title?: string | null, description?: string | null, icon?: string | null, features?: Array<string | null> | null, link?: string | null, buttonText?: string | null } | null> | null } | null, brief?: { __typename: 'PagesBrief', title?: string | null, description?: string | null, buttonText?: string | null, contact?: { __typename: 'PagesBriefContact', email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null } | null } | null, portfolio?: { __typename: 'PagesPortfolio', title?: string | null, description?: string | null, sectionLabel?: string | null } | null, portfolioHighlights?: { __typename: 'PagesPortfolioHighlights', title?: string | null, description?: string | null } | null, howWeWork?: { __typename: 'PagesHowWeWork', title?: string | null, description?: string | null, ctaTitle?: string | null, ctaDescription?: string | null, ctaButton?: string | null, steps?: Array<{ __typename: 'PagesHowWeWorkSteps', title?: string | null, description?: string | null, icon?: string | null, duration?: string | null } | null> | null } | null, faq?: { __typename: 'PagesFaq', title?: string | null, description?: string | null, ctaQuestion?: string | null, ctaButton?: string | null, items?: Array<{ __typename: 'PagesFaqItems', question?: string | null, answer?: string | null } | null> | null } | null, contact?: { __typename: 'PagesContact', title?: string | null, description?: string | null, email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null, successTitle?: string | null, successMessage?: string | null, nameLabel?: string | null, emailLabel?: string | null, messageLabel?: string | null, buttonText?: string | null, contactDataTitle?: string | null } | null } | null } | null> | null } };
+
+export type BlogQueryVariables = Exact<{
+  relativePath: Scalars['String']['input'];
+}>;
+
+
+export type BlogQuery = { __typename?: 'Query', blog: { __typename: 'Blog', id: string, title: string, slug: string, date?: string | null, author?: string | null, category?: string | null, excerpt?: string | null, image?: string | null, imageAlt?: string | null, readTime?: number | null, tags?: Array<string | null> | null, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } };
+
+export type BlogConnectionQueryVariables = Exact<{
+  before?: InputMaybe<Scalars['String']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Float']['input']>;
+  last?: InputMaybe<Scalars['Float']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<BlogFilter>;
+}>;
+
+
+export type BlogConnectionQuery = { __typename?: 'Query', blogConnection: { __typename?: 'BlogConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'BlogConnectionEdges', cursor: string, node?: { __typename: 'Blog', id: string, title: string, slug: string, date?: string | null, author?: string | null, category?: string | null, excerpt?: string | null, image?: string | null, imageAlt?: string | null, readTime?: number | null, tags?: Array<string | null> | null, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null> | null } };
+
+export type PortfolioQueryVariables = Exact<{
+  relativePath: Scalars['String']['input'];
+}>;
+
+
+export type PortfolioQuery = { __typename?: 'Query', portfolio: { __typename: 'Portfolio', id: string, title: string, slug: string, description?: string | null, date?: string | null, category?: string | null, year?: string | null, client?: string | null, excerpt?: string | null, image?: string | null, imageAlt?: string | null, link?: string | null, tags?: Array<string | null> | null, featured?: boolean | null, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } };
+
+export type PortfolioConnectionQueryVariables = Exact<{
+  before?: InputMaybe<Scalars['String']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Float']['input']>;
+  last?: InputMaybe<Scalars['Float']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<PortfolioFilter>;
+}>;
+
+
+export type PortfolioConnectionQuery = { __typename?: 'Query', portfolioConnection: { __typename?: 'PortfolioConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'PortfolioConnectionEdges', cursor: string, node?: { __typename: 'Portfolio', id: string, title: string, slug: string, description?: string | null, date?: string | null, category?: string | null, year?: string | null, client?: string | null, excerpt?: string | null, image?: string | null, imageAlt?: string | null, link?: string | null, tags?: Array<string | null> | null, featured?: boolean | null, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null> | null } };
 
 export const HeaderPartsFragmentDoc = gql`
     fragment HeaderParts on Header {
@@ -1352,66 +1290,13 @@ export const FooterPartsFragmentDoc = gql`
   cookieSettingsText
 }
     `;
-export const PortfolioPartsFragmentDoc = gql`
-    fragment PortfolioParts on Portfolio {
-  __typename
-  title
-  slug
-  description
-  date
-  excerpt
-  category
-  tags
-  year
-  client
-  image
-  imageAlt
-  link
-  featured
-  body
-}
-    `;
-export const BlogPartsFragmentDoc = gql`
-    fragment BlogParts on Blog {
-  __typename
-  title
-  slug
-  description
-  excerpt
-  date
-  author
-  category
-  tags
-  image
-  imageAlt
-  readTime
-  body
-}
-    `;
 export const PagesPartsFragmentDoc = gql`
     fragment PagesParts on Pages {
   __typename
   title
-  titleAccent
   description
   lastUpdate
   selectedProjects
-  projects {
-    __typename
-    title
-    description
-    image
-    imageAlt
-    tags
-    year
-    link
-  }
-  sections {
-    __typename
-    id
-    title
-    content
-  }
   hero {
     __typename
     title
@@ -1518,6 +1403,41 @@ export const PagesPartsFragmentDoc = gql`
     buttonText
     contactDataTitle
   }
+  body
+}
+    `;
+export const BlogPartsFragmentDoc = gql`
+    fragment BlogParts on Blog {
+  __typename
+  title
+  slug
+  date
+  author
+  category
+  excerpt
+  image
+  imageAlt
+  readTime
+  tags
+  body
+}
+    `;
+export const PortfolioPartsFragmentDoc = gql`
+    fragment PortfolioParts on Portfolio {
+  __typename
+  title
+  slug
+  description
+  date
+  category
+  year
+  client
+  excerpt
+  image
+  imageAlt
+  link
+  tags
+  featured
   body
 }
     `;
@@ -1635,120 +1555,6 @@ export const FooterConnectionDocument = gql`
   }
 }
     ${FooterPartsFragmentDoc}`;
-export const PortfolioDocument = gql`
-    query portfolio($relativePath: String!) {
-  portfolio(relativePath: $relativePath) {
-    ... on Document {
-      _sys {
-        filename
-        basename
-        hasReferences
-        breadcrumbs
-        path
-        relativePath
-        extension
-      }
-      id
-    }
-    ...PortfolioParts
-  }
-}
-    ${PortfolioPartsFragmentDoc}`;
-export const PortfolioConnectionDocument = gql`
-    query portfolioConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: PortfolioFilter) {
-  portfolioConnection(
-    before: $before
-    after: $after
-    first: $first
-    last: $last
-    sort: $sort
-    filter: $filter
-  ) {
-    pageInfo {
-      hasPreviousPage
-      hasNextPage
-      startCursor
-      endCursor
-    }
-    totalCount
-    edges {
-      cursor
-      node {
-        ... on Document {
-          _sys {
-            filename
-            basename
-            hasReferences
-            breadcrumbs
-            path
-            relativePath
-            extension
-          }
-          id
-        }
-        ...PortfolioParts
-      }
-    }
-  }
-}
-    ${PortfolioPartsFragmentDoc}`;
-export const BlogDocument = gql`
-    query blog($relativePath: String!) {
-  blog(relativePath: $relativePath) {
-    ... on Document {
-      _sys {
-        filename
-        basename
-        hasReferences
-        breadcrumbs
-        path
-        relativePath
-        extension
-      }
-      id
-    }
-    ...BlogParts
-  }
-}
-    ${BlogPartsFragmentDoc}`;
-export const BlogConnectionDocument = gql`
-    query blogConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: BlogFilter) {
-  blogConnection(
-    before: $before
-    after: $after
-    first: $first
-    last: $last
-    sort: $sort
-    filter: $filter
-  ) {
-    pageInfo {
-      hasPreviousPage
-      hasNextPage
-      startCursor
-      endCursor
-    }
-    totalCount
-    edges {
-      cursor
-      node {
-        ... on Document {
-          _sys {
-            filename
-            basename
-            hasReferences
-            breadcrumbs
-            path
-            relativePath
-            extension
-          }
-          id
-        }
-        ...BlogParts
-      }
-    }
-  }
-}
-    ${BlogPartsFragmentDoc}`;
 export const PagesDocument = gql`
     query pages($relativePath: String!) {
   pages(relativePath: $relativePath) {
@@ -1806,6 +1612,120 @@ export const PagesConnectionDocument = gql`
   }
 }
     ${PagesPartsFragmentDoc}`;
+export const BlogDocument = gql`
+    query blog($relativePath: String!) {
+  blog(relativePath: $relativePath) {
+    ... on Document {
+      _sys {
+        filename
+        basename
+        hasReferences
+        breadcrumbs
+        path
+        relativePath
+        extension
+      }
+      id
+    }
+    ...BlogParts
+  }
+}
+    ${BlogPartsFragmentDoc}`;
+export const BlogConnectionDocument = gql`
+    query blogConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: BlogFilter) {
+  blogConnection(
+    before: $before
+    after: $after
+    first: $first
+    last: $last
+    sort: $sort
+    filter: $filter
+  ) {
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+    }
+    totalCount
+    edges {
+      cursor
+      node {
+        ... on Document {
+          _sys {
+            filename
+            basename
+            hasReferences
+            breadcrumbs
+            path
+            relativePath
+            extension
+          }
+          id
+        }
+        ...BlogParts
+      }
+    }
+  }
+}
+    ${BlogPartsFragmentDoc}`;
+export const PortfolioDocument = gql`
+    query portfolio($relativePath: String!) {
+  portfolio(relativePath: $relativePath) {
+    ... on Document {
+      _sys {
+        filename
+        basename
+        hasReferences
+        breadcrumbs
+        path
+        relativePath
+        extension
+      }
+      id
+    }
+    ...PortfolioParts
+  }
+}
+    ${PortfolioPartsFragmentDoc}`;
+export const PortfolioConnectionDocument = gql`
+    query portfolioConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: PortfolioFilter) {
+  portfolioConnection(
+    before: $before
+    after: $after
+    first: $first
+    last: $last
+    sort: $sort
+    filter: $filter
+  ) {
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+    }
+    totalCount
+    edges {
+      cursor
+      node {
+        ... on Document {
+          _sys {
+            filename
+            basename
+            hasReferences
+            breadcrumbs
+            path
+            relativePath
+            extension
+          }
+          id
+        }
+        ...PortfolioParts
+      }
+    }
+  }
+}
+    ${PortfolioPartsFragmentDoc}`;
 export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R>
   export function getSdk<C>(requester: Requester<C>) {
     return {
@@ -1821,11 +1741,11 @@ export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) 
     footerConnection(variables?: FooterConnectionQueryVariables, options?: C): Promise<{data: FooterConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: FooterConnectionQueryVariables, query: string}> {
         return requester<{data: FooterConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: FooterConnectionQueryVariables, query: string}, FooterConnectionQueryVariables>(FooterConnectionDocument, variables, options);
       },
-    portfolio(variables: PortfolioQueryVariables, options?: C): Promise<{data: PortfolioQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PortfolioQueryVariables, query: string}> {
-        return requester<{data: PortfolioQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PortfolioQueryVariables, query: string}, PortfolioQueryVariables>(PortfolioDocument, variables, options);
+    pages(variables: PagesQueryVariables, options?: C): Promise<{data: PagesQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PagesQueryVariables, query: string}> {
+        return requester<{data: PagesQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PagesQueryVariables, query: string}, PagesQueryVariables>(PagesDocument, variables, options);
       },
-    portfolioConnection(variables?: PortfolioConnectionQueryVariables, options?: C): Promise<{data: PortfolioConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PortfolioConnectionQueryVariables, query: string}> {
-        return requester<{data: PortfolioConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PortfolioConnectionQueryVariables, query: string}, PortfolioConnectionQueryVariables>(PortfolioConnectionDocument, variables, options);
+    pagesConnection(variables?: PagesConnectionQueryVariables, options?: C): Promise<{data: PagesConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PagesConnectionQueryVariables, query: string}> {
+        return requester<{data: PagesConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PagesConnectionQueryVariables, query: string}, PagesConnectionQueryVariables>(PagesConnectionDocument, variables, options);
       },
     blog(variables: BlogQueryVariables, options?: C): Promise<{data: BlogQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: BlogQueryVariables, query: string}> {
         return requester<{data: BlogQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: BlogQueryVariables, query: string}, BlogQueryVariables>(BlogDocument, variables, options);
@@ -1833,11 +1753,11 @@ export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) 
     blogConnection(variables?: BlogConnectionQueryVariables, options?: C): Promise<{data: BlogConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: BlogConnectionQueryVariables, query: string}> {
         return requester<{data: BlogConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: BlogConnectionQueryVariables, query: string}, BlogConnectionQueryVariables>(BlogConnectionDocument, variables, options);
       },
-    pages(variables: PagesQueryVariables, options?: C): Promise<{data: PagesQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PagesQueryVariables, query: string}> {
-        return requester<{data: PagesQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PagesQueryVariables, query: string}, PagesQueryVariables>(PagesDocument, variables, options);
+    portfolio(variables: PortfolioQueryVariables, options?: C): Promise<{data: PortfolioQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PortfolioQueryVariables, query: string}> {
+        return requester<{data: PortfolioQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PortfolioQueryVariables, query: string}, PortfolioQueryVariables>(PortfolioDocument, variables, options);
       },
-    pagesConnection(variables?: PagesConnectionQueryVariables, options?: C): Promise<{data: PagesConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PagesConnectionQueryVariables, query: string}> {
-        return requester<{data: PagesConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PagesConnectionQueryVariables, query: string}, PagesConnectionQueryVariables>(PagesConnectionDocument, variables, options);
+    portfolioConnection(variables?: PortfolioConnectionQueryVariables, options?: C): Promise<{data: PortfolioConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PortfolioConnectionQueryVariables, query: string}> {
+        return requester<{data: PortfolioConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PortfolioConnectionQueryVariables, query: string}, PortfolioConnectionQueryVariables>(PortfolioConnectionDocument, variables, options);
       }
     };
   }
@@ -1886,7 +1806,7 @@ export const ExperimentalGetTinaClient = () =>
   getSdk(
     generateRequester(
       createClient({
-        url: "http://localhost:4001/graphql",
+        url: "https://content.tinajs.io/2.0/content/f529e4e6-9630-4638-8404-25897477e309/github/master",
         queries,
       })
     )

@@ -58,20 +58,20 @@ type Query {
   headerConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: HeaderFilter): HeaderConnection!
   footer(relativePath: String): Footer!
   footerConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: FooterFilter): FooterConnection!
-  portfolio(relativePath: String): Portfolio!
-  portfolioConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: PortfolioFilter): PortfolioConnection!
-  blog(relativePath: String): Blog!
-  blogConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: BlogFilter): BlogConnection!
   pages(relativePath: String): Pages!
   pagesConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: PagesFilter): PagesConnection!
+  blog(relativePath: String): Blog!
+  blogConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: BlogFilter): BlogConnection!
+  portfolio(relativePath: String): Portfolio!
+  portfolioConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: PortfolioFilter): PortfolioConnection!
 }
 
 input DocumentFilter {
   header: HeaderFilter
   footer: FooterFilter
-  portfolio: PortfolioFilter
-  blog: BlogFilter
   pages: PagesFilter
+  blog: BlogFilter
+  portfolio: PortfolioFilter
 }
 
 type DocumentConnectionEdges {
@@ -97,7 +97,7 @@ type Collection {
   documents(before: String, after: String, first: Float, last: Float, sort: String, filter: DocumentFilter, folder: String): DocumentConnection!
 }
 
-union DocumentNode = Header | Footer | Portfolio | Blog | Pages | Folder
+union DocumentNode = Header | Footer | Pages | Blog | Portfolio | Folder
 
 type HeaderNavigation {
   label: String!
@@ -239,143 +239,6 @@ type FooterConnection implements Connection {
   edges: [FooterConnectionEdges]
 }
 
-type Portfolio implements Node & Document {
-  title: String!
-  slug: String!
-  description: String!
-  date: String
-  excerpt: String
-  category: String
-  tags: [String]
-  year: String
-  client: String
-  image: String
-  imageAlt: String
-  link: String
-  featured: Boolean
-  body: JSON
-  id: ID!
-  _sys: SystemInfo!
-  _values: JSON!
-}
-
-input DatetimeFilter {
-  after: String
-  before: String
-  eq: String
-  exists: Boolean
-  in: [String]
-}
-
-input BooleanFilter {
-  eq: Boolean
-  exists: Boolean
-}
-
-input RichTextFilter {
-  startsWith: String
-  eq: String
-  exists: Boolean
-}
-
-input PortfolioFilter {
-  title: StringFilter
-  slug: StringFilter
-  description: StringFilter
-  date: DatetimeFilter
-  excerpt: StringFilter
-  category: StringFilter
-  tags: StringFilter
-  year: StringFilter
-  client: StringFilter
-  image: ImageFilter
-  imageAlt: StringFilter
-  link: StringFilter
-  featured: BooleanFilter
-  body: RichTextFilter
-}
-
-type PortfolioConnectionEdges {
-  cursor: String!
-  node: Portfolio
-}
-
-type PortfolioConnection implements Connection {
-  pageInfo: PageInfo!
-  totalCount: Float!
-  edges: [PortfolioConnectionEdges]
-}
-
-type Blog implements Node & Document {
-  title: String!
-  slug: String!
-  description: String!
-  excerpt: String
-  date: String!
-  author: String!
-  category: String
-  tags: [String]
-  image: String
-  imageAlt: String
-  readTime: Float
-  body: JSON
-  id: ID!
-  _sys: SystemInfo!
-  _values: JSON!
-}
-
-input NumberFilter {
-  lt: Float
-  lte: Float
-  gte: Float
-  gt: Float
-  eq: Float
-  exists: Boolean
-  in: [Float]
-}
-
-input BlogFilter {
-  title: StringFilter
-  slug: StringFilter
-  description: StringFilter
-  excerpt: StringFilter
-  date: DatetimeFilter
-  author: StringFilter
-  category: StringFilter
-  tags: StringFilter
-  image: ImageFilter
-  imageAlt: StringFilter
-  readTime: NumberFilter
-  body: RichTextFilter
-}
-
-type BlogConnectionEdges {
-  cursor: String!
-  node: Blog
-}
-
-type BlogConnection implements Connection {
-  pageInfo: PageInfo!
-  totalCount: Float!
-  edges: [BlogConnectionEdges]
-}
-
-type PagesProjects {
-  title: String
-  description: String
-  image: String
-  imageAlt: String
-  tags: [String]
-  year: String
-  link: String
-}
-
-type PagesSections {
-  id: String
-  title: String
-  content: String
-}
-
 type PagesHero {
   title: String
   titleAccent: String
@@ -488,13 +351,10 @@ type PagesContact {
 }
 
 type Pages implements Node & Document {
-  title: String!
-  titleAccent: String
+  title: String
   description: String
   lastUpdate: String
   selectedProjects: [String]
-  projects: [PagesProjects]
-  sections: [PagesSections]
   hero: PagesHero
   technology: PagesTechnology
   offer: PagesOffer
@@ -510,22 +370,6 @@ type Pages implements Node & Document {
   _values: JSON!
 }
 
-input PagesProjectsFilter {
-  title: StringFilter
-  description: StringFilter
-  image: ImageFilter
-  imageAlt: StringFilter
-  tags: StringFilter
-  year: StringFilter
-  link: StringFilter
-}
-
-input PagesSectionsFilter {
-  id: StringFilter
-  title: StringFilter
-  content: StringFilter
-}
-
 input PagesHeroFilter {
   title: StringFilter
   titleAccent: StringFilter
@@ -534,6 +378,11 @@ input PagesHeroFilter {
   ctaButton: StringFilter
   briefButton: StringFilter
   image: ImageFilter
+}
+
+input BooleanFilter {
+  eq: Boolean
+  exists: Boolean
 }
 
 input PagesTechnologyItemsFilter {
@@ -637,14 +486,17 @@ input PagesContactFilter {
   contactDataTitle: StringFilter
 }
 
+input RichTextFilter {
+  startsWith: String
+  eq: String
+  exists: Boolean
+}
+
 input PagesFilter {
   title: StringFilter
-  titleAccent: StringFilter
   description: StringFilter
   lastUpdate: StringFilter
   selectedProjects: StringFilter
-  projects: PagesProjectsFilter
-  sections: PagesSectionsFilter
   hero: PagesHeroFilter
   technology: PagesTechnologyFilter
   offer: PagesOfferFilter
@@ -668,6 +520,114 @@ type PagesConnection implements Connection {
   edges: [PagesConnectionEdges]
 }
 
+type Blog implements Node & Document {
+  title: String!
+  slug: String!
+  date: String
+  author: String
+  category: String
+  excerpt: String
+  image: String
+  imageAlt: String
+  readTime: Float
+  tags: [String]
+  body: JSON
+  id: ID!
+  _sys: SystemInfo!
+  _values: JSON!
+}
+
+input DatetimeFilter {
+  after: String
+  before: String
+  eq: String
+  exists: Boolean
+  in: [String]
+}
+
+input NumberFilter {
+  lt: Float
+  lte: Float
+  gte: Float
+  gt: Float
+  eq: Float
+  exists: Boolean
+  in: [Float]
+}
+
+input BlogFilter {
+  title: StringFilter
+  slug: StringFilter
+  date: DatetimeFilter
+  author: StringFilter
+  category: StringFilter
+  excerpt: StringFilter
+  image: ImageFilter
+  imageAlt: StringFilter
+  readTime: NumberFilter
+  tags: StringFilter
+  body: RichTextFilter
+}
+
+type BlogConnectionEdges {
+  cursor: String!
+  node: Blog
+}
+
+type BlogConnection implements Connection {
+  pageInfo: PageInfo!
+  totalCount: Float!
+  edges: [BlogConnectionEdges]
+}
+
+type Portfolio implements Node & Document {
+  title: String!
+  slug: String!
+  description: String
+  date: String
+  category: String
+  year: String
+  client: String
+  excerpt: String
+  image: String
+  imageAlt: String
+  link: String
+  tags: [String]
+  featured: Boolean
+  body: JSON
+  id: ID!
+  _sys: SystemInfo!
+  _values: JSON!
+}
+
+input PortfolioFilter {
+  title: StringFilter
+  slug: StringFilter
+  description: StringFilter
+  date: DatetimeFilter
+  category: StringFilter
+  year: StringFilter
+  client: StringFilter
+  excerpt: StringFilter
+  image: ImageFilter
+  imageAlt: StringFilter
+  link: StringFilter
+  tags: StringFilter
+  featured: BooleanFilter
+  body: RichTextFilter
+}
+
+type PortfolioConnectionEdges {
+  cursor: String!
+  node: Portfolio
+}
+
+type PortfolioConnection implements Connection {
+  pageInfo: PageInfo!
+  totalCount: Float!
+  edges: [PortfolioConnectionEdges]
+}
+
 type Mutation {
   addPendingDocument(collection: String!, relativePath: String!, template: String): DocumentNode!
   updateDocument(collection: String, relativePath: String!, params: DocumentUpdateMutation!): DocumentNode!
@@ -678,29 +638,29 @@ type Mutation {
   createHeader(relativePath: String!, params: HeaderMutation!): Header!
   updateFooter(relativePath: String!, params: FooterMutation!): Footer!
   createFooter(relativePath: String!, params: FooterMutation!): Footer!
-  updatePortfolio(relativePath: String!, params: PortfolioMutation!): Portfolio!
-  createPortfolio(relativePath: String!, params: PortfolioMutation!): Portfolio!
-  updateBlog(relativePath: String!, params: BlogMutation!): Blog!
-  createBlog(relativePath: String!, params: BlogMutation!): Blog!
   updatePages(relativePath: String!, params: PagesMutation!): Pages!
   createPages(relativePath: String!, params: PagesMutation!): Pages!
+  updateBlog(relativePath: String!, params: BlogMutation!): Blog!
+  createBlog(relativePath: String!, params: BlogMutation!): Blog!
+  updatePortfolio(relativePath: String!, params: PortfolioMutation!): Portfolio!
+  createPortfolio(relativePath: String!, params: PortfolioMutation!): Portfolio!
 }
 
 input DocumentUpdateMutation {
   header: HeaderMutation
   footer: FooterMutation
-  portfolio: PortfolioMutation
-  blog: BlogMutation
   pages: PagesMutation
+  blog: BlogMutation
+  portfolio: PortfolioMutation
   relativePath: String
 }
 
 input DocumentMutation {
   header: HeaderMutation
   footer: FooterMutation
-  portfolio: PortfolioMutation
-  blog: BlogMutation
   pages: PagesMutation
+  blog: BlogMutation
+  portfolio: PortfolioMutation
 }
 
 input HeaderNavigationMutation {
@@ -750,54 +710,6 @@ input FooterMutation {
   copyright: String
   legalLinks: [FooterLegalLinksMutation]
   cookieSettingsText: String
-}
-
-input PortfolioMutation {
-  title: String
-  slug: String
-  description: String
-  date: String
-  excerpt: String
-  category: String
-  tags: [String]
-  year: String
-  client: String
-  image: String
-  imageAlt: String
-  link: String
-  featured: Boolean
-  body: JSON
-}
-
-input BlogMutation {
-  title: String
-  slug: String
-  description: String
-  excerpt: String
-  date: String
-  author: String
-  category: String
-  tags: [String]
-  image: String
-  imageAlt: String
-  readTime: Float
-  body: JSON
-}
-
-input PagesProjectsMutation {
-  title: String
-  description: String
-  image: String
-  imageAlt: String
-  tags: [String]
-  year: String
-  link: String
-}
-
-input PagesSectionsMutation {
-  id: String
-  title: String
-  content: String
 }
 
 input PagesHeroMutation {
@@ -913,12 +825,9 @@ input PagesContactMutation {
 
 input PagesMutation {
   title: String
-  titleAccent: String
   description: String
   lastUpdate: String
   selectedProjects: [String]
-  projects: [PagesProjectsMutation]
-  sections: [PagesSectionsMutation]
   hero: PagesHeroMutation
   technology: PagesTechnologyMutation
   offer: PagesOfferMutation
@@ -928,6 +837,37 @@ input PagesMutation {
   howWeWork: PagesHowWeWorkMutation
   faq: PagesFaqMutation
   contact: PagesContactMutation
+  body: JSON
+}
+
+input BlogMutation {
+  title: String
+  slug: String
+  date: String
+  author: String
+  category: String
+  excerpt: String
+  image: String
+  imageAlt: String
+  readTime: Float
+  tags: [String]
+  body: JSON
+}
+
+input PortfolioMutation {
+  title: String
+  slug: String
+  description: String
+  date: String
+  category: String
+  year: String
+  client: String
+  excerpt: String
+  image: String
+  imageAlt: String
+  link: String
+  tags: [String]
+  featured: Boolean
   body: JSON
 }
 

@@ -3,8 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useTina } from "tinacms/dist/react";
-import client from "../../../../tina/__generated__/client";
 import "../../globals.css";
+import { CursorLightProvider } from "@/hooks/cursor-light";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
 
 type LayoutProps = {
 	children: React.ReactNode;
@@ -21,19 +23,7 @@ export default function AdminLocaleLayout({ children }: LayoutProps) {
 	const [initialFooter, setInitialFooter] = useState<any>({ footer: { _values: {} } });
 
 	useEffect(() => {
-		async function load() {
-			try {
-				const [headerRes, footerRes] = await Promise.all([
-					client.queries.header({ relativePath: `${locale}/header.mdx` }),
-					client.queries.footer({ relativePath: `${locale}/footer.mdx` }),
-				]);
-				setInitialHeader({ header: headerRes.data.header });
-				setInitialFooter({ footer: footerRes.data.footer });
-			} catch (e) {
-				console.warn("[admin layout] header/footer fetch failed", e);
-			}
-		}
-		load();
+		// Initialize with empty data, TinaCMS will fetch from GraphQL
 	}, [locale]);
 
 	const { data: headerData } = useTina({
@@ -48,5 +38,14 @@ export default function AdminLocaleLayout({ children }: LayoutProps) {
 		data: initialFooter,
 	});
 
-	return <>{children}</>;
+	const headerValues = (headerData.header as any)?._values ?? {};
+	const footerValues = (footerData.footer as any)?._values ?? {};
+
+	return (
+		<CursorLightProvider>
+			<Header data={headerValues} locale={locale} />
+			{children}
+			<Footer data={footerValues} locale={locale} strictValidation={false} />
+		</CursorLightProvider>
+	);
 }

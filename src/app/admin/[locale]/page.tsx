@@ -40,16 +40,13 @@ export default function Home() {
   useEffect(() => {
     async function load() {
       try {
-        const [pagesRes, portfolioRes] = await Promise.all([
-          client.queries.pages({ relativePath: `${locale}/home.mdx` }),
-          client.queries.portfolioConnection({ first: 3 }),
-        ]);
+        const portfolioRes = await client.queries.portfolioConnection({ first: 3 });
         setInitialData({
-          pages: pagesRes.data.pages,
+          pages: { _values: {} },
           portfolioConnection: portfolioRes.data.portfolioConnection,
         });
       } catch (e) {
-        console.warn('[admin home] fetch failed', e);
+        console.warn('[admin home] portfolio fetch failed', e);
       }
     }
     load();

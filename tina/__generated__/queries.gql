@@ -108,8 +108,8 @@ query footerConnection($before: String, $after: String, $first: Float, $last: Fl
   }
 }
 
-query portfolio($relativePath: String!) {
-  portfolio(relativePath: $relativePath) {
+query pages($relativePath: String!) {
+  pages(relativePath: $relativePath) {
     ... on Document {
       _sys {
         filename
@@ -122,12 +122,12 @@ query portfolio($relativePath: String!) {
       }
       id
     }
-    ...PortfolioParts
+    ...PagesParts
   }
 }
 
-query portfolioConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: PortfolioFilter) {
-  portfolioConnection(
+query pagesConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: PagesFilter) {
+  pagesConnection(
     before: $before
     after: $after
     first: $first
@@ -157,7 +157,7 @@ query portfolioConnection($before: String, $after: String, $first: Float, $last:
           }
           id
         }
-        ...PortfolioParts
+        ...PagesParts
       }
     }
   }
@@ -218,8 +218,8 @@ query blogConnection($before: String, $after: String, $first: Float, $last: Floa
   }
 }
 
-query pages($relativePath: String!) {
-  pages(relativePath: $relativePath) {
+query portfolio($relativePath: String!) {
+  portfolio(relativePath: $relativePath) {
     ... on Document {
       _sys {
         filename
@@ -232,12 +232,12 @@ query pages($relativePath: String!) {
       }
       id
     }
-    ...PagesParts
+    ...PortfolioParts
   }
 }
 
-query pagesConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: PagesFilter) {
-  pagesConnection(
+query portfolioConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: PortfolioFilter) {
+  portfolioConnection(
     before: $before
     after: $after
     first: $first
@@ -267,7 +267,7 @@ query pagesConnection($before: String, $after: String, $first: Float, $last: Flo
           }
           id
         }
-        ...PagesParts
+        ...PortfolioParts
       }
     }
   }
