@@ -1,6 +1,8 @@
+import fs from "fs/promises";
+import path from "path";
+import matter from "gray-matter";
 import { Background } from "@/components/layout/background";
-import Brief from "@/components/sections/Brief/Brief";
-import { getPageData } from "@/lib/content/loader";
+import Brief from "@/components/sections/Brief";
 
 export default async function BriefPage({
   params,
@@ -8,7 +10,10 @@ export default async function BriefPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const pageData = await getPageData(locale, "home", "pages");
+  
+  const homeContent = await fs.readFile(path.join(process.cwd(), "content", "pages", locale, "home.mdx"), "utf-8");
+  const pageData = matter(homeContent).data;
+  
   const briefData: Record<string, unknown> | null = pageData && typeof pageData === 'object' && 'brief' in pageData
     ? ((pageData as { brief?: Record<string, unknown> }).brief ?? null)
     : null;

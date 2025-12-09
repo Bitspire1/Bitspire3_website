@@ -1,29 +1,39 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
 import { useTina } from 'tinacms/dist/react';
-import { client } from "@/tina/__generated__/client";
+import client from "../../../../../tina/__generated__/client";
 import { Background } from "@/components/layout/background";
-import Brief from "@/components/sections/Brief/Brief";
-import { getPageData } from "@/lib/content/loader";
+import Brief from "@/components/sections/Brief";
 
-export default async function BriefPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
-  const pageData = await getPageData(locale, "home", "pages");
-  const briefData: Record<string, unknown> | null = pageData && typeof pageData === 'object' && 'brief' in pageData
-    ? ((pageData as { brief?: Record<string, unknown> }).brief ?? null)
-    : null;
+const query = `query GetPage($relativePath: String!) { pages(relativePath: $relativePath) { _sys { relativePath } _values } }`;
 
+export default function BriefPage() {
+  const params = useParams();
+  const locale = (params?.locale as string) || 'pl';
+
+  const [initialData, setInitialData] = useState<any>({ pages: { _sys: { relativePath: `${locale}/home.mdx` }, _values: {} } });
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await client.queries.pages({ relativePath: `${locale}/home.mdx` });
+        setInitialData({ pages: res.data.pages });
+      } catch (e) {
+        console.warn('[admin brief] fetch failed', e);
+      }
+    }
+    load();
+  }, [locale]);
+  
   const { data } = useTina({
-    query: `query GetPage($relativePath: String!) { pages(relativePath: $relativePath) { _sys { relativePath } _values } }`,
+    query,
     variables: { relativePath: `${locale}/home.mdx` },
-    data: { pages: { _sys: { relativePath: `${locale}/home.mdx` }, _values: pageData } }
+    data: initialData,
   });
 
-  const liveData = (data.pages as any)?._values ?? pageData;
+  const liveData = (data.pages as any)?._values ?? {};
   const liveBriefData: Record<string, unknown> | null = liveData && typeof liveData === 'object' && 'brief' in liveData
     ? ((liveData as { brief?: Record<string, unknown> }).brief ?? null)
     : null;

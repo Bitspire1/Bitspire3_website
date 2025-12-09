@@ -1,7 +1,9 @@
 import React from "react";
+import fs from "fs/promises";
+import path from "path";
+import matter from "gray-matter";
 import { Background } from "@/components/layout/background";
 import { BlogListClient } from "@/components/sections/Blog/BlogListClient";
-import { getBlogPosts } from "@/lib/content/loader";
 
 export const metadata = {
   title: "Blog",
@@ -10,7 +12,16 @@ export const metadata = {
 
 export default async function BlogPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const posts = await getBlogPosts(locale);
+  
+  const blogDir = path.join(process.cwd(), "content", "blog", locale);
+  const files = await fs.readdir(blogDir);
+  const posts = await Promise.all(
+    files.filter(f => f.endsWith(".mdx")).map(async (file) => {
+      const content = await fs.readFile(path.join(blogDir, file), "utf-8");
+      const { data } = matter(content);
+      return { ...data, slug: file.replace(".mdx", ""), _sys: { filename: file.replace(".mdx", ""), relativePath: `${locale}/${file}` } };
+    })
+  );
 
   return (
     <div className="min-h-screen pt-24 relative overflow-hidden">

@@ -5,10 +5,10 @@ import { tinaField } from 'tinacms/dist/react';
 import { CursorLightCard } from '@/hooks/cursor-light';
 
 // Lazy load formularze
-const WebsiteBrief = lazy(() => import('@/components/brief_forms/WebsiteBrief'));
-const ShopBrief = lazy(() => import('@/components/brief_forms/ShopBrief'));
-const LogoBrief = lazy(() => import('@/components/brief_forms/LogoBrief'));
-const SeoBrief = lazy(() => import('@/components/brief_forms/SeoBrief'));
+const WebsiteBrief = lazy(() => import('./Brief/brief_forms/WebsiteBrief'));
+const ShopBrief = lazy(() => import('./Brief/brief_forms/ShopBrief'));
+const LogoBrief = lazy(() => import('./Brief/brief_forms/LogoBrief'));
+const SeoBrief = lazy(() => import('./Brief/brief_forms/SeoBrief'));
 
 interface ContactInfo {
   email?: string | null;

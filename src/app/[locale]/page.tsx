@@ -1,3 +1,6 @@
+import fs from "fs/promises";
+import path from "path";
+import matter from "gray-matter";
 import { Background } from "@/components/layout/background";
 import { Hero } from "@/components/sections/Hero";
 import { Technology } from "@/components/sections/Technology";
@@ -6,12 +9,22 @@ import { HowWeWork } from "@/components/sections/HowWeWork";
 import { FAQ } from "@/components/sections/FAQ";
 import { Contact } from "@/components/sections/Contact";
 import { PortfolioHighlights } from "@/components/sections/Portfolio/PortfolioHighlights";
-import { getPageData, getPortfolioProjects } from "@/lib/content/loader";
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const pageData = await getPageData(locale, "home", "pages");
-  const portfolioProjects = await getPortfolioProjects(locale);
+  
+  const homeContent = await fs.readFile(path.join(process.cwd(), "content", "pages", locale, "home.mdx"), "utf-8");
+  const pageData = matter(homeContent).data;
+  
+  const portfolioDir = path.join(process.cwd(), "content", "portfolio", locale);
+  const portfolioFiles = await fs.readdir(portfolioDir);
+  const portfolioProjects = await Promise.all(
+    portfolioFiles.filter(f => f.endsWith(".mdx")).slice(0, 3).map(async (file) => {
+      const content = await fs.readFile(path.join(portfolioDir, file), "utf-8");
+      const { data } = matter(content);
+      return { ...data, slug: file.replace(".mdx", "") };
+    })
+  );
 
   const heroData = pageData && "hero" in pageData ? pageData.hero : undefined;
   const technologyData = pageData && "technology" in pageData ? pageData.technology : undefined;

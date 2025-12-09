@@ -3,9 +3,8 @@ import { defineConfig } from "tinacms";
 export default defineConfig({
   branch: "master",
   
-  // In development (no env vars), use LOCAL file system indexing
-  // Only use cloud credentials in production builds
-  ...(process.env.NODE_ENV === "production" && process.env.NEXT_PUBLIC_TINA_CLIENT_ID && process.env.TINA_TOKEN ? {
+  // Use cloud credentials when available
+  ...(process.env.NEXT_PUBLIC_TINA_CLIENT_ID && process.env.TINA_TOKEN ? {
     clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID,
     token: process.env.TINA_TOKEN,
   } : {}),
@@ -33,7 +32,7 @@ export default defineConfig({
         },
         ui: {
           router: ({ document }) => {
-            const pathParts = document._sys.relativePath.split('/');
+            const pathParts = document._sys.relativePath.split(/[\/\\]/);
             const locale = pathParts[0]; // 'pl' or 'en'
             return `/admin/${locale}/home`;
           },
@@ -102,7 +101,7 @@ export default defineConfig({
         },
         ui: {
           router: ({ document }) => {
-            const pathParts = document._sys.relativePath.split('/');
+            const pathParts = document._sys.relativePath.split(/[\/\\]/);
             const locale = pathParts[0];
             return `/admin/${locale}/home`;
           },
@@ -221,7 +220,7 @@ export default defineConfig({
           router: ({ document }) => {
             // Extract locale and slug from the path
             // document._sys.relativePath format: "pl/skladamy.mdx" or "en/eduvantage.mdx"
-            const pathParts = document._sys.relativePath.split('/');
+            const pathParts = document._sys.relativePath.split(/[\/\\]/);
             if (pathParts.length >= 2) {
               const locale = pathParts[0]; // 'pl' or 'en'
               const slug = pathParts[1].replace('.mdx', '');
@@ -328,7 +327,7 @@ export default defineConfig({
           router: ({ document }) => {
             // Extract locale and slug from the path
             // document._sys.relativePath format: "pl/post-slug.mdx" or "en/post-slug.mdx"
-            const pathParts = document._sys.relativePath.split('/');
+            const pathParts = document._sys.relativePath.split(/[\/\\]/);
             if (pathParts.length >= 2) {
               const locale = pathParts[0]; // 'pl' or 'en'
               const slug = pathParts[1].replace('.mdx', '');
@@ -423,7 +422,7 @@ export default defineConfig({
           router: ({ document }) => {
             // Extract locale and slug from the path
             // document._sys.relativePath format: "pl/home.mdx" or "en/portfolio.mdx"
-            const pathParts = document._sys.relativePath.split('/');
+            const pathParts = document._sys.relativePath.split(/[\/\\]/);
             if (pathParts.length >= 2) {
               const locale = pathParts[0]; // 'pl' or 'en'
               const slug = pathParts[1].replace('.mdx', '');

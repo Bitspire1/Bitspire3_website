@@ -40,10 +40,12 @@ async function getBlogSlugs() {
   }
 }
 
-export async function generateStaticParams() {
-  // Read from filesystem (no token required, faster, more reliable)
-  return await getBlogSlugs();
-}
+// export async function generateStaticParams() {
+//   // Read from filesystem (no token required, faster, more reliable)
+//   return await getBlogSlugs();
+// }
+
+export const dynamicParams = true;
 
 export default async function BlogPostPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params;

@@ -1,3 +1,6 @@
+import fs from 'fs/promises';
+import path from 'path';
+import matter from 'gray-matter';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -6,7 +9,6 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { CursorLightProvider } from '@/hooks/cursor-light';
 import { CookieBanner } from '@/components/ui/CookieBanner';
-import { getHeaderData, getFooterData } from '@/lib/content/loader';
 import '../globals.css';
 import type { Metadata } from 'next';
 
@@ -38,9 +40,12 @@ export default async function LocaleLayout({
   // side is the easiest way to get started
   const messages = await getMessages();
   
-  // Load header and footer data
-  const headerData = await getHeaderData(locale);
-  const footerData = await getFooterData(locale);
+  // Load header and footer data from filesystem
+  const headerContent = await fs.readFile(path.join(process.cwd(), "content", "global", locale, "header.mdx"), "utf-8");
+  const headerData = matter(headerContent).data;
+  
+  const footerContent = await fs.readFile(path.join(process.cwd(), "content", "global", locale, "footer.mdx"), "utf-8");
+  const footerData = matter(footerContent).data;
 
   return (
     <>

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import React from "react";
+import fs from "fs/promises";
+import path from "path";
+import matter from "gray-matter";
 import LegalPage from "@/components/sections/LegalPage";
-import { getPageData } from "@/lib/content/loader";
 import { getMdxFileName } from "@/i18n/routing";
 import type { Locale } from "@/i18n/request";
 
@@ -22,7 +24,8 @@ export default async function PolitykaCookiesPage({ params }: { params: Promise<
   const { locale } = await params;
   
   const fileName = getMdxFileName('cookies', locale as Locale);
-  const data = await getPageData(locale, fileName.replace(/\.mdx$/, ''), 'pages');
+  const content = await fs.readFile(path.join(process.cwd(), "content", "pages", locale, fileName), "utf-8");
+  const data = matter(content).data;
   
   return <LegalPage data={data as Record<string, unknown>} />;
 }

@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "tinacms dev -c \"next dev\"",
     "build": "tinacms build && next build",
+    "build:local": "cross-env NEXT_PUBLIC_TINA_CLIENT_ID= TINA_TOKEN= next build",
+    "dev:local": "cross-env NEXT_PUBLIC_TINA_CLIENT_ID= TINA_TOKEN= tinacms dev -c \"next dev\"",
     "start": "tinacms build && next start",
     "prod": "cross-env NODE_ENV=production npm run start",
     "lint": "eslint",

@@ -1,157 +1,43 @@
 'use client';
 
-import React from "react";
-import { promises as fs } from "fs";
-import path from "path";
-import matter from "gray-matter";
+import React, { use } from "react";
 import { Background } from "@/components/layout/background";
 import Link from "next/link";
 import Image from "next/image";
-import { notFound } from "next/navigation";
-import { markdownToHtml } from "@/lib/markdown-to-html";
-import { RelatedArticles } from "@/components/sections/Blog/RelatedArticles";
 import { useTina } from "tinacms/dist/react";
-
-// Read blog files from content/ directory to generate static params
-// Avoids 403 Forbidden errors with read-only tokens during build
-async function getBlogSlugs() {
-  try {
-    const contentDir = path.join(process.cwd(), "content", "blog");
-    const locales = await fs.readdir(contentDir);
-    
-    const params: { locale: string; slug: string }[] = [];
-    
-    for (const locale of locales) {
-      const localeDir = path.join(contentDir, locale);
-      const stat = await fs.stat(localeDir);
-      
-      if (!stat.isDirectory()) continue;
-      
-      const files = await fs.readdir(localeDir);
-      for (const file of files) {
-        if (file.endsWith(".mdx")) {
-          const slug = file.replace(/\.mdx$/, "");
-          params.push({ locale, slug });
-        }
-      }
-    }
-    
-    return params;
-  } catch (error) {
-    console.warn("[blog/[slug]] Failed to read blog files from filesystem:", error);
-    return [];
-  }
-}
-
-export async function generateStaticParams() {
-  // Read from filesystem (no token required, faster, more reliable)
-  return await getBlogSlugs();
-}
+import client from "@tina/__generated__/client";
 
 interface BlogPostPageProps {
   params: Promise<{ locale: string; slug: string }>;
 }
 
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const { locale, slug } = await params;
+export default function BlogPostPage({ params }: BlogPostPageProps) {
+  const { locale, slug } = use(params);
+  
+  // Initial query - fetch data from TinaCMS
+  const queryData = use(
+    client.queries.blog({
+      relativePath: `${locale}/${slug}.mdx`,
+    })
+  ) as Awaited<ReturnType<typeof client.queries.blog>>;
 
-  const filePath = path.join(process.cwd(), "content", "blog", locale, `${slug}.mdx`);
-
-  const fileData = await fs.readFile(filePath, "utf8").catch((error) => {
-    console.warn(`[blog/[slug]] Missing file at ${filePath}:`, error);
-    return null;
+  // Live preview with Tina
+  const { data } = useTina({
+    query: queryData.query,
+    variables: queryData.variables,
+    data: queryData.data,
   });
 
-  if (!fileData) {
-    notFound();
-  }
+  const post = data.blog;
 
-  const { data, content } = matter(fileData);
-
-  if (!data) {
-    notFound();
-  }
-
-  type BlogFrontmatter = {
-    title?: string;
-    excerpt?: string;
-    description?: string;
-    category?: string;
-    author?: string;
-    image?: string;
-    imageAlt?: string;
-    tags?: string[];
-    readTime?: number;
-    date?: string;
-  };
-
-  const post = data as BlogFrontmatter;
-
-  const htmlContent = await markdownToHtml(content);
-  
+  // Format date
   const formattedDate = post.date 
-    ? new Date(String(post.date)).toLocaleDateString(locale === 'pl' ? 'pl-PL' : 'en-US', {
+    ? new Date(post.date).toLocaleDateString(locale === 'pl' ? 'pl-PL' : 'en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
       })
     : '';
-
-  const relatedDir = path.join(process.cwd(), "content", "blog", locale);
-  const relatedFiles = await fs.readdir(relatedDir);
-  const allPosts: Array<{ title: string; slug: string; excerpt?: string; image?: string; date?: string; readTime?: string }> = await Promise.all(
-    relatedFiles
-      .filter((file) => file.endsWith(".mdx"))
-      .map(async (file) => {
-        const raw = await fs.readFile(path.join(relatedDir, file), "utf8");
-        const { data: relatedData } = matter(raw);
-        const relatedSlug = file.replace(/\.mdx$/, "");
-        return {
-          title: (relatedData as Record<string, unknown>).title as string,
-          slug: relatedSlug,
-          excerpt: (relatedData as Record<string, unknown>).excerpt as string | undefined,
-          image: (relatedData as Record<string, unknown>).image as string | undefined,
-          date: (relatedData as Record<string, unknown>).date as string | undefined,
-          readTime: (relatedData as Record<string, unknown>).readTime ? String((relatedData as Record<string, unknown>).readTime) : undefined,
-        };
-      })
-  );
-
-  const { data: liveData } = useTina({
-    query: `
-      query GetBlogPost($relativePath: String!) {
-        blog(relativePath: $relativePath) {
-          title
-          excerpt
-          category
-          author
-          image
-          imageAlt
-          tags
-          readTime
-          date
-          body
-        }
-      }
-    `,
-    variables: {
-      relativePath: `${locale}/${slug}.mdx`,
-    },
-    data: {
-      blog: {
-        title: post.title,
-        excerpt: post.excerpt,
-        category: post.category,
-        author: post.author,
-        image: post.image,
-        imageAlt: post.imageAlt,
-        tags: post.tags,
-        readTime: post.readTime,
-        date: post.date,
-        body: content,
-      },
-    },
-  });
 
   return (
     <div className="min-h-screen bg-slate-900 pt-24 relative overflow-hidden">
@@ -176,52 +62,52 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         {/* Header */}
         <header className="mb-12">
-          {liveData.blog.category && (
+          {post.category && (
             <div className="mb-6">
               <span className="inline-block px-4 py-1.5 text-xs uppercase tracking-wider font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/30 rounded-full backdrop-blur-sm">
-                {liveData.blog.category}
+                {post.category}
               </span>
             </div>
           )}
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight tracking-tight">
-            {liveData.blog.title}
+            {post.title}
           </h1>
           
-          {liveData.blog.excerpt && (
+          {post.excerpt && (
             <p className="text-xl text-slate-400 leading-relaxed mb-8">
-              {liveData.blog.excerpt}
+              {post.excerpt}
             </p>
           )}
 
           <div className="flex flex-wrap items-center gap-4 text-sm text-slate-400 border-t border-slate-800 pt-6">
-            {liveData.blog.date && (
-              <time dateTime={liveData.blog.date} className="flex items-center gap-2">
+            {post.date && (
+              <time dateTime={post.date} className="flex items-center gap-2">
                 <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 {formattedDate}
               </time>
             )}
-            {liveData.blog.author && (
+            {post.author && (
               <>
                 <span className="text-slate-700">•</span>
                 <span className="flex items-center gap-2">
                   <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
-                  {liveData.blog.author}
+                  {post.author}
                 </span>
               </>
             )}
-            {liveData.blog.readTime && (
+            {post.readTime && (
               <>
                 <span className="text-slate-700">•</span>
                 <span className="flex items-center gap-2">
                   <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  {liveData.blog.readTime} {locale === 'pl' ? 'min' : 'min'}
+                  {post.readTime} {locale === 'pl' ? 'min' : 'min'}
                 </span>
               </>
             )}
@@ -229,12 +115,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </header>
 
         {/* Featured Image */}
-        {liveData.blog.image && (
+        {post.image && (
           <div className="relative w-full aspect-video mb-16 rounded-2xl overflow-hidden border border-blue-500/20 shadow-[0_0_50px_rgba(59,130,246,0.1)]">
             <div className="absolute inset-0 bg-linear-to-tr from-blue-500/10 to-emerald-500/10 rounded-3xl blur-2xl -z-10" />
             <Image
-              src={liveData.blog.image}
-              alt={liveData.blog.imageAlt || liveData.blog.title || 'Blog post image'}
+              src={post.image}
+              alt={post.imageAlt || post.title || 'Blog post image'}
               fill
               className="object-cover"
               priority
@@ -265,11 +151,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             prose-th:bg-slate-800/50 prose-th:text-white prose-th:font-semibold
             prose-td:text-slate-300 prose-td:border-slate-800
           "
-          dangerouslySetInnerHTML={{ __html: htmlContent }}
+          dangerouslySetInnerHTML={{ __html: post.body }}
         />
 
         {/* Tags */}
-        {liveData.blog.tags && liveData.blog.tags.length > 0 && (
+        {post.tags && post.tags.length > 0 && (
           <div className="mt-16 pt-8 border-t border-slate-800/50">
             <h3 className="text-sm font-semibold text-blue-400 uppercase tracking-wider mb-4 flex items-center gap-2">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -278,7 +164,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               {locale === 'pl' ? 'Tagi' : 'Tags'}
             </h3>
             <div className="flex flex-wrap gap-3">
-              {liveData.blog.tags.map((tag: string | null) => tag && (
+              {post.tags.map((tag: string | null) => tag && (
                 <span
                   key={tag}
                   className="px-4 py-2 text-sm bg-slate-800/50 text-slate-300 rounded-full border border-blue-500/20 hover:border-blue-500/40 hover:bg-slate-800/70 transition-all cursor-default"
@@ -300,16 +186,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </Link>
         </div>
       </article>
-
-      {/* Related Articles */}
-      {allPosts.length > 0 && (
-        <RelatedArticles 
-          articles={allPosts}
-          currentSlug={slug}
-          locale={locale}
-          type="blog"
-        />
-      )}
     </div>
   );
 }

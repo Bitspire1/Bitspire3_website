@@ -60,10 +60,12 @@ async function getPortfolioSlugs() {
   }
 }
 
-export async function generateStaticParams() {
-  // Read from filesystem (no token required, faster, more reliable)
-  return await getPortfolioSlugs();
-}
+// export async function generateStaticParams() {
+//   // Read from filesystem (no token required, faster, more reliable)
+//   return await getPortfolioSlugs();
+// }
+
+export const dynamicParams = true;
 
 export default async function PortfolioPostPage({ params }: PortfolioPostPageProps) {
   const { locale, slug } = await params;

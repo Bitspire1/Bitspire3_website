@@ -1,19 +1,36 @@
 'use client';
 
+import React, { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { useTina } from 'tinacms/dist/react';
-import React from "react";
+import client from "../../../../../tina/__generated__/client";
 import { Background } from "@/components/layout/background";
 import { PortfolioListClient } from "@/components/sections/Portfolio/PortfolioListClient";
-import { getPortfolioProjects } from "@/lib/content/loader";
 
-export default async function PortfolioPage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  const posts = await getPortfolioProjects(locale);
+const query = `query GetPortfolio { portfolioConnection { edges { node { _sys { filename relativePath } title slug excerpt image imageAlt category date } } } }`;
+
+export default function PortfolioPage() {
+  const params = useParams();
+  const locale = (params?.locale as string) || 'pl';
+
+  const [initialData, setInitialData] = useState<any>({ portfolioConnection: { edges: [] } });
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await client.queries.portfolioConnection();
+        setInitialData({ portfolioConnection: res.data.portfolioConnection });
+      } catch (e) {
+        console.warn('[admin portfolio] fetch failed', e);
+      }
+    }
+    load();
+  }, [locale]);
 
   const { data } = useTina({
-    query: `query GetPortfolio { portfolioConnection { edges { node { _sys { filename relativePath } title slug excerpt image imageAlt category date } } } }`,
+    query,
     variables: {},
-    data: { portfolioConnection: { edges: (posts || []).map(project => ({ node: { _sys: { filename: project.slug, relativePath: `${locale}/${project.slug}.mdx` }, ...project } })) } }
+    data: initialData,
   });
 
   const liveData = (data.portfolioConnection as any)?.edges || [];

@@ -1,19 +1,36 @@
 'use client';
 
+import React, { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { useTina } from 'tinacms/dist/react';
-import React from "react";
+import client from "../../../../../tina/__generated__/client";
 import { Background } from "@/components/layout/background";
 import { BlogListClient } from "@/components/sections/Blog/BlogListClient";
-import { getBlogPosts } from "@/lib/content/loader";
 
-export default async function BlogPage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  const posts = await getBlogPosts(locale);
+const query = `query GetBlog { blogConnection { edges { node { _sys { filename relativePath } title slug excerpt description image imageAlt category date } } } }`;
+
+export default function BlogPage() {
+  const params = useParams();
+  const locale = (params?.locale as string) || 'pl';
+
+  const [initialData, setInitialData] = useState<any>({ blogConnection: { edges: [] } });
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await client.queries.blogConnection();
+        setInitialData({ blogConnection: res.data.blogConnection });
+      } catch (e) {
+        console.warn('[admin blog] fetch failed', e);
+      }
+    }
+    load();
+  }, [locale]);
 
   const { data } = useTina({
-    query: `query GetBlog { blogConnection { edges { node { _sys { filename relativePath } title slug excerpt description image imageAlt category date } } } }`,
+    query,
     variables: {},
-    data: { blogConnection: { edges: (posts || []).map(post => ({ node: post as any })) } }
+    data: initialData,
   });
 
   const liveData = (data.blogConnection as any)?.edges || [];

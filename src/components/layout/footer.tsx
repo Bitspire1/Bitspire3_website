@@ -10,7 +10,7 @@ import {
   FaPhone,
   FaMapMarkerAlt,
 } from 'react-icons/fa';
-import { PreviewLink } from './ui/PreviewLink';
+import { PreviewLink } from '../ui/PreviewLink';
 
 interface FooterProps {
   data?: {

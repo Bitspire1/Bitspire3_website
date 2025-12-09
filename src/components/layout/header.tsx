@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, memo } from 'react';
 import Image from 'next/image';
-import { LanguageSwitcher } from './ui/LanguageSwitcher';
-import { PreviewLink } from './ui/PreviewLink';
+import { LanguageSwitcher } from '../ui/LanguageSwitcher';
+import { PreviewLink } from '../ui/PreviewLink';
 
 interface HeaderProps {
   data?: {

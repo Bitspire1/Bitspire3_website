@@ -1,29 +1,11 @@
 'use client';
 
-import React from "react";
-import { promises as fs } from "fs";
-import path from "path";
-import matter from "gray-matter";
-import { notFound } from "next/navigation";
+import React, { use } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Background } from "@/components/layout/background";
-import { markdownToHtml } from "@/lib/markdown-to-html";
 import { useTina } from "tinacms/dist/react";
-
-type PortfolioFrontmatter = {
-  title?: string;
-  excerpt?: string;
-  description?: string;
-  category?: string;
-  year?: string;
-  image?: string;
-  imageAlt?: string;
-  tags?: string[];
-  link?: string;
-  date?: string;
-  client?: string;
-};
+import client from "@tina/__generated__/client";
 
 interface PortfolioPostPageProps {
   params: Promise<{
@@ -32,62 +14,24 @@ interface PortfolioPostPageProps {
   }>;
 }
 
-// Read portfolio files from content/ directory to generate static params
-// Avoids 403 Forbidden errors with read-only tokens during build
-async function getPortfolioSlugs() {
-  try {
-    const contentDir = path.join(process.cwd(), "content", "portfolio");
-    const locales = await fs.readdir(contentDir);
-    
-    const params: { locale: string; slug: string }[] = [];
-    
-    for (const locale of locales) {
-      const localeDir = path.join(contentDir, locale);
-      const stat = await fs.stat(localeDir);
-      
-      if (!stat.isDirectory()) continue;
-      
-      const files = await fs.readdir(localeDir);
-      for (const file of files) {
-        if (file.endsWith(".mdx")) {
-          const slug = file.replace(/\.mdx$/, "");
-          params.push({ locale, slug });
-        }
-      }
-    }
-    
-    return params;
-  } catch (error) {
-    console.warn("[portfolio/[slug]] Failed to read portfolio files from filesystem:", error);
-    return [];
-  }
-}
+export default function PortfolioPostPage({ params }: PortfolioPostPageProps) {
+  const { locale, slug } = use(params);
 
-export async function generateStaticParams() {
-  // Read from filesystem (no token required, faster, more reliable)
-  return await getPortfolioSlugs();
-}
+  // Initial query - fetch data from TinaCMS
+  const queryData = use(
+    client.queries.portfolio({
+      relativePath: `${locale}/${slug}.mdx`,
+    })
+  ) as Awaited<ReturnType<typeof client.queries.portfolio>>;
 
-export default async function PortfolioPostPage({ params }: PortfolioPostPageProps) {
-  const { locale, slug } = await params;
-  const filePath = path.join(process.cwd(), "content", "portfolio", locale, `${slug}.mdx`);
-
-  const fileData = await fs.readFile(filePath, "utf8").catch((error) => {
-    console.warn(`[portfolio/[slug]] Missing file at ${filePath}:`, error);
-    return null;
+  // Live preview with Tina
+  const { data } = useTina({
+    query: queryData.query,
+    variables: queryData.variables,
+    data: queryData.data,
   });
 
-  if (!fileData) {
-    notFound();
-  }
-
-  const { data, content } = matter(fileData);
-
-  if (!data) {
-    notFound();
-  }
-
-  const post = data as PortfolioFrontmatter;
+  const post = data.portfolio;
 
   // Format date
   const formattedDate = post.date 
@@ -97,49 +41,6 @@ export default async function PortfolioPostPage({ params }: PortfolioPostPagePro
         day: 'numeric'
       })
     : '';
-  
-  // Convert markdown to HTML
-  const htmlContent = await markdownToHtml(content);
-
-  const { data: liveData } = useTina({
-    query: `
-      query GetPortfolioProject($relativePath: String!) {
-        portfolio(relativePath: $relativePath) {
-          title
-          excerpt
-          description
-          category
-          year
-          image
-          imageAlt
-          tags
-          link
-          date
-          client
-          body
-        }
-      }
-    `,
-    variables: {
-      relativePath: `${locale}/${slug}.mdx`,
-    },
-    data: {
-      portfolio: {
-        title: post.title,
-        excerpt: post.excerpt,
-        description: post.description,
-        category: post.category,
-        year: post.year,
-        image: post.image,
-        imageAlt: post.imageAlt,
-        tags: post.tags,
-        link: post.link,
-        date: post.date,
-        client: post.client,
-        body: content,
-      },
-    },
-  });
 
   return (
     <div className="min-h-screen bg-slate-900 pt-24 relative overflow-hidden">
@@ -163,45 +64,45 @@ export default async function PortfolioPostPage({ params }: PortfolioPostPagePro
         {/* Header */}
         <header className="mb-12">
           <div className="flex flex-wrap items-center gap-3 mb-6">
-            {liveData.portfolio.category && (
+            {post.category && (
               <span className="inline-block px-4 py-1.5 text-xs uppercase tracking-wider font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/30 rounded-full backdrop-blur-sm">
-                {liveData.portfolio.category}
+                {post.category}
               </span>
             )}
-            {liveData.portfolio.year && (
+            {post.year && (
               <span className="inline-block px-4 py-1.5 text-xs uppercase tracking-wider font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full backdrop-blur-sm">
-                {liveData.portfolio.year}
+                {post.year}
               </span>
             )}
           </div>
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight tracking-tight">
-            {liveData.portfolio.title}
+            {post.title}
           </h1>
 
-          {liveData.portfolio.excerpt && (
+          {post.excerpt && (
             <p className="text-xl text-slate-400 leading-relaxed mb-8">
-              {liveData.portfolio.excerpt}
+              {post.excerpt}
             </p>
           )}
 
           <div className="flex flex-wrap items-center gap-4 text-sm text-slate-400 border-t border-slate-800 pt-6">
             {formattedDate && (
-              <time dateTime={liveData.portfolio.date || undefined} className="flex items-center gap-2">
+              <time dateTime={post.date || undefined} className="flex items-center gap-2">
                 <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 {formattedDate}
               </time>
             )}
-            {liveData.portfolio.client && (
+            {post.client && (
               <>
                 <span className="text-slate-700">•</span>
                 <span className="flex items-center gap-2">
                   <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  {liveData.portfolio.client}
+                  {post.client}
                 </span>
               </>
             )}
@@ -209,12 +110,12 @@ export default async function PortfolioPostPage({ params }: PortfolioPostPagePro
         </header>
 
         {/* Featured image */}
-        {liveData.portfolio.image && (
+        {post.image && (
           <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-12 border border-blue-500/20 shadow-[0_0_50px_rgba(59,130,246,0.1)]">
             <div className="absolute inset-0 bg-linear-to-tr from-blue-500/10 to-emerald-500/10 rounded-3xl blur-2xl -z-10" />
             <Image
-              src={liveData.portfolio.image}
-              alt={liveData.portfolio.imageAlt || liveData.portfolio.title || 'Project image'}
+              src={post.image}
+              alt={post.imageAlt || post.title || 'Project image'}
               fill
               className="object-cover"
               priority
@@ -223,9 +124,9 @@ export default async function PortfolioPostPage({ params }: PortfolioPostPagePro
         )}
 
         {/* Tags */}
-        {liveData.portfolio.tags && liveData.portfolio.tags.length > 0 && (
+        {post.tags && post.tags.length > 0 && (
           <div className="flex flex-wrap gap-3 mb-12">
-            {liveData.portfolio.tags.map((tag: string | null) => tag && (
+            {post.tags.map((tag: string | null) => tag && (
               <span
                 key={tag}
                 className="px-4 py-2 text-sm bg-slate-800/50 text-slate-300 rounded-full border border-blue-500/20 hover:border-blue-500/40 hover:bg-slate-800/70 transition-all cursor-default"
@@ -259,14 +160,14 @@ export default async function PortfolioPostPage({ params }: PortfolioPostPagePro
             prose-th:bg-slate-800/50 prose-th:text-white prose-th:font-semibold
             prose-td:text-slate-300 prose-td:border-slate-800
           "
-          dangerouslySetInnerHTML={{ __html: htmlContent }}
+          dangerouslySetInnerHTML={{ __html: post.body }}
         />
 
         {/* Project link */}
-        {liveData.portfolio.link && (
+        {post.link && (
           <div className="mt-16 pt-8 border-t border-slate-800/50">
             <a
-              href={liveData.portfolio.link}
+              href={post.link}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-3 rounded-xl bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-emerald-500 text-white text-base font-semibold px-8 py-4 shadow-lg shadow-blue-600/30 transition-all hover:shadow-blue-500/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-400 focus-visible:ring-offset-slate-900 group"
