@@ -325,8 +325,8 @@ export type FooterSocialMedia = {
 
 export type FooterLegalLinks = {
   __typename?: 'FooterLegalLinks';
-  label?: Maybe<Scalars['String']['output']>;
-  href?: Maybe<Scalars['String']['output']>;
+  label: Scalars['String']['output'];
+  href: Scalars['String']['output'];
 };
 
 export type Footer = Node & Document & {
@@ -336,9 +336,9 @@ export type Footer = Node & Document & {
   contact?: Maybe<FooterContact>;
   navigation?: Maybe<Array<Maybe<FooterNavigation>>>;
   socialMedia?: Maybe<Array<Maybe<FooterSocialMedia>>>;
-  copyright?: Maybe<Scalars['String']['output']>;
-  legalLinks?: Maybe<Array<Maybe<FooterLegalLinks>>>;
-  cookieSettingsText?: Maybe<Scalars['String']['output']>;
+  copyright: Scalars['String']['output'];
+  legalLinks: Array<FooterLegalLinks>;
+  cookieSettingsText: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   _sys: SystemInfo;
   _values: Scalars['JSON']['output'];
@@ -1140,7 +1140,7 @@ export type PortfolioMutation = {
 
 export type HeaderPartsFragment = { __typename: 'Header', logo: string, logoAlt: string, navigation?: Array<{ __typename: 'HeaderNavigation', label: string, href: string } | null> | null, ctaButton?: { __typename: 'HeaderCtaButton', text: string, href: string } | null };
 
-export type FooterPartsFragment = { __typename: 'Footer', companyName?: string | null, description?: string | null, copyright?: string | null, cookieSettingsText?: string | null, contact?: { __typename: 'FooterContact', email?: string | null, phone?: string | null, location?: string | null } | null, navigation?: Array<{ __typename: 'FooterNavigation', label?: string | null, href?: string | null } | null> | null, socialMedia?: Array<{ __typename: 'FooterSocialMedia', platform?: string | null, url?: string | null } | null> | null, legalLinks?: Array<{ __typename: 'FooterLegalLinks', label?: string | null, href?: string | null } | null> | null };
+export type FooterPartsFragment = { __typename: 'Footer', companyName?: string | null, description?: string | null, copyright: string, cookieSettingsText: string, contact?: { __typename: 'FooterContact', email?: string | null, phone?: string | null, location?: string | null } | null, navigation?: Array<{ __typename: 'FooterNavigation', label?: string | null, href?: string | null } | null> | null, socialMedia?: Array<{ __typename: 'FooterSocialMedia', platform?: string | null, url?: string | null } | null> | null, legalLinks: Array<{ __typename: 'FooterLegalLinks', label: string, href: string }> };
 
 export type PagesPartsFragment = { __typename: 'Pages', title?: string | null, description?: string | null, lastUpdate?: string | null, selectedProjects?: Array<string | null> | null, body?: any | null, hero?: { __typename: 'PagesHero', title?: string | null, titleAccent?: string | null, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null, technology?: { __typename: 'PagesTechnology', title?: string | null, description?: string | null, items?: Array<{ __typename: 'PagesTechnologyItems', name?: string | null, icon?: string | null, useBrightness?: boolean | null } | null> | null } | null, offer?: { __typename: 'PagesOffer', title?: string | null, titleAccent?: string | null, subtitle?: string | null, sectionLabel?: string | null, services?: Array<{ __typename: 'PagesOfferServices', title?: string | null, description?: string | null, icon?: string | null, features?: Array<string | null> | null, link?: string | null, buttonText?: string | null } | null> | null } | null, brief?: { __typename: 'PagesBrief', title?: string | null, description?: string | null, buttonText?: string | null, contact?: { __typename: 'PagesBriefContact', email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null } | null } | null, portfolio?: { __typename: 'PagesPortfolio', title?: string | null, description?: string | null, sectionLabel?: string | null } | null, portfolioHighlights?: { __typename: 'PagesPortfolioHighlights', title?: string | null, description?: string | null } | null, howWeWork?: { __typename: 'PagesHowWeWork', title?: string | null, description?: string | null, ctaTitle?: string | null, ctaDescription?: string | null, ctaButton?: string | null, steps?: Array<{ __typename: 'PagesHowWeWorkSteps', title?: string | null, description?: string | null, icon?: string | null, duration?: string | null } | null> | null } | null, faq?: { __typename: 'PagesFaq', title?: string | null, description?: string | null, ctaQuestion?: string | null, ctaButton?: string | null, items?: Array<{ __typename: 'PagesFaqItems', question?: string | null, answer?: string | null } | null> | null } | null, contact?: { __typename: 'PagesContact', title?: string | null, description?: string | null, email?: string | null, phone?: string | null, address?: string | null, addressLine2?: string | null, city?: string | null, successTitle?: string | null, successMessage?: string | null, nameLabel?: string | null, emailLabel?: string | null, messageLabel?: string | null, buttonText?: string | null, contactDataTitle?: string | null } | null };
 
@@ -1172,7 +1172,7 @@ export type FooterQueryVariables = Exact<{
 }>;
 
 
-export type FooterQuery = { __typename?: 'Query', footer: { __typename: 'Footer', id: string, companyName?: string | null, description?: string | null, copyright?: string | null, cookieSettingsText?: string | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, contact?: { __typename: 'FooterContact', email?: string | null, phone?: string | null, location?: string | null } | null, navigation?: Array<{ __typename: 'FooterNavigation', label?: string | null, href?: string | null } | null> | null, socialMedia?: Array<{ __typename: 'FooterSocialMedia', platform?: string | null, url?: string | null } | null> | null, legalLinks?: Array<{ __typename: 'FooterLegalLinks', label?: string | null, href?: string | null } | null> | null } };
+export type FooterQuery = { __typename?: 'Query', footer: { __typename: 'Footer', id: string, companyName?: string | null, description?: string | null, copyright: string, cookieSettingsText: string, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, contact?: { __typename: 'FooterContact', email?: string | null, phone?: string | null, location?: string | null } | null, navigation?: Array<{ __typename: 'FooterNavigation', label?: string | null, href?: string | null } | null> | null, socialMedia?: Array<{ __typename: 'FooterSocialMedia', platform?: string | null, url?: string | null } | null> | null, legalLinks: Array<{ __typename: 'FooterLegalLinks', label: string, href: string }> } };
 
 export type FooterConnectionQueryVariables = Exact<{
   before?: InputMaybe<Scalars['String']['input']>;
@@ -1184,7 +1184,7 @@ export type FooterConnectionQueryVariables = Exact<{
 }>;
 
 
-export type FooterConnectionQuery = { __typename?: 'Query', footerConnection: { __typename?: 'FooterConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'FooterConnectionEdges', cursor: string, node?: { __typename: 'Footer', id: string, companyName?: string | null, description?: string | null, copyright?: string | null, cookieSettingsText?: string | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, contact?: { __typename: 'FooterContact', email?: string | null, phone?: string | null, location?: string | null } | null, navigation?: Array<{ __typename: 'FooterNavigation', label?: string | null, href?: string | null } | null> | null, socialMedia?: Array<{ __typename: 'FooterSocialMedia', platform?: string | null, url?: string | null } | null> | null, legalLinks?: Array<{ __typename: 'FooterLegalLinks', label?: string | null, href?: string | null } | null> | null } | null } | null> | null } };
+export type FooterConnectionQuery = { __typename?: 'Query', footerConnection: { __typename?: 'FooterConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'FooterConnectionEdges', cursor: string, node?: { __typename: 'Footer', id: string, companyName?: string | null, description?: string | null, copyright: string, cookieSettingsText: string, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, contact?: { __typename: 'FooterContact', email?: string | null, phone?: string | null, location?: string | null } | null, navigation?: Array<{ __typename: 'FooterNavigation', label?: string | null, href?: string | null } | null> | null, socialMedia?: Array<{ __typename: 'FooterSocialMedia', platform?: string | null, url?: string | null } | null> | null, legalLinks: Array<{ __typename: 'FooterLegalLinks', label: string, href: string }> } | null } | null> | null } };
 
 export type PagesQueryVariables = Exact<{
   relativePath: Scalars['String']['input'];

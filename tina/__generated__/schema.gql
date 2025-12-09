@@ -178,8 +178,8 @@ type FooterSocialMedia {
 }
 
 type FooterLegalLinks {
-  label: String
-  href: String
+  label: String!
+  href: String!
 }
 
 type Footer implements Node & Document {
@@ -188,9 +188,9 @@ type Footer implements Node & Document {
   contact: FooterContact
   navigation: [FooterNavigation]
   socialMedia: [FooterSocialMedia]
-  copyright: String
-  legalLinks: [FooterLegalLinks]
-  cookieSettingsText: String
+  copyright: String!
+  legalLinks: [FooterLegalLinks!]!
+  cookieSettingsText: String!
   id: ID!
   _sys: SystemInfo!
   _values: JSON!

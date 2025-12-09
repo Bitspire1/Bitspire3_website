@@ -40,7 +40,8 @@ interface FooterProps {
 
 const FooterContent: React.FC<FooterProps> = ({ data, locale, strictValidation = true }) => {
   // Graceful fallback for missing data
-  if (!data) {
+  const hasData = data && Object.keys(data).length > 0;
+  if (!hasData) {
     return (
       <footer className="bg-slate-900 border-t border-slate-800 py-8">
         <div className="max-w-screen-2xl mx-auto px-4 text-center text-gray-400 text-sm">
@@ -73,20 +74,22 @@ const FooterContent: React.FC<FooterProps> = ({ data, locale, strictValidation =
   const cookieSettingsText = data.cookieSettingsText;
   const copyrightText = data.copyright;
 
-  const isStrict = strictValidation !== false;
+  // Strict mode: validate and throw if missing (only when explicitly true)
+  if (strictValidation === true) {
+    if (!legalLinks.length) {
+      throw new Error('Footer legal links missing in Tina content');
+    }
 
-  if (isStrict && !legalLinks.length) {
-    throw new Error('Footer legal links missing in Tina content');
+    if (!cookieSettingsText) {
+      throw new Error('Footer cookie settings text missing in Tina content');
+    }
+
+    if (!copyrightText) {
+      throw new Error('Footer copyright missing in Tina content');
+    }
   }
 
-  if (isStrict && !cookieSettingsText) {
-    throw new Error('Footer cookie settings text missing in Tina content');
-  }
-
-  if (isStrict && !copyrightText) {
-    throw new Error('Footer copyright missing in Tina content');
-  }
-
+  // Non-strict mode: always use fallbacks
   const legalLinksToRender = legalLinks.length ? legalLinks : [];
   const safeCookieText = cookieSettingsText || (locale === 'en' ? 'Cookie settings' : 'Ustawienia ciasteczek');
   const safeCopyrightText =

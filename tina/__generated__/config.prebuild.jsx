@@ -170,30 +170,35 @@ var config_default = defineConfig({
           {
             type: "string",
             name: "copyright",
-            label: "Copyright Text"
+            label: "Copyright Text",
+            required: true
           },
           {
             type: "object",
             name: "legalLinks",
             label: "Legal Links",
             list: true,
+            required: true,
             fields: [
               {
                 type: "string",
                 name: "label",
-                label: "Label"
+                label: "Label",
+                required: true
               },
               {
                 type: "string",
                 name: "href",
-                label: "Link"
+                label: "Link",
+                required: true
               }
             ]
           },
           {
             type: "string",
             name: "cookieSettingsText",
-            label: "Cookie Settings Button Text"
+            label: "Cookie Settings Button Text",
+            required: true
           }
         ]
       },
