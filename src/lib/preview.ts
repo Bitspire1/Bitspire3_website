@@ -1,16 +1,20 @@
-export function isInPreviewMode(pathname: string): boolean {
-  return pathname.includes('/admin/');
-}
+/**
+ * Utility functions for preview/admin mode path handling
+ */
 
-export function getLocaleFromPreviewPath(pathname: string): string {
-  const match = pathname.match(/\/admin\/([a-z]{2})/);
-  return match?.[1] || 'en';
+export function isInPreviewMode(pathname: string): boolean {
+  return pathname.startsWith('/admin');
 }
 
 export function getPathFromPreviewPathname(pathname: string): string {
-  return pathname.replace(/\/admin\/[a-z]{2}/, '').replace(/^\/$/, '/home');
+  // Extract path from /admin/{locale}/{path}
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments[0] === 'admin' && segments.length > 2) {
+    return segments.slice(2).join('/');
+  }
+  return segments[segments.length - 1] || 'home';
 }
 
-export function buildPreviewPath(locale: string, slug: string): string {
-  return `/admin/${locale}/${slug}`;
+export function buildPreviewPath(locale: string, path: string): string {
+  return `/admin/${locale}/${path}`;
 }

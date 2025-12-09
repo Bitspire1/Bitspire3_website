@@ -1,6 +1,3 @@
-import fs from 'fs/promises';
-import path from 'path';
-import matter from 'gray-matter';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -39,13 +36,6 @@ export default async function LocaleLayout({
   // Providing all messages to the client
   // side is the easiest way to get started
   const messages = await getMessages();
-  
-  // Load header and footer data from filesystem
-  const headerContent = await fs.readFile(path.join(process.cwd(), "content", "global", locale, "header.mdx"), "utf-8");
-  const headerData = matter(headerContent).data;
-  
-  const footerContent = await fs.readFile(path.join(process.cwd(), "content", "global", locale, "footer.mdx"), "utf-8");
-  const footerData = matter(footerContent).data;
 
   return (
     <>
@@ -53,9 +43,9 @@ export default async function LocaleLayout({
       <link rel="preconnect" href="https://content.tinajs.io" crossOrigin="anonymous" />
       <NextIntlClientProvider messages={messages}>
         <CursorLightProvider>
-          <Header data={headerData} locale={locale} />
+          <Header locale={locale} />
           {children}
-          <Footer data={footerData} locale={locale} />
+          <Footer locale={locale} />
           <CookieBanner />
         </CursorLightProvider>
       </NextIntlClientProvider>

@@ -54,24 +54,12 @@ type Query {
   collections: [Collection!]!
   node(id: String): Node!
   document(collection: String, relativePath: String): DocumentNode!
-  header(relativePath: String): Header!
-  headerConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: HeaderFilter): HeaderConnection!
-  footer(relativePath: String): Footer!
-  footerConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: FooterFilter): FooterConnection!
   pages(relativePath: String): Pages!
   pagesConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: PagesFilter): PagesConnection!
-  blog(relativePath: String): Blog!
-  blogConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: BlogFilter): BlogConnection!
-  portfolio(relativePath: String): Portfolio!
-  portfolioConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: PortfolioFilter): PortfolioConnection!
 }
 
 input DocumentFilter {
-  header: HeaderFilter
-  footer: FooterFilter
   pages: PagesFilter
-  blog: BlogFilter
-  portfolio: PortfolioFilter
 }
 
 type DocumentConnectionEdges {
@@ -97,33 +85,25 @@ type Collection {
   documents(before: String, after: String, first: Float, last: Float, sort: String, filter: DocumentFilter, folder: String): DocumentConnection!
 }
 
-union DocumentNode = Header | Footer | Pages | Blog | Portfolio | Folder
+union DocumentNode = Pages | Folder
 
-type HeaderNavigation {
-  label: String!
-  href: String!
+type PagesHero {
+  title: String!
+  titleAccent: String!
+  titleEnd: String
+  subtitle: String
+  ctaButton: String
+  briefButton: String
+  image: String
 }
 
-type HeaderCtaButton {
-  text: String!
-  href: String!
-}
-
-type Header implements Node & Document {
-  logo: String!
-  logoAlt: String!
-  navigation: [HeaderNavigation]
-  ctaButton: HeaderCtaButton
+type Pages implements Node & Document {
+  title: String!
+  description: String
+  hero: PagesHero
   id: ID!
   _sys: SystemInfo!
   _values: JSON!
-}
-
-input ImageFilter {
-  startsWith: String
-  eq: String
-  exists: Boolean
-  in: [String]
 }
 
 input StringFilter {
@@ -133,253 +113,11 @@ input StringFilter {
   in: [String]
 }
 
-input HeaderNavigationFilter {
-  label: StringFilter
-  href: StringFilter
-}
-
-input HeaderCtaButtonFilter {
-  text: StringFilter
-  href: StringFilter
-}
-
-input HeaderFilter {
-  logo: ImageFilter
-  logoAlt: StringFilter
-  navigation: HeaderNavigationFilter
-  ctaButton: HeaderCtaButtonFilter
-}
-
-type HeaderConnectionEdges {
-  cursor: String!
-  node: Header
-}
-
-type HeaderConnection implements Connection {
-  pageInfo: PageInfo!
-  totalCount: Float!
-  edges: [HeaderConnectionEdges]
-}
-
-type FooterContact {
-  email: String
-  phone: String
-  location: String
-}
-
-type FooterNavigation {
-  label: String
-  href: String
-}
-
-type FooterSocialMedia {
-  platform: String
-  url: String
-}
-
-type FooterLegalLinks {
-  label: String
-  href: String
-}
-
-type Footer implements Node & Document {
-  companyName: String
-  description: String
-  contact: FooterContact
-  navigation: [FooterNavigation]
-  socialMedia: [FooterSocialMedia]
-  copyright: String
-  legalLinks: [FooterLegalLinks]
-  cookieSettingsText: String
-  id: ID!
-  _sys: SystemInfo!
-  _values: JSON!
-}
-
-input FooterContactFilter {
-  email: StringFilter
-  phone: StringFilter
-  location: StringFilter
-}
-
-input FooterNavigationFilter {
-  label: StringFilter
-  href: StringFilter
-}
-
-input FooterSocialMediaFilter {
-  platform: StringFilter
-  url: StringFilter
-}
-
-input FooterLegalLinksFilter {
-  label: StringFilter
-  href: StringFilter
-}
-
-input FooterFilter {
-  companyName: StringFilter
-  description: StringFilter
-  contact: FooterContactFilter
-  navigation: FooterNavigationFilter
-  socialMedia: FooterSocialMediaFilter
-  copyright: StringFilter
-  legalLinks: FooterLegalLinksFilter
-  cookieSettingsText: StringFilter
-}
-
-type FooterConnectionEdges {
-  cursor: String!
-  node: Footer
-}
-
-type FooterConnection implements Connection {
-  pageInfo: PageInfo!
-  totalCount: Float!
-  edges: [FooterConnectionEdges]
-}
-
-type PagesHero {
-  title: String
-  titleAccent: String
-  titleEnd: String
-  subtitle: String
-  ctaButton: String
-  briefButton: String
-  image: String
-}
-
-type PagesTechnologyItems {
-  name: String
-  icon: String
-  useBrightness: Boolean
-}
-
-type PagesTechnology {
-  title: String
-  description: String
-  items: [PagesTechnologyItems]
-}
-
-type PagesOfferServices {
-  title: String
-  description: String
-  icon: String
-  features: [String]
-  link: String
-  buttonText: String
-}
-
-type PagesOffer {
-  title: String
-  titleAccent: String
-  subtitle: String
-  sectionLabel: String
-  services: [PagesOfferServices]
-}
-
-type PagesBriefContact {
-  email: String
-  phone: String
-  address: String
-  addressLine2: String
-  city: String
-}
-
-type PagesBrief {
-  title: String
-  description: String
-  buttonText: String
-  contact: PagesBriefContact
-}
-
-type PagesPortfolio {
-  title: String
-  description: String
-  sectionLabel: String
-}
-
-type PagesPortfolioHighlightsProjects {
-  title: String
-  slug: String
-  excerpt: String
-  image: String
-  imageAlt: String
-  category: String
-  date: String
-  featured: Boolean
-}
-
-type PagesPortfolioHighlights {
-  title: String
-  description: String
-  projects: [PagesPortfolioHighlightsProjects]
-}
-
-type PagesHowWeWorkSteps {
-  title: String
-  description: String
-  icon: String
-  duration: String
-}
-
-type PagesHowWeWork {
-  title: String
-  description: String
-  steps: [PagesHowWeWorkSteps]
-  ctaTitle: String
-  ctaDescription: String
-  ctaButton: String
-}
-
-type PagesFaqItems {
-  question: String
-  answer: String
-}
-
-type PagesFaq {
-  title: String
-  description: String
-  items: [PagesFaqItems]
-  ctaQuestion: String
-  ctaButton: String
-}
-
-type PagesContact {
-  title: String
-  description: String
-  email: String
-  phone: String
-  address: String
-  addressLine2: String
-  city: String
-  successTitle: String
-  successMessage: String
-  nameLabel: String
-  emailLabel: String
-  messageLabel: String
-  buttonText: String
-  contactDataTitle: String
-}
-
-type Pages implements Node & Document {
-  title: String
-  description: String
-  lastUpdate: String
-  selectedProjects: [String]
-  hero: PagesHero
-  technology: PagesTechnology
-  offer: PagesOffer
-  brief: PagesBrief
-  portfolio: PagesPortfolio
-  portfolioHighlights: PagesPortfolioHighlights
-  howWeWork: PagesHowWeWork
-  faq: PagesFaq
-  contact: PagesContact
-  body: JSON
-  id: ID!
-  _sys: SystemInfo!
-  _values: JSON!
+input ImageFilter {
+  startsWith: String
+  eq: String
+  exists: Boolean
+  in: [String]
 }
 
 input PagesHeroFilter {
@@ -392,145 +130,10 @@ input PagesHeroFilter {
   image: ImageFilter
 }
 
-input BooleanFilter {
-  eq: Boolean
-  exists: Boolean
-}
-
-input PagesTechnologyItemsFilter {
-  name: StringFilter
-  icon: ImageFilter
-  useBrightness: BooleanFilter
-}
-
-input PagesTechnologyFilter {
-  title: StringFilter
-  description: StringFilter
-  items: PagesTechnologyItemsFilter
-}
-
-input PagesOfferServicesFilter {
-  title: StringFilter
-  description: StringFilter
-  icon: StringFilter
-  features: StringFilter
-  link: StringFilter
-  buttonText: StringFilter
-}
-
-input PagesOfferFilter {
-  title: StringFilter
-  titleAccent: StringFilter
-  subtitle: StringFilter
-  sectionLabel: StringFilter
-  services: PagesOfferServicesFilter
-}
-
-input PagesBriefContactFilter {
-  email: StringFilter
-  phone: StringFilter
-  address: StringFilter
-  addressLine2: StringFilter
-  city: StringFilter
-}
-
-input PagesBriefFilter {
-  title: StringFilter
-  description: StringFilter
-  buttonText: StringFilter
-  contact: PagesBriefContactFilter
-}
-
-input PagesPortfolioFilter {
-  title: StringFilter
-  description: StringFilter
-  sectionLabel: StringFilter
-}
-
-input PagesPortfolioHighlightsProjectsFilter {
-  title: StringFilter
-  slug: StringFilter
-  excerpt: StringFilter
-  image: ImageFilter
-  imageAlt: StringFilter
-  category: StringFilter
-  date: StringFilter
-  featured: BooleanFilter
-}
-
-input PagesPortfolioHighlightsFilter {
-  title: StringFilter
-  description: StringFilter
-  projects: PagesPortfolioHighlightsProjectsFilter
-}
-
-input PagesHowWeWorkStepsFilter {
-  title: StringFilter
-  description: StringFilter
-  icon: StringFilter
-  duration: StringFilter
-}
-
-input PagesHowWeWorkFilter {
-  title: StringFilter
-  description: StringFilter
-  steps: PagesHowWeWorkStepsFilter
-  ctaTitle: StringFilter
-  ctaDescription: StringFilter
-  ctaButton: StringFilter
-}
-
-input PagesFaqItemsFilter {
-  question: StringFilter
-  answer: StringFilter
-}
-
-input PagesFaqFilter {
-  title: StringFilter
-  description: StringFilter
-  items: PagesFaqItemsFilter
-  ctaQuestion: StringFilter
-  ctaButton: StringFilter
-}
-
-input PagesContactFilter {
-  title: StringFilter
-  description: StringFilter
-  email: StringFilter
-  phone: StringFilter
-  address: StringFilter
-  addressLine2: StringFilter
-  city: StringFilter
-  successTitle: StringFilter
-  successMessage: StringFilter
-  nameLabel: StringFilter
-  emailLabel: StringFilter
-  messageLabel: StringFilter
-  buttonText: StringFilter
-  contactDataTitle: StringFilter
-}
-
-input RichTextFilter {
-  startsWith: String
-  eq: String
-  exists: Boolean
-}
-
 input PagesFilter {
   title: StringFilter
   description: StringFilter
-  lastUpdate: StringFilter
-  selectedProjects: StringFilter
   hero: PagesHeroFilter
-  technology: PagesTechnologyFilter
-  offer: PagesOfferFilter
-  brief: PagesBriefFilter
-  portfolio: PagesPortfolioFilter
-  portfolioHighlights: PagesPortfolioHighlightsFilter
-  howWeWork: PagesHowWeWorkFilter
-  faq: PagesFaqFilter
-  contact: PagesContactFilter
-  body: RichTextFilter
 }
 
 type PagesConnectionEdges {
@@ -544,196 +147,23 @@ type PagesConnection implements Connection {
   edges: [PagesConnectionEdges]
 }
 
-type Blog implements Node & Document {
-  title: String!
-  slug: String!
-  date: String
-  author: String
-  category: String
-  excerpt: String
-  image: String
-  imageAlt: String
-  readTime: Float
-  tags: [String]
-  body: JSON
-  id: ID!
-  _sys: SystemInfo!
-  _values: JSON!
-}
-
-input DatetimeFilter {
-  after: String
-  before: String
-  eq: String
-  exists: Boolean
-  in: [String]
-}
-
-input NumberFilter {
-  lt: Float
-  lte: Float
-  gte: Float
-  gt: Float
-  eq: Float
-  exists: Boolean
-  in: [Float]
-}
-
-input BlogFilter {
-  title: StringFilter
-  slug: StringFilter
-  date: DatetimeFilter
-  author: StringFilter
-  category: StringFilter
-  excerpt: StringFilter
-  image: ImageFilter
-  imageAlt: StringFilter
-  readTime: NumberFilter
-  tags: StringFilter
-  body: RichTextFilter
-}
-
-type BlogConnectionEdges {
-  cursor: String!
-  node: Blog
-}
-
-type BlogConnection implements Connection {
-  pageInfo: PageInfo!
-  totalCount: Float!
-  edges: [BlogConnectionEdges]
-}
-
-type Portfolio implements Node & Document {
-  title: String!
-  slug: String!
-  description: String
-  date: String
-  category: String
-  year: String
-  client: String
-  excerpt: String
-  image: String
-  imageAlt: String
-  link: String
-  tags: [String]
-  featured: Boolean
-  body: JSON
-  id: ID!
-  _sys: SystemInfo!
-  _values: JSON!
-}
-
-input PortfolioFilter {
-  title: StringFilter
-  slug: StringFilter
-  description: StringFilter
-  date: DatetimeFilter
-  category: StringFilter
-  year: StringFilter
-  client: StringFilter
-  excerpt: StringFilter
-  image: ImageFilter
-  imageAlt: StringFilter
-  link: StringFilter
-  tags: StringFilter
-  featured: BooleanFilter
-  body: RichTextFilter
-}
-
-type PortfolioConnectionEdges {
-  cursor: String!
-  node: Portfolio
-}
-
-type PortfolioConnection implements Connection {
-  pageInfo: PageInfo!
-  totalCount: Float!
-  edges: [PortfolioConnectionEdges]
-}
-
 type Mutation {
   addPendingDocument(collection: String!, relativePath: String!, template: String): DocumentNode!
   updateDocument(collection: String, relativePath: String!, params: DocumentUpdateMutation!): DocumentNode!
   deleteDocument(collection: String, relativePath: String!): DocumentNode!
   createDocument(collection: String, relativePath: String!, params: DocumentMutation!): DocumentNode!
   createFolder(collection: String, relativePath: String!): DocumentNode!
-  updateHeader(relativePath: String!, params: HeaderMutation!): Header!
-  createHeader(relativePath: String!, params: HeaderMutation!): Header!
-  updateFooter(relativePath: String!, params: FooterMutation!): Footer!
-  createFooter(relativePath: String!, params: FooterMutation!): Footer!
   updatePages(relativePath: String!, params: PagesMutation!): Pages!
   createPages(relativePath: String!, params: PagesMutation!): Pages!
-  updateBlog(relativePath: String!, params: BlogMutation!): Blog!
-  createBlog(relativePath: String!, params: BlogMutation!): Blog!
-  updatePortfolio(relativePath: String!, params: PortfolioMutation!): Portfolio!
-  createPortfolio(relativePath: String!, params: PortfolioMutation!): Portfolio!
 }
 
 input DocumentUpdateMutation {
-  header: HeaderMutation
-  footer: FooterMutation
   pages: PagesMutation
-  blog: BlogMutation
-  portfolio: PortfolioMutation
   relativePath: String
 }
 
 input DocumentMutation {
-  header: HeaderMutation
-  footer: FooterMutation
   pages: PagesMutation
-  blog: BlogMutation
-  portfolio: PortfolioMutation
-}
-
-input HeaderNavigationMutation {
-  label: String
-  href: String
-}
-
-input HeaderCtaButtonMutation {
-  text: String
-  href: String
-}
-
-input HeaderMutation {
-  logo: String
-  logoAlt: String
-  navigation: [HeaderNavigationMutation]
-  ctaButton: HeaderCtaButtonMutation
-}
-
-input FooterContactMutation {
-  email: String
-  phone: String
-  location: String
-}
-
-input FooterNavigationMutation {
-  label: String
-  href: String
-}
-
-input FooterSocialMediaMutation {
-  platform: String
-  url: String
-}
-
-input FooterLegalLinksMutation {
-  label: String
-  href: String
-}
-
-input FooterMutation {
-  companyName: String
-  description: String
-  contact: FooterContactMutation
-  navigation: [FooterNavigationMutation]
-  socialMedia: [FooterSocialMediaMutation]
-  copyright: String
-  legalLinks: [FooterLegalLinksMutation]
-  cookieSettingsText: String
 }
 
 input PagesHeroMutation {
@@ -746,165 +176,10 @@ input PagesHeroMutation {
   image: String
 }
 
-input PagesTechnologyItemsMutation {
-  name: String
-  icon: String
-  useBrightness: Boolean
-}
-
-input PagesTechnologyMutation {
-  title: String
-  description: String
-  items: [PagesTechnologyItemsMutation]
-}
-
-input PagesOfferServicesMutation {
-  title: String
-  description: String
-  icon: String
-  features: [String]
-  link: String
-  buttonText: String
-}
-
-input PagesOfferMutation {
-  title: String
-  titleAccent: String
-  subtitle: String
-  sectionLabel: String
-  services: [PagesOfferServicesMutation]
-}
-
-input PagesBriefContactMutation {
-  email: String
-  phone: String
-  address: String
-  addressLine2: String
-  city: String
-}
-
-input PagesBriefMutation {
-  title: String
-  description: String
-  buttonText: String
-  contact: PagesBriefContactMutation
-}
-
-input PagesPortfolioMutation {
-  title: String
-  description: String
-  sectionLabel: String
-}
-
-input PagesPortfolioHighlightsProjectsMutation {
-  title: String
-  slug: String
-  excerpt: String
-  image: String
-  imageAlt: String
-  category: String
-  date: String
-  featured: Boolean
-}
-
-input PagesPortfolioHighlightsMutation {
-  title: String
-  description: String
-  projects: [PagesPortfolioHighlightsProjectsMutation]
-}
-
-input PagesHowWeWorkStepsMutation {
-  title: String
-  description: String
-  icon: String
-  duration: String
-}
-
-input PagesHowWeWorkMutation {
-  title: String
-  description: String
-  steps: [PagesHowWeWorkStepsMutation]
-  ctaTitle: String
-  ctaDescription: String
-  ctaButton: String
-}
-
-input PagesFaqItemsMutation {
-  question: String
-  answer: String
-}
-
-input PagesFaqMutation {
-  title: String
-  description: String
-  items: [PagesFaqItemsMutation]
-  ctaQuestion: String
-  ctaButton: String
-}
-
-input PagesContactMutation {
-  title: String
-  description: String
-  email: String
-  phone: String
-  address: String
-  addressLine2: String
-  city: String
-  successTitle: String
-  successMessage: String
-  nameLabel: String
-  emailLabel: String
-  messageLabel: String
-  buttonText: String
-  contactDataTitle: String
-}
-
 input PagesMutation {
   title: String
   description: String
-  lastUpdate: String
-  selectedProjects: [String]
   hero: PagesHeroMutation
-  technology: PagesTechnologyMutation
-  offer: PagesOfferMutation
-  brief: PagesBriefMutation
-  portfolio: PagesPortfolioMutation
-  portfolioHighlights: PagesPortfolioHighlightsMutation
-  howWeWork: PagesHowWeWorkMutation
-  faq: PagesFaqMutation
-  contact: PagesContactMutation
-  body: JSON
-}
-
-input BlogMutation {
-  title: String
-  slug: String
-  date: String
-  author: String
-  category: String
-  excerpt: String
-  image: String
-  imageAlt: String
-  readTime: Float
-  tags: [String]
-  body: JSON
-}
-
-input PortfolioMutation {
-  title: String
-  slug: String
-  description: String
-  date: String
-  category: String
-  year: String
-  client: String
-  excerpt: String
-  image: String
-  imageAlt: String
-  link: String
-  tags: [String]
-  featured: Boolean
-  body: JSON
 }
 
 schema {

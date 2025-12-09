@@ -1,15 +1,12 @@
 'use client';
 
-/**
- * Hook for smooth scrolling to an element by ID
- * @param elementId - The ID of the element to scroll to
- * @returns A callback function that performs the scroll
- */
-export const useScrollTo = (elementId: string) => {
-  return () => {
-    const element = document.getElementById(elementId);
+import { useCallback } from 'react';
+
+export function useScrollTo(targetId: string) {
+  return useCallback(() => {
+    const element = document.getElementById(targetId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  };
-};
+  }, [targetId]);
+}

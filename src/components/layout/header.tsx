@@ -4,47 +4,44 @@ import Image from 'next/image';
 import { LanguageSwitcher } from '../ui/LanguageSwitcher';
 import { PreviewLink } from '../ui/PreviewLink';
 
+const HEADER_DATA = {
+  en: {
+    logo: '/logo/Bitspire logo main.svg',
+    logoAlt: 'Bitspire - Web Development',
+    navigation: [
+      { label: 'Portfolio', href: '/portfolio/' },
+      { label: 'Blog', href: '/blog/' },
+      { label: 'Brief', href: '/brief/' },
+    ],
+    ctaButton: {
+      text: 'Get a Quote',
+      href: '/brief/',
+    },
+  },
+  pl: {
+    logo: '/logo/Bitspire logo main.svg',
+    logoAlt: 'Bitspire - Tworzenie stron internetowych',
+    navigation: [
+      { label: 'Portfolio', href: '/portfolio/' },
+      { label: 'Blog', href: '/blog/' },
+      { label: 'Brief', href: '/brief/' },
+    ],
+    ctaButton: {
+      text: 'Zapytaj o ofertę',
+      href: '/brief/',
+    },
+  },
+} as const;
+
 interface HeaderProps {
-  data?: {
-    logo?: string | null;
-    logoAlt?: string | null;
-    navigation?: Array<{ label?: string | null; href?: string | null } | null> | null;
-    ctaButton?: { text?: string | null; href?: string | null } | null;
-  } | null;
-  locale?: string;
+  locale: string;
 }
 
-const HeaderContent: React.FC<HeaderProps> = ({ data, locale }) => {
+const HeaderContent: React.FC<HeaderProps> = ({ locale }) => {
   const [open, setOpen] = useState(false);
-
-  // Graceful fallback for missing data
-  if (!data) {
-    return (
-      <header className="fixed top-0 left-0 right-0 z-50 py-4 px-4 sm:px-6">
-        <div className="bg-gray-900/70 border border-gray-700 text-white max-w-screen-2xl mx-auto rounded-xl shadow-xl h-16 flex items-center px-4">
-          <span className="text-sm text-gray-400">Header data unavailable</span>
-        </div>
-      </header>
-    );
-  }
-
-  const logo = data.logo;
-  const logoAlt = data.logoAlt || 'Logo';
-  const navigation = data.navigation?.filter((item): item is { label: string; href: string } =>
-    item !== null && typeof item.label === 'string' && typeof item.href === 'string'
-  ) || [];
-  const ctaButton = data.ctaButton;
-
-  // Graceful fallbacks for missing required fields
-  if (!logo) {
-    return (
-      <header className="fixed top-0 left-0 right-0 z-50 py-4 px-4 sm:px-6">
-        <div className="bg-gray-900/70 border border-gray-700 text-white max-w-screen-2xl mx-auto rounded-xl shadow-xl h-16 flex items-center px-4">
-          <span className="text-sm text-gray-400">Logo missing</span>
-        </div>
-      </header>
-    );
-  }
+  
+  const data = HEADER_DATA[locale as keyof typeof HEADER_DATA] || HEADER_DATA.en;
+  const { logo, logoAlt, navigation, ctaButton } = data;
 
   return (
     <header
