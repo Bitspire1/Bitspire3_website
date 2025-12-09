@@ -1,17 +1,14 @@
 "use client";
 import React from "react";
-
-const scrollToBrief = () => {
-  const briefElement = document.getElementById('brief-section');
-  if (briefElement) {
-    briefElement.scrollIntoView({ behavior: 'smooth' });
-  }
-};
+import { useScrollTo } from "@/hooks/useScrollTo";
 
 export const BriefButton: React.FC<{
   href?: string;
   className?: string;
-}> = ({ className = "" }) => (
+}> = ({ className = "" }) => {
+  const scrollToBrief = useScrollTo('brief-section');
+
+  return (
   <button
     onClick={scrollToBrief}
     className={`
@@ -30,4 +27,5 @@ export const BriefButton: React.FC<{
     </svg>
     <span>Wypełnij brief</span>
   </button>
-);
+  );
+};

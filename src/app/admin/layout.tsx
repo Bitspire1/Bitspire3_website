@@ -1,13 +1,14 @@
-import './globals.css';
+import { CursorLightProvider } from "@/hooks/cursor-light";
+import '../globals.css';
 
-export default function AdminLayout({
-  children,
-}: {
+type AdminLayoutProps = {
   children: React.ReactNode;
-}) {
+};
+
+export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
+    <CursorLightProvider>
+      {children}
+    </CursorLightProvider>
   );
 }

@@ -1,17 +1,14 @@
 "use client";
 import React from "react";
-
-const scrollToContact = () => {
-  const contactElement = document.getElementById('contact-section');
-  if (contactElement) {
-    contactElement.scrollIntoView({ behavior: 'smooth' });
-  }
-};
+import { useScrollTo } from "@/hooks/useScrollTo";
 
 export const CTAButton: React.FC<{
   href?: string;
   className?: string;
-}> = ({ className = "" }) => (
+}> = ({ className = "" }) => {
+  const scrollToContact = useScrollTo('contact-section');
+
+  return (
   <button
     onClick={scrollToContact}
     className={`
@@ -29,4 +26,5 @@ export const CTAButton: React.FC<{
     </svg>
     <span>Skontaktuj się z nami</span>
   </button>
-);
+  );
+};

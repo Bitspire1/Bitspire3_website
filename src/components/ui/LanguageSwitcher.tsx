@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { locales } from '@/i18n/request';
+import { isInPreviewMode, getPathFromPreviewPathname, buildPreviewPath } from '@/lib/preview';
 
 const flagMap = {
   pl: '/flags/pl.svg',
@@ -17,15 +18,12 @@ export function LanguageSwitcher() {
 
   const switchLanguage = (newLocale: string) => {
     // Check if we're in preview mode
-    const isPreview = pathname.startsWith('/admin/preview');
-    
-    if (isPreview) {
-      // Extract current path from pathname: /admin/preview/pl/home -> home
-      const pathMatch = pathname.match(/\/admin\/preview\/[^\/]+\/(.+)/);
-      const currentPath = pathMatch?.[1] || 'home';
+    if (isInPreviewMode(pathname)) {
+      // Extract current path from pathname: /admin/pl/home -> home
+      const currentPath = getPathFromPreviewPathname(pathname);
       
       // Use Next.js router to change only the locale, keeping the path
-      router.push(`/admin/preview/${newLocale}/${currentPath}`);
+      router.push(buildPreviewPath(newLocale, currentPath));
       return;
     }
     
