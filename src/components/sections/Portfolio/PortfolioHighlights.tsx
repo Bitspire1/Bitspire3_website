@@ -66,25 +66,15 @@ export function PortfolioHighlights(props: PortfolioHighlightsProps) {
   } else {
     // Tina mode: featured projects from CMS
     tinaDataRef = props.tinaData;
-    if (!tinaDataRef?.projects) {
-      throw new Error('Portfolio highlights featured projects missing in Tina content');
-    }
     projectsToDisplay = (tinaDataRef.projects || [])
-      .filter((p): p is PortfolioProject => p !== null && (p.featured === true || !('featured' in p)));
+      .filter((p): p is PortfolioProject => p !== null && p.title && p.image);
     title = tinaDataRef.title || '';
     description = tinaDataRef.description || '';
+  }
 
-    if (!title || !description) {
-      throw new Error('Portfolio highlights title/description missing in Tina content');
-    }
-    if (projectsToDisplay.length === 0) {
-      throw new Error('Portfolio highlights featured projects missing in Tina content');
-    }
-    projectsToDisplay.forEach((project, index) => {
-      if (!project.title || !project.image) {
-        throw new Error(`Portfolio highlight project ${index} missing required fields in Tina content`);
-      }
-    });
+  // Don't render if no projects or missing title/description
+  if (projectsToDisplay.length === 0 || !title || !description) {
+    return null;
   }
 
   // Portfolio link helper
@@ -131,6 +121,7 @@ export function PortfolioHighlights(props: PortfolioHighlightsProps) {
               key={project.slug || idx}
               href={getProjectLink(project)}
               className="group relative h-80 overflow-hidden rounded-2xl border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300"
+              {...(tinaDataRef ? { 'data-tina-field': tinaField(tinaDataRef, 'projects', idx) } : {})}
             >
               {/* Image */}
               <div className="absolute inset-0">

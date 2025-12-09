@@ -3,11 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { NextIntlClientProvider, useMessages } from 'next-intl';
-import { useTina } from 'tinacms/dist/react';
+import { useTina, tinaField } from 'tinacms/dist/react';
 import client from "../../../../tina/__generated__/client";
 import { Background } from "@/components/layout/background";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { Hero } from "@/components/sections/Hero";
 import { Technology } from "@/components/sections/Technology";
 import { Offer } from "@/components/sections/Offer";
@@ -17,7 +15,122 @@ import { Contact } from "@/components/sections/Contact";
 import { PortfolioHighlights } from "@/components/sections/Portfolio/PortfolioHighlights";
 
 const pageQuery = `query Home($relativePath: String!) {
-  pages(relativePath: $relativePath) { _values }
+  pages(relativePath: $relativePath) {
+    _sys {
+      filename
+      basename
+      breadcrumbs
+      path
+      relativePath
+      extension
+    }
+    title
+    description
+    lastUpdate
+    selectedProjects
+    hero {
+      title
+      titleAccent
+      titleEnd
+      subtitle
+      ctaButton
+      briefButton
+      image
+    }
+    technology {
+      title
+      description
+      items {
+        name
+        icon
+        useBrightness
+      }
+    }
+    offer {
+      title
+      titleAccent
+      subtitle
+      sectionLabel
+      services {
+        title
+        description
+        icon
+        features
+        link
+        buttonText
+      }
+    }
+    brief {
+      title
+      description
+      buttonText
+      contact {
+        email
+        phone
+        address
+        addressLine2
+        city
+      }
+    }
+    portfolio {
+      title
+      description
+      sectionLabel
+    }
+    portfolioHighlights {
+      title
+      description
+      projects {
+        title
+        slug
+        excerpt
+        image
+        imageAlt
+        category
+        date
+        featured
+      }
+    }
+    howWeWork {
+      title
+      description
+      steps {
+        title
+        description
+        icon
+        duration
+      }
+      ctaTitle
+      ctaDescription
+      ctaButton
+    }
+    faq {
+      title
+      description
+      items {
+        question
+        answer
+      }
+      ctaQuestion
+      ctaButton
+    }
+    contact {
+      title
+      description
+      contactDataTitle
+      email
+      phone
+      address
+      addressLine2
+      city
+      successTitle
+      successMessage
+      nameLabel
+      emailLabel
+      messageLabel
+      buttonText
+    }
+  }
 }`;
 
 export default function Home() {
@@ -29,24 +142,18 @@ export default function Home() {
     pages: { _values: {} },
     portfolioConnection: { edges: [] },
   });
-  const [headerValues, setHeaderValues] = useState<any>({});
-  const [footerValues, setFooterValues] = useState<any>({});
 
   useEffect(() => {
     async function load() {
       try {
-        const [pageRes, headerRes, footerRes] = await Promise.all([
+        const [pageRes] = await Promise.all([
           client.queries.pages({ relativePath: `${locale}/home.mdx` }),
-          client.queries.header({ relativePath: `${locale}/header.mdx` }),
-          client.queries.footer({ relativePath: `${locale}/footer.mdx` }),
         ]);
 
         setInitialPageData({
           pages: pageRes.data.pages,
           portfolioConnection: { edges: [] },
         });
-        setHeaderValues((headerRes.data.header as any)?._values ?? {});
-        setFooterValues((footerRes.data.footer as any)?._values ?? {});
       } catch (e) {
         console.warn('[admin home] data fetch failed', e);
       }
@@ -60,37 +167,56 @@ export default function Home() {
     data: initialPageData,
   });
 
-  const liveData = (pageData.pages as any)?._values ?? {};
-  const portfolioHighlightsData = liveData && "portfolioHighlights" in liveData ? liveData.portfolioHighlights : null;
-  
-  const heroData = liveData && "hero" in liveData ? liveData.hero : undefined;
-  const technologyData = liveData && "technology" in liveData ? liveData.technology : undefined;
-  const offerData = liveData && "offer" in liveData ? liveData.offer : undefined;
-  const howWeWorkData = liveData && "howWeWork" in liveData ? liveData.howWeWork : undefined;
-  const faqData = liveData && "faq" in liveData ? liveData.faq : undefined;
-  const contactData = liveData && "contact" in liveData ? liveData.contact : undefined;
+  const pagesData = pageData.pages as any;
+  const heroData = pagesData?.hero;
+  const technologyData = pagesData?.technology;
+  const offerData = pagesData?.offer;
+  const howWeWorkData = pagesData?.howWeWork;
+  const portfolioHighlightsData = pagesData?.portfolioHighlights;
+  const faqData = pagesData?.faq;
+  const contactData = pagesData?.contact;
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
-      <Header data={headerValues} locale={locale} />
       <div className="min-h-screen pt-20 relative overflow-hidden">
         <Background />
         <main className="relative z-10">
-          {heroData ? <Hero data={heroData as never} /> : null}
-          {technologyData ? <Technology data={technologyData as never} /> : null}
+          {heroData ? (
+            <div data-tina-field={tinaField(pageData.pages as any, 'hero')}>
+              <Hero data={heroData as never} />
+            </div>
+          ) : null}
+          {technologyData ? (
+            <div data-tina-field={tinaField(pageData.pages as any, 'technology')}>
+              <Technology data={technologyData as never} />
+            </div>
+          ) : null}
           {offerData ? (
-            <div id="offer-section">
+            <div id="offer-section" data-tina-field={tinaField(pageData.pages as any, 'offer')}>
               <Offer data={offerData as never} />
             </div>
           ) : null}
-          {howWeWorkData ? <HowWeWork data={howWeWorkData as never} /> : null}
-          {portfolioHighlightsData && portfolioHighlightsData.title && portfolioHighlightsData.description ? (
-            <PortfolioHighlights mode="tina" tinaData={portfolioHighlightsData} />
+          {howWeWorkData ? (
+            <div data-tina-field={tinaField(pageData.pages as any, 'howWeWork')}>
+              <HowWeWork data={howWeWorkData as never} />
+            </div>
           ) : null}
-          {faqData ? <FAQ data={faqData as never} /> : null}
-          {contactData ? <Contact data={contactData as never} /> : null}
+          {portfolioHighlightsData ? (
+            <div data-tina-field={tinaField(pageData.pages as any, 'portfolioHighlights')}>
+              <PortfolioHighlights mode="tina" tinaData={portfolioHighlightsData} />
+            </div>
+          ) : null}
+          {faqData ? (
+            <div data-tina-field={tinaField(pageData.pages as any, 'faq')}>
+              <FAQ data={faqData as never} />
+            </div>
+          ) : null}
+          {contactData ? (
+            <div data-tina-field={tinaField(pageData.pages as any, 'contact')}>
+              <Contact data={contactData as never} />
+            </div>
+          ) : null}
         </main>
       </div>
-      <Footer data={footerValues} locale={locale} strictValidation={false} />
     </NextIntlClientProvider>
   );
 }

@@ -29,7 +29,7 @@ export const Hero: React.FC<{ data?: HeroData }> = ({ data }) => {
   }
 
   return (
-    <section className="relative py-16 lg:py-24 overflow-hidden" data-tina-field={tinaField(data, 'hero')}>
+    <section className="relative py-16 lg:py-24 overflow-hidden">
       {/* Spotlight Effect */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-blue-500/20 blur-[120px] rounded-full pointer-events-none" />
       
@@ -70,7 +70,7 @@ export const Hero: React.FC<{ data?: HeroData }> = ({ data }) => {
           </div>
 
           {/* Right Side - Visuals */}
-          <div className="absolute inset-0 z-0 opacity-20 lg:opacity-100 lg:relative lg:inset-auto lg:z-auto lg:h-[600px] flex items-center justify-center pointer-events-none lg:pointer-events-auto">
+          <div className="absolute inset-0 z-0 opacity-20 lg:opacity-100 lg:relative lg:inset-auto lg:z-auto lg:h-[600px] flex items-center justify-center">
             {image ? (
               <div className="relative w-full h-full animate-float">
                  <div className="absolute inset-0 bg-linear-to-tr from-blue-500/20 to-cyan-500/20 rounded-3xl blur-2xl -z-10" />

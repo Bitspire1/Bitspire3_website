@@ -57,7 +57,7 @@ export const Offer: React.FC<{ data?: OfferData }> = ({ data }) => {
   };
 
   return (
-    <section className="py-12 px-4 relative" data-tina-field={tinaField(data, 'offer')}>
+    <section className="py-12 px-4 relative">
       <div className="container mx-auto max-w-7xl">
         {/* Header */}
         <div className="text-center mb-12">
