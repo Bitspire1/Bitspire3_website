@@ -1,0 +1,49 @@
+fragment PagesParts on Pages {
+  __typename
+  title
+  description
+  hero {
+    __typename
+    title
+    titleAccent
+    titleEnd
+    subtitle
+    ctaButton
+    briefButton
+    image
+  }
+  technology {
+    __typename
+    title
+    description
+    items {
+      __typename
+      name
+      icon
+      useBrightness
+    }
+  }
+  offer {
+    __typename
+    title
+    titleAccent
+    subtitle
+    sectionLabel
+    services {
+      __typename
+      title
+      description
+      icon
+      features
+      link
+      buttonText
+    }
+  }
+  portfolio {
+    __typename
+    title
+    description
+    sectionLabel
+  }
+  selectedProjects
+}
