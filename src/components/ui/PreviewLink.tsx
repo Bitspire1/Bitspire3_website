@@ -7,7 +7,8 @@ interface PreviewLinkProps {
   href: string;
   children: React.ReactNode;
   className?: string;
-  onClick?: (e: React.MouseEvent) => void;
+  // Accept a flexible mouse event type to accommodate different callers
+  onClick?: (e: React.MouseEvent<any>) => void;
   'aria-label'?: string;
 }
 
@@ -18,11 +19,11 @@ export function PreviewLink({ href, children, className, onClick, 'aria-label': 
   const isPreviewMode = pathname?.startsWith('/admin');
   
   // In preview mode, prevent navigation
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: React.MouseEvent<any>) => {
     if (isPreviewMode) {
       e.preventDefault();
     }
-    onClick?.(e);
+    onClick?.(e as any);
   };
 
   return (

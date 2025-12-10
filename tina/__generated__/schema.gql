@@ -132,11 +132,6 @@ type PagesPortfolio {
   sectionLabel: String
 }
 
-type PagesPortfolioHighlights {
-  title: String!
-  description: String
-}
-
 type Pages implements Node & Document {
   title: String!
   description: String
@@ -144,7 +139,6 @@ type Pages implements Node & Document {
   technology: PagesTechnology
   offer: PagesOffer
   portfolio: PagesPortfolio
-  portfolioHighlights: PagesPortfolioHighlights
   selectedProjects: [String]
   id: ID!
   _sys: SystemInfo!
@@ -215,11 +209,6 @@ input PagesPortfolioFilter {
   sectionLabel: StringFilter
 }
 
-input PagesPortfolioHighlightsFilter {
-  title: StringFilter
-  description: StringFilter
-}
-
 input PagesFilter {
   title: StringFilter
   description: StringFilter
@@ -227,7 +216,6 @@ input PagesFilter {
   technology: PagesTechnologyFilter
   offer: PagesOfferFilter
   portfolio: PagesPortfolioFilter
-  portfolioHighlights: PagesPortfolioHighlightsFilter
   selectedProjects: StringFilter
 }
 
@@ -306,11 +294,6 @@ input PagesPortfolioMutation {
   sectionLabel: String
 }
 
-input PagesPortfolioHighlightsMutation {
-  title: String
-  description: String
-}
-
 input PagesMutation {
   title: String
   description: String
@@ -318,7 +301,6 @@ input PagesMutation {
   technology: PagesTechnologyMutation
   offer: PagesOfferMutation
   portfolio: PagesPortfolioMutation
-  portfolioHighlights: PagesPortfolioHighlightsMutation
   selectedProjects: [String]
 }
 

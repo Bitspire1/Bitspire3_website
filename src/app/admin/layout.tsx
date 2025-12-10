@@ -4,12 +4,7 @@ import { Footer } from "@/components/layout/footer";
 import AdminIntlWrapper from '@/components/logic/AdminIntlWrapper';
 import '../globals.css';
 
-type AdminLayoutProps = {
-  children: React.ReactNode;
-  params?: { locale?: string };
-};
-
-export default function AdminLayout({ children, params }: AdminLayoutProps) {
+export default function AdminLayout({ children, params }: { children: React.ReactNode; params?: any }) {
   const locale = params?.locale || 'pl';
 
   return (

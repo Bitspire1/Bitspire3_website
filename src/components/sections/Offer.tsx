@@ -3,6 +3,7 @@
 import React from 'react';
 import { tinaField } from 'tinacms/dist/react';
 import { PreviewLink } from '../ui/PreviewLink';
+import { CursorLightCard } from '@/hooks/cursor-light';
 
 interface Service {
   title?: string | null;
@@ -90,11 +91,11 @@ export const Offer: React.FC<{ data?: OfferData }> = ({ data }) => {
             const buttonText = service.buttonText as string;
 
             return (
-              <div 
-                key={index} 
+              <CursorLightCard
+                key={index}
                 className="rounded-2xl relative backdrop-blur-sm bg-slate-800/30 border border-slate-700/40 transition-all duration-300 hover:-translate-y-2 hover:border-blue-500/50 hover:bg-slate-800/50 hover:shadow-2xl hover:shadow-blue-500/20 group overflow-hidden"
               >
-                <div 
+                <div
                   className="h-full flex flex-col p-6"
                   data-tina-field={tinaField(service)}
                 >
@@ -156,7 +157,7 @@ export const Offer: React.FC<{ data?: OfferData }> = ({ data }) => {
                     </PreviewLink>
                   </div>
                 </div>
-              </div>
+              </CursorLightCard>
             );
           })}
         </div>

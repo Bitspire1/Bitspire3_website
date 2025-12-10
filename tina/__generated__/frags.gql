@@ -45,10 +45,5 @@ fragment PagesParts on Pages {
     description
     sectionLabel
   }
-  portfolioHighlights {
-    __typename
-    title
-    description
-  }
   selectedProjects
 }

@@ -236,27 +236,6 @@ var config_default = defineConfig({
             ]
           },
           {
-            type: "object",
-            name: "portfolioHighlights",
-            label: "Portfolio Highlights Section",
-            fields: [
-              {
-                type: "string",
-                name: "title",
-                label: "Section Title",
-                required: true
-              },
-              {
-                type: "string",
-                name: "description",
-                label: "Section Description",
-                ui: {
-                  component: "textarea"
-                }
-              }
-            ]
-          },
-          {
             type: "string",
             name: "selectedProjects",
             label: "Selected Projects (slugs)",
