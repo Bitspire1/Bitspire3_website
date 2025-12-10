@@ -12,4 +12,15 @@ fragment PagesParts on Pages {
     briefButton
     image
   }
+  technology {
+    __typename
+    title
+    description
+    items {
+      __typename
+      name
+      icon
+      useBrightness
+    }
+  }
 }

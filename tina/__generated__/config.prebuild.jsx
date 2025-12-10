@@ -1,6 +1,6 @@
 // tina/config.ts
 import { defineConfig } from "tinacms";
-var branch = process.env.NEXT_PUBLIC_TINA_BRANCH || "main";
+var branch = process.env.NEXT_PUBLIC_TINA_BRANCH || "rozpierdol";
 var config_default = defineConfig({
   branch,
   clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID,
@@ -22,6 +22,12 @@ var config_default = defineConfig({
         label: "Pages",
         path: "content/pages",
         format: "mdx",
+        ui: {
+          router: ({ document }) => {
+            const locale = document._sys.breadcrumbs[0] || "pl";
+            return `/admin/${locale}`;
+          }
+        },
         fields: [
           {
             type: "string",
@@ -78,6 +84,53 @@ var config_default = defineConfig({
                 type: "image",
                 name: "image",
                 label: "Hero Image"
+              }
+            ]
+          },
+          {
+            type: "object",
+            name: "technology",
+            label: "Technology Section",
+            fields: [
+              {
+                type: "string",
+                name: "title",
+                label: "Section Title",
+                required: true
+              },
+              {
+                type: "string",
+                name: "description",
+                label: "Section Description",
+                ui: {
+                  component: "textarea"
+                }
+              },
+              {
+                type: "object",
+                name: "items",
+                label: "Technology Items",
+                list: true,
+                fields: [
+                  {
+                    type: "string",
+                    name: "name",
+                    label: "Technology Name",
+                    required: true
+                  },
+                  {
+                    type: "image",
+                    name: "icon",
+                    label: "Technology Icon/Logo",
+                    required: true
+                  },
+                  {
+                    type: "boolean",
+                    name: "useBrightness",
+                    label: "Apply Brightness Filter (for dark logos)",
+                    description: "Enable for logos that need brightness-0 invert filter"
+                  }
+                ]
               }
             ]
           }

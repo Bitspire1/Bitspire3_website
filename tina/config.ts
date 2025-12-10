@@ -26,6 +26,13 @@ export default defineConfig({
         label: "Pages",
         path: "content/pages",
         format: "mdx",
+        ui: {
+          router: ({ document }) => {
+            // Extract locale from path (e.g., "pl/home.mdx" -> "pl")
+            const locale = document._sys.breadcrumbs[0] || 'pl';
+            return `/admin/${locale}`;
+          },
+        },
         fields: [
           {
             type: "string",
@@ -82,6 +89,53 @@ export default defineConfig({
                 type: "image",
                 name: "image",
                 label: "Hero Image",
+              },
+            ],
+          },
+          {
+            type: "object",
+            name: "technology",
+            label: "Technology Section",
+            fields: [
+              {
+                type: "string",
+                name: "title",
+                label: "Section Title",
+                required: true,
+              },
+              {
+                type: "string",
+                name: "description",
+                label: "Section Description",
+                ui: {
+                  component: "textarea",
+                },
+              },
+              {
+                type: "object",
+                name: "items",
+                label: "Technology Items",
+                list: true,
+                fields: [
+                  {
+                    type: "string",
+                    name: "name",
+                    label: "Technology Name",
+                    required: true,
+                  },
+                  {
+                    type: "image",
+                    name: "icon",
+                    label: "Technology Icon/Logo",
+                    required: true,
+                  },
+                  {
+                    type: "boolean",
+                    name: "useBrightness",
+                    label: "Apply Brightness Filter (for dark logos)",
+                    description: "Enable for logos that need brightness-0 invert filter",
+                  },
+                ],
               },
             ],
           },

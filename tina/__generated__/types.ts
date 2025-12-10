@@ -176,11 +176,26 @@ export type PagesHero = {
   image?: Maybe<Scalars['String']['output']>;
 };
 
+export type PagesTechnologyItems = {
+  __typename?: 'PagesTechnologyItems';
+  name: Scalars['String']['output'];
+  icon: Scalars['String']['output'];
+  useBrightness?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type PagesTechnology = {
+  __typename?: 'PagesTechnology';
+  title: Scalars['String']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  items?: Maybe<Array<Maybe<PagesTechnologyItems>>>;
+};
+
 export type Pages = Node & Document & {
   __typename?: 'Pages';
   title: Scalars['String']['output'];
   description?: Maybe<Scalars['String']['output']>;
   hero?: Maybe<PagesHero>;
+  technology?: Maybe<PagesTechnology>;
   id: Scalars['ID']['output'];
   _sys: SystemInfo;
   _values: Scalars['JSON']['output'];
@@ -210,10 +225,28 @@ export type PagesHeroFilter = {
   image?: InputMaybe<ImageFilter>;
 };
 
+export type BooleanFilter = {
+  eq?: InputMaybe<Scalars['Boolean']['input']>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type PagesTechnologyItemsFilter = {
+  name?: InputMaybe<StringFilter>;
+  icon?: InputMaybe<ImageFilter>;
+  useBrightness?: InputMaybe<BooleanFilter>;
+};
+
+export type PagesTechnologyFilter = {
+  title?: InputMaybe<StringFilter>;
+  description?: InputMaybe<StringFilter>;
+  items?: InputMaybe<PagesTechnologyItemsFilter>;
+};
+
 export type PagesFilter = {
   title?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
   hero?: InputMaybe<PagesHeroFilter>;
+  technology?: InputMaybe<PagesTechnologyFilter>;
 };
 
 export type PagesConnectionEdges = {
@@ -304,20 +337,33 @@ export type PagesHeroMutation = {
   image?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type PagesTechnologyItemsMutation = {
+  name?: InputMaybe<Scalars['String']['input']>;
+  icon?: InputMaybe<Scalars['String']['input']>;
+  useBrightness?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type PagesTechnologyMutation = {
+  title?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  items?: InputMaybe<Array<InputMaybe<PagesTechnologyItemsMutation>>>;
+};
+
 export type PagesMutation = {
   title?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   hero?: InputMaybe<PagesHeroMutation>;
+  technology?: InputMaybe<PagesTechnologyMutation>;
 };
 
-export type PagesPartsFragment = { __typename: 'Pages', title: string, description?: string | null, hero?: { __typename: 'PagesHero', title: string, titleAccent: string, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null };
+export type PagesPartsFragment = { __typename: 'Pages', title: string, description?: string | null, hero?: { __typename: 'PagesHero', title: string, titleAccent: string, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null, technology?: { __typename: 'PagesTechnology', title: string, description?: string | null, items?: Array<{ __typename: 'PagesTechnologyItems', name: string, icon: string, useBrightness?: boolean | null } | null> | null } | null };
 
 export type PagesQueryVariables = Exact<{
   relativePath: Scalars['String']['input'];
 }>;
 
 
-export type PagesQuery = { __typename?: 'Query', pages: { __typename: 'Pages', id: string, title: string, description?: string | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero?: { __typename: 'PagesHero', title: string, titleAccent: string, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null } };
+export type PagesQuery = { __typename?: 'Query', pages: { __typename: 'Pages', id: string, title: string, description?: string | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero?: { __typename: 'PagesHero', title: string, titleAccent: string, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null, technology?: { __typename: 'PagesTechnology', title: string, description?: string | null, items?: Array<{ __typename: 'PagesTechnologyItems', name: string, icon: string, useBrightness?: boolean | null } | null> | null } | null } };
 
 export type PagesConnectionQueryVariables = Exact<{
   before?: InputMaybe<Scalars['String']['input']>;
@@ -329,7 +375,7 @@ export type PagesConnectionQueryVariables = Exact<{
 }>;
 
 
-export type PagesConnectionQuery = { __typename?: 'Query', pagesConnection: { __typename?: 'PagesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'PagesConnectionEdges', cursor: string, node?: { __typename: 'Pages', id: string, title: string, description?: string | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero?: { __typename: 'PagesHero', title: string, titleAccent: string, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null } | null } | null> | null } };
+export type PagesConnectionQuery = { __typename?: 'Query', pagesConnection: { __typename?: 'PagesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'PagesConnectionEdges', cursor: string, node?: { __typename: 'Pages', id: string, title: string, description?: string | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero?: { __typename: 'PagesHero', title: string, titleAccent: string, titleEnd?: string | null, subtitle?: string | null, ctaButton?: string | null, briefButton?: string | null, image?: string | null } | null, technology?: { __typename: 'PagesTechnology', title: string, description?: string | null, items?: Array<{ __typename: 'PagesTechnologyItems', name: string, icon: string, useBrightness?: boolean | null } | null> | null } | null } | null } | null> | null } };
 
 export const PagesPartsFragmentDoc = gql`
     fragment PagesParts on Pages {
@@ -345,6 +391,17 @@ export const PagesPartsFragmentDoc = gql`
     ctaButton
     briefButton
     image
+  }
+  technology {
+    __typename
+    title
+    description
+    items {
+      __typename
+      name
+      icon
+      useBrightness
+    }
   }
 }
     `;
@@ -461,7 +518,7 @@ export const ExperimentalGetTinaClient = () =>
   getSdk(
     generateRequester(
       createClient({
-        url: "https://content.tinajs.io/2.0/content/f529e4e6-9630-4638-8404-25897477e309/github/main",
+        url: "http://localhost:4001/graphql",
         queries,
       })
     )

@@ -97,10 +97,23 @@ type PagesHero {
   image: String
 }
 
+type PagesTechnologyItems {
+  name: String!
+  icon: String!
+  useBrightness: Boolean
+}
+
+type PagesTechnology {
+  title: String!
+  description: String
+  items: [PagesTechnologyItems]
+}
+
 type Pages implements Node & Document {
   title: String!
   description: String
   hero: PagesHero
+  technology: PagesTechnology
   id: ID!
   _sys: SystemInfo!
   _values: JSON!
@@ -130,10 +143,28 @@ input PagesHeroFilter {
   image: ImageFilter
 }
 
+input BooleanFilter {
+  eq: Boolean
+  exists: Boolean
+}
+
+input PagesTechnologyItemsFilter {
+  name: StringFilter
+  icon: ImageFilter
+  useBrightness: BooleanFilter
+}
+
+input PagesTechnologyFilter {
+  title: StringFilter
+  description: StringFilter
+  items: PagesTechnologyItemsFilter
+}
+
 input PagesFilter {
   title: StringFilter
   description: StringFilter
   hero: PagesHeroFilter
+  technology: PagesTechnologyFilter
 }
 
 type PagesConnectionEdges {
@@ -176,10 +207,23 @@ input PagesHeroMutation {
   image: String
 }
 
+input PagesTechnologyItemsMutation {
+  name: String
+  icon: String
+  useBrightness: Boolean
+}
+
+input PagesTechnologyMutation {
+  title: String
+  description: String
+  items: [PagesTechnologyItemsMutation]
+}
+
 input PagesMutation {
   title: String
   description: String
   hero: PagesHeroMutation
+  technology: PagesTechnologyMutation
 }
 
 schema {

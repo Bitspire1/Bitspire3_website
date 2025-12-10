@@ -7,6 +7,7 @@ import { useTina, tinaField } from 'tinacms/dist/react';
 import client from "../../../../tina/__generated__/client";
 import { Background } from "@/components/layout/background";
 import { Hero } from "@/components/sections/Hero";
+import { Technology } from "@/components/sections/Technology";
 
 const pageQuery = `query Home($relativePath: String!) {
   pages(relativePath: $relativePath) {
@@ -28,6 +29,15 @@ const pageQuery = `query Home($relativePath: String!) {
       ctaButton
       briefButton
       image
+    }
+    technology {
+      title
+      description
+      items {
+        name
+        icon
+        useBrightness
+      }
     }
   }
 }`;
@@ -64,6 +74,7 @@ export default function Home() {
 
   const pagesData = pageData.pages as any;
   const heroData = pagesData?.hero;
+  const technologyData = pagesData?.technology;
 
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
@@ -73,6 +84,11 @@ export default function Home() {
           {heroData ? (
             <div data-tina-field={tinaField(pageData.pages as any, 'hero')}>
               <Hero data={heroData as never} />
+            </div>
+          ) : null}
+          {technologyData ? (
+            <div data-tina-field={tinaField(pageData.pages as any, 'technology')}>
+              <Technology data={technologyData as never} />
             </div>
           ) : null}
         </main>
