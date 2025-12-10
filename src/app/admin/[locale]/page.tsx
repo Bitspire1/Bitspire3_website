@@ -8,6 +8,8 @@ import client from "../../../../tina/__generated__/client";
 import { Background } from "@/components/layout/background";
 import { Hero } from "@/components/sections/Hero";
 import { Technology } from "@/components/sections/Technology";
+import { Offer } from "@/components/sections/Offer";
+import { PortfolioHighlights } from "@/components/sections/PortfolioHighlights";
 
 const pageQuery = `query Home($relativePath: String!) {
   pages(relativePath: $relativePath) {
@@ -38,6 +40,24 @@ const pageQuery = `query Home($relativePath: String!) {
         icon
         useBrightness
       }
+    }
+    offer {
+      title
+      titleAccent
+      subtitle
+      sectionLabel
+      services {
+        title
+        description
+        icon
+        features
+        link
+        buttonText
+      }
+    }
+    portfolioHighlights {
+      title
+      description
     }
   }
 }`;
@@ -75,6 +95,8 @@ export default function Home() {
   const pagesData = pageData.pages as any;
   const heroData = pagesData?.hero;
   const technologyData = pagesData?.technology;
+  const offerData = pagesData?.offer;
+  const portfolioHighlightsData = pagesData?.portfolioHighlights;
 
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
@@ -89,6 +111,16 @@ export default function Home() {
           {technologyData ? (
             <div data-tina-field={tinaField(pageData.pages as any, 'technology')}>
               <Technology data={technologyData as never} />
+            </div>
+          ) : null}
+          {offerData ? (
+            <div data-tina-field={tinaField(pageData.pages as any, 'offer')}>
+              <Offer data={offerData as never} />
+            </div>
+          ) : null}
+          {portfolioHighlightsData ? (
+            <div data-tina-field={tinaField(pageData.pages as any, 'portfolioHighlights')}>
+              <PortfolioHighlights data={portfolioHighlightsData as never} />
             </div>
           ) : null}
         </main>

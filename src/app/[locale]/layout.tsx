@@ -5,7 +5,6 @@ import { locales, type Locale } from '@/i18n/request';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { CursorLightProvider } from '@/hooks/cursor-light';
-import { CookieBanner } from '@/components/ui/CookieBanner';
 import '../globals.css';
 import type { Metadata } from 'next';
 
@@ -46,7 +45,6 @@ export default async function LocaleLayout({
           <Header locale={locale} />
           {children}
           <Footer locale={locale} />
-          <CookieBanner />
         </CursorLightProvider>
       </NextIntlClientProvider>
     </>

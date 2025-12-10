@@ -209,7 +209,7 @@ const Technology: React.FC<{ data?: TechnologyData }> = ({ data }) => {
               alt={alt}
               width={80}
               height={60}
-              className={`h-14 w-auto object-contain opacity-60 transition-all duration-500 group-hover:opacity-100 group-hover:scale-110 relative z-10 ${useBrightness ? 'brightness-0 invert' : ''}`}
+              className="h-14 w-auto object-contain brightness-0 invert opacity-60 transition-all duration-500 group-hover:opacity-100 group-hover:scale-110 relative z-10"
               loading="lazy"
               sizes="80px"
             />

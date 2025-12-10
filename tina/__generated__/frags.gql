@@ -23,4 +23,32 @@ fragment PagesParts on Pages {
       useBrightness
     }
   }
+  offer {
+    __typename
+    title
+    titleAccent
+    subtitle
+    sectionLabel
+    services {
+      __typename
+      title
+      description
+      icon
+      features
+      link
+      buttonText
+    }
+  }
+  portfolio {
+    __typename
+    title
+    description
+    sectionLabel
+  }
+  portfolioHighlights {
+    __typename
+    title
+    description
+  }
+  selectedProjects
 }

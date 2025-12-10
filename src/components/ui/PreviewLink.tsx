@@ -7,7 +7,7 @@ interface PreviewLinkProps {
   href: string;
   children: React.ReactNode;
   className?: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
   'aria-label'?: string;
 }
 
@@ -22,7 +22,7 @@ export function PreviewLink({ href, children, className, onClick, 'aria-label': 
     if (isPreviewMode) {
       e.preventDefault();
     }
-    onClick?.();
+    onClick?.(e);
   };
 
   return (
