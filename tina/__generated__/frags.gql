@@ -39,6 +39,35 @@ fragment PagesParts on Pages {
       buttonText
     }
   }
+  howWeWork {
+    __typename
+    title
+    titleAccent
+    subtitle
+    steps {
+      __typename
+      number
+      title
+      description
+      icon
+    }
+    ctaTitle
+    ctaDescription
+    ctaButton
+  }
+  faq {
+    __typename
+    title
+    titleAccent
+    subtitle
+    questions {
+      __typename
+      question
+      answer
+    }
+    ctaQuestion
+    ctaButton
+  }
   portfolio {
     __typename
     title

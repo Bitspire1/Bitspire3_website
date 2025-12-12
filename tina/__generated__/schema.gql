@@ -126,6 +126,37 @@ type PagesOffer {
   services: [PagesOfferServices]
 }
 
+type PagesHowWeWorkSteps {
+  number: String!
+  title: String!
+  description: String!
+  icon: String!
+}
+
+type PagesHowWeWork {
+  title: String!
+  titleAccent: String!
+  subtitle: String
+  steps: [PagesHowWeWorkSteps]
+  ctaTitle: String
+  ctaDescription: String
+  ctaButton: String
+}
+
+type PagesFaqQuestions {
+  question: String!
+  answer: String!
+}
+
+type PagesFaq {
+  title: String!
+  titleAccent: String!
+  subtitle: String
+  questions: [PagesFaqQuestions]
+  ctaQuestion: String
+  ctaButton: String
+}
+
 type PagesPortfolio {
   title: String
   description: String
@@ -138,6 +169,8 @@ type Pages implements Node & Document {
   hero: PagesHero
   technology: PagesTechnology
   offer: PagesOffer
+  howWeWork: PagesHowWeWork
+  faq: PagesFaq
   portfolio: PagesPortfolio
   selectedProjects: [String]
   id: ID!
@@ -203,6 +236,37 @@ input PagesOfferFilter {
   services: PagesOfferServicesFilter
 }
 
+input PagesHowWeWorkStepsFilter {
+  number: StringFilter
+  title: StringFilter
+  description: StringFilter
+  icon: StringFilter
+}
+
+input PagesHowWeWorkFilter {
+  title: StringFilter
+  titleAccent: StringFilter
+  subtitle: StringFilter
+  steps: PagesHowWeWorkStepsFilter
+  ctaTitle: StringFilter
+  ctaDescription: StringFilter
+  ctaButton: StringFilter
+}
+
+input PagesFaqQuestionsFilter {
+  question: StringFilter
+  answer: StringFilter
+}
+
+input PagesFaqFilter {
+  title: StringFilter
+  titleAccent: StringFilter
+  subtitle: StringFilter
+  questions: PagesFaqQuestionsFilter
+  ctaQuestion: StringFilter
+  ctaButton: StringFilter
+}
+
 input PagesPortfolioFilter {
   title: StringFilter
   description: StringFilter
@@ -215,6 +279,8 @@ input PagesFilter {
   hero: PagesHeroFilter
   technology: PagesTechnologyFilter
   offer: PagesOfferFilter
+  howWeWork: PagesHowWeWorkFilter
+  faq: PagesFaqFilter
   portfolio: PagesPortfolioFilter
   selectedProjects: StringFilter
 }
@@ -288,6 +354,37 @@ input PagesOfferMutation {
   services: [PagesOfferServicesMutation]
 }
 
+input PagesHowWeWorkStepsMutation {
+  number: String
+  title: String
+  description: String
+  icon: String
+}
+
+input PagesHowWeWorkMutation {
+  title: String
+  titleAccent: String
+  subtitle: String
+  steps: [PagesHowWeWorkStepsMutation]
+  ctaTitle: String
+  ctaDescription: String
+  ctaButton: String
+}
+
+input PagesFaqQuestionsMutation {
+  question: String
+  answer: String
+}
+
+input PagesFaqMutation {
+  title: String
+  titleAccent: String
+  subtitle: String
+  questions: [PagesFaqQuestionsMutation]
+  ctaQuestion: String
+  ctaButton: String
+}
+
 input PagesPortfolioMutation {
   title: String
   description: String
@@ -300,6 +397,8 @@ input PagesMutation {
   hero: PagesHeroMutation
   technology: PagesTechnologyMutation
   offer: PagesOfferMutation
+  howWeWork: PagesHowWeWorkMutation
+  faq: PagesFaqMutation
   portfolio: PagesPortfolioMutation
   selectedProjects: [String]
 }

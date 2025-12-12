@@ -220,6 +220,144 @@ export default defineConfig({
           },
           {
             type: "object",
+            name: "howWeWork",
+            label: "How We Work Section",
+            fields: [
+              {
+                type: "string",
+                name: "title",
+                label: "Title",
+                required: true,
+              },
+              {
+                type: "string",
+                name: "titleAccent",
+                label: "Title Accent (highlighted)",
+                required: true,
+              },
+              {
+                type: "string",
+                name: "subtitle",
+                label: "Subtitle",
+                ui: {
+                  component: "textarea",
+                },
+              },
+              {
+                type: "object",
+                name: "steps",
+                label: "Process Steps",
+                list: true,
+                fields: [
+                  {
+                    type: "string",
+                    name: "number",
+                    label: "Step Number",
+                    required: true,
+                  },
+                  {
+                    type: "string",
+                    name: "title",
+                    label: "Step Title",
+                    required: true,
+                  },
+                  {
+                    type: "string",
+                    name: "description",
+                    label: "Step Description",
+                    required: true,
+                    ui: {
+                      component: "textarea",
+                    },
+                  },
+                  {
+                    type: "string",
+                    name: "icon",
+                    label: "Icon Name",
+                    required: true,
+                    description: "Options: lightbulb, search, code, rocket, chart",
+                  },
+                ],
+              },
+              {
+                type: "string",
+                name: "ctaTitle",
+                label: "CTA Title",
+              },
+              {
+                type: "string",
+                name: "ctaDescription",
+                label: "CTA Description",
+              },
+              {
+                type: "string",
+                name: "ctaButton",
+                label: "CTA Button Text",
+              },
+            ],
+          },
+          {
+            type: "object",
+            name: "faq",
+            label: "FAQ Section",
+            fields: [
+              {
+                type: "string",
+                name: "title",
+                label: "Title",
+                required: true,
+              },
+              {
+                type: "string",
+                name: "titleAccent",
+                label: "Title Accent (highlighted)",
+                required: true,
+              },
+              {
+                type: "string",
+                name: "subtitle",
+                label: "Subtitle",
+                ui: {
+                  component: "textarea",
+                },
+              },
+              {
+                type: "object",
+                name: "questions",
+                label: "FAQ Questions",
+                list: true,
+                fields: [
+                  {
+                    type: "string",
+                    name: "question",
+                    label: "Question",
+                    required: true,
+                  },
+                  {
+                    type: "string",
+                    name: "answer",
+                    label: "Answer",
+                    required: true,
+                    ui: {
+                      component: "textarea",
+                    },
+                  },
+                ],
+              },
+              {
+                type: "string",
+                name: "ctaQuestion",
+                label: "CTA Question",
+              },
+              {
+                type: "string",
+                name: "ctaButton",
+                label: "CTA Button Text",
+              },
+            ],
+          },
+          {
+            type: "object",
             name: "portfolio",
             label: "Portfolio Section",
             fields: [
