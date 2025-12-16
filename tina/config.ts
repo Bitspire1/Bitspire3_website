@@ -1,6 +1,6 @@
 import { defineConfig } from "tinacms";
 
-const branch = process.env.NEXT_PUBLIC_TINA_BRANCH || "rozpierdol";
+const branch = process.env.NEXT_PUBLIC_TINA_BRANCH || "rozkminione";
 
 export default defineConfig({
   branch,

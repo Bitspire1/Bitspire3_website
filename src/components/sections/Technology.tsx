@@ -20,16 +20,13 @@ const LOGO_WIDTH = 140; // 80px image + 60px gap
 const SPEED = 0.8; // Faster speed
 
 const Technology: React.FC<{ data?: TechnologyData }> = ({ data }) => {
-	if (!data) {
-		throw new Error('Technology content missing from TinaCMS');
-	}
-
-	if (!data.title || !data.description) {
-		throw new Error('Technology title/description missing in Tina content');
-	}
+	// Graceful handling for editing mode
+	const title = data?.title || 'Enter title...';
+	const description = data?.description || 'Enter description...';
+	const items = data?.items || [];
 
 	// Convert Tina items to logos format
-	const logos = (data.items || []).map((item) => ({
+	const logos = items.map((item) => ({
 		src: item?.icon || '',
 		alt: item?.name || 'Technology Logo',
 		useBrightness: item?.useBrightness ?? false,
@@ -160,10 +157,10 @@ const Technology: React.FC<{ data?: TechnologyData }> = ({ data }) => {
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
 		  <div className="w-16 h-0.5 bg-linear-to-r from-blue-600 to-cyan-500 mb-4"></div>
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-3" data-tina-field={tinaField(data, 'title')}>
-						{data.title}
+						{title}
           </h2>
           <p className="text-slate-300 text-base" data-tina-field={tinaField(data, 'description')}>
-						{data.description}
+						{description}
           </p>
         </div>
       </div>
@@ -224,7 +221,5 @@ const Technology: React.FC<{ data?: TechnologyData }> = ({ data }) => {
   );
 };
 
-
-export { Technology };
 export default Technology;
 
