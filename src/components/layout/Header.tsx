@@ -55,7 +55,7 @@ export const Header: React.FC = () => {
               <Image
                 src={logo}
                 alt={logoAlt}
-                className="h-8 sm:h-10 w-auto max-h-10 max-w-[140px] object-contain"
+                className="h-8 sm:h-10 w-auto max-h-10 max-w-35 object-contain"
                 width={120}
                 height={40}
                 priority

@@ -88,10 +88,15 @@ interface HomePageData {
 }
 
 interface HomePageWrapperProps {
-    data: HomePageData;
+    data?: HomePageData;
 }
 
 export default function HomePageWrapper({ data }: HomePageWrapperProps) {
+    // Fallback jeśli data jest undefined
+    if (!data) {
+        return null;
+    }
+
     return (
         <>
             <Hero data={data?.hero} />

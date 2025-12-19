@@ -10,8 +10,10 @@ const CursorContext = createContext<CursorContextType | undefined>(undefined);
 
 export const useCursorLight = () => {
   const context = useContext(CursorContext);
+  // Opcjonalny context - jeśli nie ma providera, zwróć dummy funkcję
+  // To pozwala na SSR bez błędów
   if (!context) {
-    throw new Error('useCursorLight must be used within CursorLightProvider');
+    return { setIsHoveringCard: () => {} };
   }
   return context;
 };

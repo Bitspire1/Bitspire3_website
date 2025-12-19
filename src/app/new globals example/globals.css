@@ -144,11 +144,6 @@ html, body, #__next {
   75% { transform: translateX(5px); }
 }
 
-@keyframes gradient-x {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
 .animate-shake {
   animation: shake 0.3s ease-in-out;
 }

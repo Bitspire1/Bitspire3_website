@@ -450,7 +450,7 @@ export default function Brief({ data }: { data?: BriefData }) {
             </div>
 
             {/* Formularz brief */}
-            <CursorLightCard className="relative rounded-2xl glass-panel p-8 flex-1 min-h-[480px] overflow-y-auto">
+            <CursorLightCard className="relative rounded-2xl glass-panel p-8 flex-1 min-h-120 overflow-y-auto">
               <BriefForm briefType={activeTab} key={activeTab} />
             </CursorLightCard>
           </div>

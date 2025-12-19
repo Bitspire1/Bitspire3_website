@@ -228,6 +228,12 @@ export default async function Page(props: PageProps) {
             relativePath: `${locale}/${pageSlug}.mdx`,
         });
 
+        // Sprawdź czy data istnieje przed przekazaniem
+        if (!result?.data?.pages) {
+            console.error('No data returned for page:', pageSlug);
+            notFound();
+        }
+
         return <Wrapper data={result.data.pages} />;
     } catch (error) {
         console.error('Page not found:', error);

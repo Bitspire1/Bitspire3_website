@@ -13,9 +13,9 @@ export default createMiddleware({
 });
 
 export const config = {
-  // Match only internationalized pathnames, exclude static files and API routes
-  // Admin routes need locale handling too, so we DON'T exclude them
+  // Match only internationalized pathnames, exclude static files, API routes, and admin
+  // Admin has its own routing and TinaCMS interface
   matcher: [
-    '/((?!api|_next|_vercel|favicon.ico|.*\\.[^/]+$).*)',
+    '/((?!api|_next|_vercel|admin|favicon.ico|.*\\.[^/]+$).*)',
   ]
 };
