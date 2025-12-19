@@ -1,6 +1,7 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { useCookieConsent } from "@/hooks/useCookies";
+import { useModal } from "@/hooks/useModal";
 import type { CookieCategory } from "@/lib/cookies";
 
 interface Props {
@@ -17,53 +18,12 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 export const CookieSettingsModal: React.FC<Props> = ({ open, onClose }) => {
   const { consent, setCategories, rejectAll, grantAll } = useCookieConsent();
-  const dialogRef = useRef<HTMLDivElement | null>(null);
-  const firstFocusable = useRef<HTMLButtonElement | null>(null);
-  const lastFocusable = useRef<HTMLButtonElement | null>(null);
-  const [visible, setVisible] = useState(open);
-  const [closing, setClosing] = useState(false);
-  const [entering, setEntering] = useState(false);
-
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape" && open) onClose();
-      if (e.key === "Tab" && open && dialogRef.current) {
-        const focusables = dialogRef.current.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        if (focusables.length === 0) return;
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          (last as HTMLElement).focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          (first as HTMLElement).focus();
-        }
-      }
-    }
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
-
-  // sync with open prop
-  useEffect(() => {
-    if (open) {
-      setVisible(true);
-      setClosing(false);
-      setEntering(true);
-      // flip to false on next frame to trigger transition
-      const raf = requestAnimationFrame(() => setEntering(false));
-      return () => cancelAnimationFrame(raf);
-    }
-    if (visible) {
-      // run exit then hide
-      setClosing(true);
-      const t = setTimeout(() => { setVisible(false); setClosing(false); }, 250);
-      return () => clearTimeout(t);
-    }
-  }, [open, visible]);
+  const {
+    visible,
+    dialogRef,
+    overlayClass,
+    contentClass,
+  } = useModal(open, { onClose, trapFocus: true });
 
   if (!visible) return null;
 
@@ -76,13 +36,13 @@ export const CookieSettingsModal: React.FC<Props> = ({ open, onClose }) => {
 
   return (
     <div
-      className={`fixed inset-0 z-200 flex items-center justify-center p-4 transition-opacity duration-300 ${entering || closing ? 'opacity-0' : 'opacity-100'} bg-black/60 backdrop-blur-sm`}
+      className={`fixed inset-0 z-200 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm ${overlayClass}`}
       aria-modal="true"
       role="dialog"
       aria-labelledby="cookie-settings-title"
       ref={dialogRef}
     >
-      <div className={`w-full max-w-2xl rounded-2xl bg-slate-900 border border-slate-700 shadow-2xl p-6 md:p-8 transform transition-all duration-300 ${entering || closing ? 'opacity-0 scale-95 translate-y-2' : 'opacity-100 scale-100 translate-y-0'}`}>
+      <div className={`w-full max-w-2xl rounded-2xl bg-slate-900 border border-slate-700 shadow-2xl p-6 md:p-8 ${contentClass}`}>
         <h2 id="cookie-settings-title" className="text-2xl font-bold text-white mb-2">
           Ustawienia cookies
         </h2>
@@ -120,7 +80,6 @@ export const CookieSettingsModal: React.FC<Props> = ({ open, onClose }) => {
         </ul>
         <div className="flex flex-wrap gap-4 justify-end mt-8">
           <button
-            ref={firstFocusable}
             onClick={() => { rejectAll(); onClose(); }}
             className="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm font-medium text-slate-200 border border-slate-600"
           >
@@ -133,7 +92,6 @@ export const CookieSettingsModal: React.FC<Props> = ({ open, onClose }) => {
             Akceptuj wszystkie
           </button>
           <button
-            ref={lastFocusable}
             onClick={onClose}
             className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-medium text-slate-200 border border-slate-600"
           >

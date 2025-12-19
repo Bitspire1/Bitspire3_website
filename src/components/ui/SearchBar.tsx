@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { FaSearch, FaTimes } from 'react-icons/fa';
+import { useSearch } from '@/hooks/useSearch';
 
 type ContentType = 'blog' | 'portfolio';
 
@@ -61,42 +62,50 @@ const translations = {
 };
 
 export function SearchBar({ allTags, onSearchChange, onTagsChange, locale, type = 'blog' }: SearchBarProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [showAllTags, setShowAllTags] = useState(false);
+  const {
+    searchQuery,
+    selectedTags,
+    hasActiveFilters,
+    handleSearchChange: internalHandleSearchChange,
+    handleTagToggle,
+    handleClearSearch,
+    handleClearFilters,
+    handleClearTag,
+    getDisplayedTags,
+    getRemainingTagsCount,
+    shouldShowMoreButton,
+    toggleShowAllTags,
+    showAllTags,
+  } = useSearch({ maxVisibleTags: 8 });
+
   const t = translations[type][locale as keyof typeof translations.blog] || translations[type].en;
+  const displayedTags = getDisplayedTags(allTags);
+  const remainingCount = getRemainingTagsCount(allTags);
 
-  // Limit tags displayed initially
-  const displayedTags = showAllTags ? allTags : allTags.slice(0, 8);
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setSearchQuery(value);
+    internalHandleSearchChange(value);
     onSearchChange(value);
   };
 
-  const handleTagToggle = (tag: string) => {
+  const handleTagClick = (tag: string) => {
+    handleTagToggle(tag);
     const newTags = selectedTags.includes(tag)
       ? selectedTags.filter(t => t !== tag)
       : [...selectedTags, tag];
-    
-    setSelectedTags(newTags);
     onTagsChange(newTags);
   };
 
-  const handleClearSearch = () => {
-    setSearchQuery('');
+  const handleClear = () => {
+    handleClearSearch();
     onSearchChange('');
   };
 
-  const handleClearFilters = () => {
-    setSelectedTags([]);
-    setSearchQuery('');
+  const handleClearAll = () => {
+    handleClearFilters();
     onSearchChange('');
     onTagsChange([]);
   };
-
-  const hasActiveFilters = searchQuery || selectedTags.length > 0;
 
   return (
     <div className="mb-12 space-y-6">
@@ -107,13 +116,13 @@ export function SearchBar({ allTags, onSearchChange, onTagsChange, locale, type 
           <input
             type="text"
             value={searchQuery}
-            onChange={handleSearchChange}
+            onChange={handleSearchInput}
             placeholder={t.searchPlaceholder}
             className="w-full pl-12 pr-12 py-4 bg-slate-800/50 border border-slate-700/50 rounded-xl text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
           />
           {searchQuery && (
             <button
-              onClick={handleClearSearch}
+              onClick={handleClear}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 transition-colors"
               aria-label={t.clearSearch}
             >
@@ -132,7 +141,7 @@ export function SearchBar({ allTags, onSearchChange, onTagsChange, locale, type 
             </h3>
             {hasActiveFilters && (
               <button
-                onClick={handleClearFilters}
+                onClick={handleClearAll}
                 className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
               >
                 {t.clearFilters}
@@ -151,7 +160,7 @@ export function SearchBar({ allTags, onSearchChange, onTagsChange, locale, type 
               return (
                 <button
                   key={tag}
-                  onClick={() => handleTagToggle(tag)}
+                  onClick={() => handleTagClick(tag)}
                   className={`${baseClasses} ${selectedClasses}`}
                   aria-pressed={isSelected}
                 >
@@ -160,12 +169,12 @@ export function SearchBar({ allTags, onSearchChange, onTagsChange, locale, type 
               );
             })}
             
-            {allTags.length > 8 && (
+            {shouldShowMoreButton(allTags) && (
               <button
-                onClick={() => setShowAllTags(!showAllTags)}
+                onClick={toggleShowAllTags}
                 className="px-3 py-1.5 rounded-full text-xs font-medium bg-slate-700/50 text-slate-400 hover:text-slate-200 border border-slate-600/50 hover:border-slate-500 transition-all"
               >
-                {showAllTags ? t.showLess : t.showMore(allTags.length - 8)}
+                {showAllTags ? t.showLess : t.showMore(remainingCount)}
               </button>
             )}
           </div>
@@ -182,7 +191,7 @@ export function SearchBar({ allTags, onSearchChange, onTagsChange, locale, type 
                   >
                     {tag}
                     <button
-                      onClick={() => handleTagToggle(tag)}
+                      onClick={() => handleTagClick(tag)}
                       className="hover:text-blue-100 transition-colors"
                       aria-label={t.removeFilter(tag)}
                     >

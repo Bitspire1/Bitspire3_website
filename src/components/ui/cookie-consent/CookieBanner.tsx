@@ -9,15 +9,11 @@ export const CookieBanner: React.FC = () => {
   const [openSettings, setOpenSettings] = useState(false);
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
-  const [entering, setEntering] = useState(false);
 
   useEffect(() => {
     if (ready && !consent) {
       setVisible(true);
       setClosing(false);
-      // trigger enter transition on next frame
-      requestAnimationFrame(() => setEntering(false));
-      setEntering(true);
     }
   }, [ready, consent]);
 
@@ -38,6 +34,15 @@ export const CookieBanner: React.FC = () => {
 
   if (!visible) return <CookieSettingsModal open={openSettings} onClose={() => setOpenSettings(false)} />;
 
+  const handleAction = (action: () => void) => {
+    setClosing(true);
+    setTimeout(() => {
+      action();
+      setVisible(false);
+      setClosing(false);
+    }, 250);
+  };
+
   return (
     <>
       <div
@@ -45,7 +50,7 @@ export const CookieBanner: React.FC = () => {
           `fixed bottom-4 left-1/2 -translate-x-1/2 z-150 w-[min(100%-1rem,760px)]` +
           ` bg-slate-900/95 border border-slate-700 backdrop-blur-md rounded-2xl shadow-2xl p-6 md:p-7` +
           ` transition-all duration-300 ease-out transform` +
-          ` ${closing || entering ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'}`
+          ` ${closing ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'}`
         }
         role="dialog"
         aria-label="Komunikat o cookies"
@@ -57,14 +62,7 @@ export const CookieBanner: React.FC = () => {
         </p>
         <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-end">
           <button
-            onClick={() => {
-              setClosing(true);
-              setTimeout(() => {
-                rejectAll();
-                setVisible(false);
-                setClosing(false);
-              }, 250);
-            }}
+            onClick={() => handleAction(rejectAll)}
             className="px-5 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm font-medium text-slate-200 border border-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900"
           >
             Odrzuć
@@ -76,14 +74,7 @@ export const CookieBanner: React.FC = () => {
             Ustawienia
           </button>
           <button
-            onClick={() => {
-              setClosing(true);
-              setTimeout(() => {
-                grantAll();
-                setVisible(false);
-                setClosing(false);
-              }, 250);
-            }}
+            onClick={() => handleAction(grantAll)}
             className="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-sm font-semibold text-white shadow focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900"
             autoFocus
           >
