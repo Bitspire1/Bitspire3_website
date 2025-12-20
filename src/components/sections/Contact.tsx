@@ -1,8 +1,9 @@
 ﻿"use client";
 
-import React, { useState, useCallback } from "react";
-import { CursorLightCard } from "../../hooks/cursor-light";
+import React from "react";
+import { CursorLightCard } from "../features/Cursor-Light";
 import { tinaField } from 'tinacms/dist/react';
+import { useContactForm } from "@/hooks/useContactForm";
 
 interface ContactData {
   title?: string | null;
@@ -23,39 +24,14 @@ interface ContactData {
 }
 
 const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [sent, setSent] = useState(false);
-
-  // Memoize handlers for performance
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  }, []);
-
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Formularz kontaktowy:", form);
-
-    try {
-      // Prepare data for Netlify Forms
-      const formData = new URLSearchParams();
-      formData.append("form-name", "contact");
-      formData.append("name", form.name);
-      formData.append("email", form.email);
-      formData.append("message", form.message);
-
-      await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: formData.toString(),
-      });
-
-      console.log("Formularz wysłany pomyślnie");
-      setSent(true);
-    } catch (error) {
-      console.error("Błąd:", error);
-      alert("Wystąpił błąd podczas wysyłania formularza. Spróbuj ponownie.");
-    }
-  }, [form]);
+  const {
+    formData,
+    loading,
+    success,
+    error,
+    handleChange,
+    handleSubmit,
+  } = useContactForm({ formName: "contact" });
 
   return (
     <section className="py-12 px-4 bg-slate-900/20" id="contact">
@@ -73,7 +49,7 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
         <div className="grid lg:grid-cols-[2fr_1fr] gap-8">
           {/* Formularz kontaktowy */}
           <CursorLightCard className="glass-panel rounded-2xl p-8">
-            {sent ? (
+            {success ? (
               <div className="py-12 text-center">
                 <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-500/20">
                    <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-green-400">
@@ -102,7 +78,7 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                      <input
                        type="text"
                        name="name"
-                       value={form.name}
+                       value={formData.name}
                        onChange={handleChange}
                        placeholder="Jan Kowalski"
                        className="w-full px-4 py-3 rounded-lg bg-slate-900/50 text-white border border-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200 placeholder-slate-600"
@@ -117,7 +93,7 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                      <input
                        type="email"
                        name="email"
-                       value={form.email}
+                       value={formData.email}
                        onChange={handleChange}
                        placeholder="jan@example.com"
                        className="w-full px-4 py-3 rounded-lg bg-slate-900/50 text-white border border-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200 placeholder-slate-600"
@@ -132,7 +108,7 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                    </label>
                    <textarea
                      name="message"
-                     value={form.message}
+                     value={formData.message}
                      onChange={handleChange}
                      placeholder="Opisz swój projekt..."
                      rows={6}
@@ -141,12 +117,19 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                    />
                 </div>
                 
+                {error && (
+                  <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm text-center">
+                    {error}
+                  </div>
+                )}
+                
                 <button
                   type="submit"
-                  className="btn-tech-primary w-full py-4 rounded-lg font-bold text-sm uppercase tracking-wider"
+                  disabled={loading}
+                  className={`btn-tech-primary w-full py-4 rounded-lg font-bold text-sm uppercase tracking-wider ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                   data-tina-field={tinaField(data, 'buttonText')}
                 >
-                  {data?.buttonText || 'Wyślij wiadomość'}
+                  {loading ? 'Wysyłanie...' : (data?.buttonText || 'Wyślij wiadomość')}
                 </button>
               </form>
             )}

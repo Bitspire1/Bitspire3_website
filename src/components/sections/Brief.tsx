@@ -1,14 +1,10 @@
 'use client';
 
-import React, { useState, lazy, Suspense } from 'react';
+import React, { useState } from 'react';
 import { tinaField } from 'tinacms/dist/react';
-import { CursorLightCard } from '@/hooks/cursor-light';
-
-// Lazy load formularze
-const WebsiteBrief = lazy(() => import('@/components/brief_forms/WebsiteBrief'));
-const ShopBrief = lazy(() => import('@/components/brief_forms/ShopBrief'));
-const LogoBrief = lazy(() => import('@/components/brief_forms/LogoBrief'));
-const SeoBrief = lazy(() => import('@/components/brief_forms/SeoBrief'));
+import { CursorLightCard } from '@/components/features/Cursor-Light';
+import { useBriefForm } from '@/hooks/useBriefForm';
+import { useContactForm } from '@/hooks/useContactForm';
 
 interface ContactInfo {
   email?: string | null;
@@ -27,6 +23,14 @@ interface BriefData {
   [key: string]: unknown;
 }
 
+interface Step {
+  label: string;
+  required: boolean;
+  options?: string[];
+  type?: 'text' | 'textarea';
+  key: string;
+}
+
 const TAB_TYPES = [
   { label: 'Strona internetowa', value: 'website' },
   { label: 'Sklep internetowy', value: 'shop' },
@@ -34,50 +38,295 @@ const TAB_TYPES = [
   { label: 'Pozycjonowanie', value: 'seo' },
 ];
 
+// Kroki dla każdego typu briefu
+const BRIEF_STEPS: Record<string, Step[]> = {
+  website: [
+    { label: "Nowy projekt czy przebudowa?", required: true, options: ["Nowy projekt", "Przebudowa"], key: "projectType" },
+    { label: "Jakie są główne cele strony? (np. sprzedaż produktów, prezentacja usług, blog, portfolio)", required: true, type: "textarea", key: "mainGoal" },
+    { label: "Czy strona ma być dostosowana do urządzeń mobilnych (responsywność)?", required: true, options: ["Tak", "Nie"], key: "responsive" },
+    { label: "Jakie funkcje ma posiadać strona? (np. formularz kontaktowy, sklep internetowy, system rezerwacji, integracja z mediami społecznościowymi, mapy...)", required: false, type: "textarea", key: "features" },
+    { label: "Czy potrzebne są dodatkowe funkcjonalności, takie jak panel administracyjny do zarządzania treścią? (CMS)", required: false, options: ["Tak", "Nie"], key: "cms" },
+    { label: "Czy posiadasz już materiały graficzne (np. logo, zdjęcia, kolorystykę)?", required: false, options: ["Tak", "Nie"], key: "graphics" },
+    { label: "Czy oczekujesz unikalnego projektu graficznego, czy możesz zaakceptować gotowy szablon?", required: false, options: ["Unikalny projekt", "Gotowy szablon"], key: "designType" },
+    { label: "Preferencje co do stylu graficznego (np. minimalistyczny, nowoczesny, klasyczny)", required: false, type: "text", key: "style" },
+    { label: "Linki do stron-inspiracji (jeśli są)", required: false, type: "text", key: "inspirationLinks" },
+    { label: "Czy dostarczysz gotowe treści (teksty, zdjęcia, filmy), czy potrzebujesz pomocy w ich stworzeniu?", required: false, options: ["Dostarczę treści", "Potrzebuję pomocy"], key: "contentDelivery" },
+    { label: "Ile podstron planujesz?", required: false, options: ["0-5", "6-10", "11-20", ">20"], key: "subpages" },
+    { label: "Czy treści strony mają być dostępne tylko w języku polskim? Jeśli nie, to w jakich innych językach?", required: false, type: "text", key: "languages" },
+    { label: "Preferencje do konkretnych technologii?", required: false, options: ["Nie", "Inne"], key: "technology" },
+    { label: "Czy posiadasz już hosting i domenę, czy potrzebujesz pomocy w ich wyborze i konfiguracji?", required: false, options: ["Posiadam", "Potrzebuję pomocy"], key: "hosting" },
+    { label: "Czy strona ma być zabezpieczona certyfikatem SSL?", required: false, options: ["Tak", "Nie"], key: "ssl" },
+    { label: "Jaki jest orientacyjny budżet na realizację projektu?", required: false, type: "text", key: "budget" },
+    { label: "Czy przewidujesz dodatkowy budżet na utrzymanie strony po jej uruchomieniu?", required: false, options: ["Tak", "Nie"], key: "maintenanceBudget" },
+    { label: "Podaj swoje dane kontaktowe (e-mail lub numer telefonu)", required: true, type: "text", key: "contact" }
+  ],
+  shop: [
+    { label: "Nowy sklep czy przebudowa?", required: true, options: ["Nowy sklep", "Przebudowa"], key: "shopType" },
+    { label: "Jakie produkty chcesz sprzedawać?", required: true, type: "textarea", key: "products" },
+    { label: "Ile produktów planujesz na start?", required: false, options: ["do10", "od11do50", "od51do200", "powyzej200"], key: "productCount" },
+    { label: "Czy sklep ma obsługiwać różne warianty produktów (np. rozmiar, kolor)?", required: false, options: ["Tak", "Nie"], key: "variants" },
+    { label: "Jakie metody płatności mają być dostępne?", required: false, type: "textarea", key: "payments" },
+    { label: "Jakie metody dostawy mają być dostępne?", required: false, type: "textarea", key: "shipping" },
+    { label: "Czy sklep ma mieć integracje z systemami zewnętrznymi (np. Allegro, hurtownie, ERP)?", required: false, options: ["Tak", "Nie", "Inne"], key: "integrations" },
+    { label: "Czy potrzebujesz panelu administracyjnego do zarządzania zamówieniami i produktami?", required: false, options: ["Tak", "Nie"], key: "adminPanel" },
+    { label: "Czy posiadasz już materiały graficzne (logo, zdjęcia produktów)?", required: false, options: ["Tak", "Nie"], key: "graphics" },
+    { label: "Preferencje co do stylu graficznego sklepu?", required: false, type: "text", key: "style" },
+    { label: "Czy sklep ma być dostępny w innych językach niż polski?", required: false, type: "text", key: "languages" },
+    { label: "Jaki jest orientacyjny budżet na realizację sklepu?", required: false, type: "text", key: "budget" },
+    { label: "Podaj swoje dane kontaktowe (e-mail lub numer telefonu)", required: true, type: "text", key: "contact" }
+  ],
+  logo: [
+    { label: "Nowe logo czy lifting obecnego?", required: true, options: ["Nowe logo", "Lifting obecnego"], key: "logoType" },
+    { label: "Nazwa firmy / marki do umieszczenia w logo", required: true, type: "text", key: "brandName" },
+    { label: "Hasło / tagline (jeśli ma się pojawić)", required: false, type: "text", key: "tagline" },
+    { label: "Jakie wartości lub cechy ma wyrażać logo?", required: true, type: "textarea", key: "values" },
+    { label: "Preferencje kolorystyczne", required: false, type: "text", key: "colors" },
+    { label: "Preferencje co do stylu logo (np. minimalistyczne, klasyczne, nowoczesne)", required: false, type: "text", key: "style" },
+    { label: "Czy logo ma zawierać symbol/grafikę czy być tylko typograficzne?", required: false, options: ["Symbol/grafika", "Tylko typografia", "Nie wiem"], key: "symbol" },
+    { label: "Gdzie będzie używane logo? (np. strona www, druk, social media, gadżety)", required: false, type: "textarea", key: "usage" },
+    { label: "Czy posiadasz inspiracje lub przykłady logo, które Ci się podobają?", required: false, type: "text", key: "inspirations" },
+    { label: "Jaki jest orientacyjny budżet na projekt logo?", required: false, type: "text", key: "budget" },
+    { label: "Podaj swoje dane kontaktowe (e-mail lub numer telefonu)", required: true, type: "text", key: "contact" }
+  ],
+  seo: [
+    { label: "Czy strona jest już online?", required: true, options: ["Tak", "Nie"], key: "online" },
+    { label: "Adres strony do pozycjonowania", required: true, type: "text", key: "url" },
+    { label: "Jakie cele chcesz osiągnąć dzięki pozycjonowaniu? (np. wzrost ruchu, sprzedaż, rozpoznawalność marki)", required: true, type: "textarea", key: "goals" },
+    { label: "Na jakie frazy/tematy chcesz się pozycjonować?", required: true, type: "textarea", key: "keywords" },
+    { label: "Czy prowadzisz już działania SEO?", required: false, options: ["Tak", "Nie"], key: "existingSeo" },
+    { label: "Czy masz preferencje co do rynku (np. Polska, zagranica)?", required: false, type: "text", key: "market" },
+    { label: "Czy posiadasz blog lub planujesz go prowadzić?", required: false, options: ["Tak", "Nie"], key: "blog" },
+    { label: "Czy posiadasz materiały do optymalizacji (teksty, zdjęcia)?", required: false, options: ["Tak", "Nie"], key: "materials" },
+    { label: "Jaki jest orientacyjny budżet na działania SEO?", required: false, type: "text", key: "budget" },
+    { label: "Podaj swoje dane kontaktowe (e-mail lub numer telefonu)", required: true, type: "text", key: "contact" }
+  ]
+};
+
+// Komponent Briefu
+function BriefForm({ briefType }: { briefType: string }) {
+  const STEPS = BRIEF_STEPS[briefType] || [];
+  
+  const {
+    step,
+    form,
+    loading,
+    success,
+    error,
+    current,
+    percent,
+    isFormValid,
+    handleSelect,
+    handleInputChange,
+    handleOtherInputChange,
+    nextStep,
+    prevStep,
+    handleSubmit,
+    isLastStep,
+    isFirstStep,
+    setError,
+  } = useBriefForm({
+    steps: STEPS,
+    briefType,
+  });
+
+  return (
+    <div className="h-full flex flex-col">
+      <div className="mb-8">
+        <div className="flex justify-between items-end mb-2">
+          <span className="text-xs font-mono text-blue-400">POSTĘP</span>
+          <span className="text-xs font-mono text-blue-400">{percent}%</span>
+        </div>
+        <div className="w-full h-2 bg-slate-900/50 rounded-full overflow-hidden border border-slate-800">
+          <div
+            className="h-full bg-linear-to-r from-blue-600 to-cyan-500 relative"
+            style={{
+              width: `${percent}%`,
+              transition: "width 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+            }}
+          >
+            <div className="absolute inset-0 bg-white/20 animate-pulse-slow"></div>
+          </div>
+        </div>
+      </div>
+
+      {success ? (
+        <div className="flex-1 flex flex-col items-center justify-center p-8 text-center animate-fade-in">
+          <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mb-6 border border-green-500/20 shadow-[0_0_30px_rgba(34,197,94,0.2)]">
+            <svg className="w-10 h-10 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 className="text-2xl font-bold text-white mb-3">Brief wysłany pomyślnie!</h3>
+          <p className="text-slate-400 max-w-md">
+            Dziękujemy za poświęcony czas. Przeanalizujemy Twoje odpowiedzi i skontaktujemy się z Tobą w ciągu 24 godzin.
+          </p>
+        </div>
+      ) : (
+        <>
+          <div className="flex-1 mb-8">
+            <label className="block text-2xl md:text-3xl font-bold mb-6 text-white leading-tight">
+              {current.label}{" "}
+              {current.required && (
+                <span className="text-blue-500 text-lg align-top">*</span>
+              )}
+            </label>
+            
+            <div key={current.key} className="flex flex-col gap-3 animate-fade-in-up">
+              {current.options &&
+                current.options.map((option: string) => (
+                  <div key={option} className="flex flex-col">
+                    <label
+                      className={`flex items-center gap-4 cursor-pointer p-4 rounded-xl border transition-all duration-300 group relative overflow-hidden
+                      ${
+                        form[current.key] === option ||
+                        (option === "Inne" && form[current.key]?.startsWith("Inne:"))
+                          ? "border-blue-500 bg-blue-500/10 shadow-[0_0_20px_rgba(59,130,246,0.15)]"
+                          : "border-slate-800 bg-slate-900/40 hover:border-blue-500/30 hover:bg-slate-800/60"
+                      }`}
+                    >
+                      <div className="relative z-10 flex items-center gap-4 w-full">
+                        <div className="relative">
+                          <input
+                            type="radio"
+                            name={`brief-${briefType}-${current.key}`}
+                            checked={Boolean(
+                              form[current.key] === option ||
+                              (option === "Inne" && form[current.key]?.startsWith("Inne:"))
+                            )}
+                            onChange={() => handleSelect(option)}
+                            className="sr-only"
+                          />
+                          <div
+                            className={`w-5 h-5 rounded-full border transition-all duration-300 flex items-center justify-center
+                            ${
+                              form[current.key] === option ||
+                              (option === "Inne" && form[current.key]?.startsWith("Inne:"))
+                                ? "border-blue-500 bg-blue-500"
+                                : "border-slate-600 bg-transparent group-hover:border-blue-400"
+                            }`}
+                          >
+                            {(form[current.key] === option ||
+                              (option === "Inne" && form[current.key]?.startsWith("Inne:"))) && (
+                              <div className="w-2 h-2 bg-white rounded-full"></div>
+                            )}
+                          </div>
+                        </div>
+                        <span className={`text-lg font-medium transition-colors ${
+                          form[current.key] === option || (option === "Inne" && form[current.key]?.startsWith("Inne:"))
+                          ? "text-white"
+                          : "text-slate-400 group-hover:text-slate-200"
+                        }`}>{option}</span>
+                      </div>
+                    </label>
+                    {(current.key === "technology" || current.key === "integrations") &&
+                      option === "Inne" &&
+                      (form[current.key] === "Inne" ||
+                        form[current.key]?.startsWith("Inne:")) && (
+                        <input
+                          className="w-full mt-3 p-4 rounded-xl bg-slate-900/80 border border-blue-500/50 text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all animate-fade-in"
+                          type="text"
+                          placeholder={current.key === "technology" ? "Podaj preferowane technologie..." : "Podaj integracje..."}
+                          value={
+                            form[current.key]?.replace(
+                              "Inne:",
+                              ""
+                            ) || ""
+                          }
+                          onChange={(e) => handleOtherInputChange(e.target.value)}
+                          autoFocus
+                        />
+                      )}
+                  </div>
+                ))}
+              {current.type === "textarea" && (
+                <textarea
+                  className="w-full p-5 rounded-xl bg-slate-900/50 border border-slate-700 text-white text-lg placeholder-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none min-h-40"
+                  rows={4}
+                  value={form[current.key] || ""}
+                  onChange={(e) => handleInputChange(e.target.value)}
+                  placeholder="Wpisz tutaj..."
+                />
+              )}
+              {current.type === "text" && (
+                <input
+                  className="w-full p-5 rounded-xl bg-slate-900/50 border border-slate-700 text-white text-lg placeholder-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                  type="text"
+                  value={form[current.key] || ""}
+                  onChange={(e) => handleInputChange(e.target.value)}
+                  placeholder="Wpisz tutaj..."
+                />
+              )}
+            </div>
+          </div>
+          
+          {error && (
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-center text-sm font-medium animate-shake">
+              {error}
+            </div>
+          )}
+          
+          <div className="flex gap-4 pt-4 border-t border-slate-800/50 mt-auto">
+            <button
+              className={`px-6 py-3 rounded-lg font-medium text-sm transition-all duration-300 border
+                ${isFirstStep || loading 
+                  ? "border-slate-800 text-slate-600 cursor-not-allowed opacity-50" 
+                  : "border-slate-700 text-slate-400 hover:text-white hover:border-slate-500 hover:bg-slate-800"}`}
+              onClick={prevStep}
+              disabled={isFirstStep || loading}
+            >
+              Wstecz
+            </button>
+            
+            {!isLastStep ? (
+              <button
+                className={`flex-1 px-6 py-3 rounded-lg font-bold text-sm uppercase tracking-wider transition-all duration-300
+                  ${
+                    !form[current.key] || loading
+                      ? "bg-slate-800 text-slate-500 cursor-not-allowed"
+                      : "btn-tech-primary"
+                  }`}
+                onClick={nextStep}
+                disabled={!form[current.key] || loading}
+              >
+                Dalej
+              </button>
+            ) : (
+              <button
+                className={`flex-1 px-6 py-3 rounded-lg font-bold text-sm uppercase tracking-wider transition-all duration-300
+                  ${
+                    (!form[current.key] || !isFormValid) || loading
+                      ? "bg-slate-800 text-slate-500 cursor-not-allowed"
+                      : "bg-linear-to-r from-blue-600 to-cyan-500 text-white hover:shadow-[0_0_20px_rgba(6,182,212,0.4)]"
+                  }`}
+                onClick={handleSubmit}
+                disabled={(!form[current.key] || !isFormValid) || loading}
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                    Wysyłanie...
+                  </span>
+                ) : "Wyślij brief"}
+              </button>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 export default function Brief({ data }: { data?: BriefData }) {
   const [activeTab, setActiveTab] = useState('website');
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    
-    try {
-      const formDataEncoded = new URLSearchParams({
-        'form-name': 'contact',
-        ...formData
-      }).toString();
-
-      await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: formDataEncoded
-      });
-      
-      setSuccess(true);
-      setFormData({ name: '', email: '', message: '' });
-    } catch (err) {
-      console.error('Błąd wysyłania:', err);
-      setError('Wystąpił błąd. Spróbuj ponownie.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  
+  const {
+    formData,
+    loading,
+    success,
+    error,
+    handleChange,
+    handleSubmit,
+  } = useContactForm({ formName: 'contact' });
 
   return (
     <section className="py-24 px-4 bg-grid-pattern relative" data-tina-field={tinaField(data, 'brief')}>
@@ -123,20 +372,8 @@ export default function Brief({ data }: { data?: BriefData }) {
             </div>
 
             {/* Formularz brief */}
-            <CursorLightCard className="relative rounded-2xl glass-panel p-8 flex-1 min-h-[480px] overflow-y-auto">
-              <Suspense fallback={
-                <div className="flex items-center justify-center py-20 h-full">
-                  <div className="text-center">
-                    <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-slate-400 text-sm uppercase tracking-wider">Ładowanie formularza...</p>
-                  </div>
-                </div>
-              }>
-                {activeTab === 'website' && <WebsiteBrief />}
-                {activeTab === 'shop' && <ShopBrief />}
-                {activeTab === 'logo' && <LogoBrief />}
-                {activeTab === 'seo' && <SeoBrief />}
-              </Suspense>
+            <CursorLightCard className="relative rounded-2xl glass-panel p-8 flex-1 min-h-120 overflow-y-auto">
+              <BriefForm briefType={activeTab} key={activeTab} />
             </CursorLightCard>
           </div>
 

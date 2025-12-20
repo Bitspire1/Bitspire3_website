@@ -2,17 +2,17 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Background } from '@/components/background';
+import { Background } from '@/components/layout/Background';
 import { Hero } from '@/components/sections/Hero';
 import Technology from '@/components/sections/Technology';
 import { Offer } from '@/components/sections/Offer';
-import PortfolioHighlights from '@/components/sections/PortfolioHighlights';
+import PortfolioHighlights from '@/components/sections/portfolio/PortfolioHighlights';
 import HowWeWork from '@/components/sections/HowWeWork';
 import FAQ from '@/components/sections/FAQ';
 import Contact from '@/components/sections/Contact';
 import LegalPage from '@/components/sections/LegalPage';
 import Brief from '@/components/sections/Brief';
-import { CursorLightProvider } from '@/hooks/cursor-light';
+import { CursorLightProvider } from '@/components/features/Cursor-Light';
 import { useTina, tinaField } from 'tinacms/dist/react';
 import { TinaMarkdown } from 'tinacms/dist/rich-text';
 

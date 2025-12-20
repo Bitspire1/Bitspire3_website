@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { CursorLightCard } from '../../hooks/cursor-light';
+import { CursorLightCard } from '../features/Cursor-Light';
 import { tinaField } from 'tinacms/dist/react';
-import { PreviewLink } from '../ui/PreviewLink';
+import { PreviewLink } from '../features/PreviewLink';
 
 interface Service {
   title?: string | null;

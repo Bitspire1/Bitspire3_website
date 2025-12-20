@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { tinaField } from 'tinacms/dist/react';
-import { CursorLightCard } from '../../hooks/cursor-light';
+import { CursorLightCard } from '../features/Cursor-Light';
 
 interface FAQItem {
   question?: string | null;

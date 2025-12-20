@@ -1,48 +1,41 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
+import { CursorLightProvider } from '@/components/features/Cursor-Light';
+import { Background } from '@/components/layout/Background';
+import './globals.css';
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://bitspire.pl"),
-  title: {
-    default: "Bitspire",
-    template: "%s | Bitspire",
-  },
-  description:
-    "Agencja Bitspire — tworzymy nowoczesne strony internetowe, sklepy i aplikacje. Projektujemy z naciskiem na wydajność, UX i konwersję.",
-  alternates: {
-    canonical: "/",
-  },
-  robots: { index: true, follow: true },
-  openGraph: {
-    title: "Bitspire",
-    description:
-      "Agencja Bitspire — tworzymy nowoczesne strony internetowe, sklepy i aplikacje. Projektujemy z naciskiem na wydajność, UX i konwersję.",
-    url: "/",
-    siteName: "Bitspire",
-    locale: "pl_PL",
-    type: "website",
-    images: [
-      {
-        url: "/Bitspire logo main.svg",
-        width: 1200,
-        height: 630,
-        alt: "Bitspire – nowoczesne strony internetowe i sklepy",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Bitspire",
-    description:
-      "Agencja Bitspire — tworzymy nowoczesne strony internetowe, sklepy i aplikacje. Projektujemy z naciskiem na wydajność, UX i konwersję.",
-    images: ["/Bitspire logo main.svg"],
-  },
+export const metadata = {
+  title: 'Bitspire - Tworzenie stron internetowych',
+  description: 'Profesjonalne strony internetowe i sklepy online',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
+  params,
+}: {
   children: React.ReactNode;
-}>) {
-  return children;
+  params: Promise<{ locale?: string }>;
+}) {
+  // Pobierz locale z params (będzie ustawione przez middleware)
+  const { locale } = await params;
+  const messages = await getMessages({ locale });
+
+  return (
+    <html lang={locale || 'pl'} suppressHydrationWarning>
+      <body className="antialiased bg-slate-950 text-slate-100 min-h-screen">
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <CursorLightProvider>
+            <Background />
+            <Header />
+            <main className="relative z-10">
+              {children}
+            </main>
+            <Footer />
+          </CursorLightProvider>
+        </NextIntlClientProvider>
+      </body>
+    </html>
+  );
 }

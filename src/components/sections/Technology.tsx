@@ -2,6 +2,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import { tinaField } from 'tinacms/dist/react';
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 interface TechnologyData {
   title?: string | null;
@@ -33,9 +34,8 @@ const Technology: React.FC<{ data?: TechnologyData }> = ({ data }) => {
 	const lastWidthRef = useRef<number>(0);
 	const resizeTimeoutRef = useRef<number | null>(null);
   
-  // Animation state
-  const [visible, setVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
+  // Use scroll animation hook
+  const { ref: sectionRef, visible } = useScrollAnimation<HTMLElement>({ threshold: 0.15 });
 
   useEffect(() => {
 		// Calculate how many logos are needed to fill the container + buffer
@@ -112,24 +112,6 @@ const Technology: React.FC<{ data?: TechnologyData }> = ({ data }) => {
 			rafRef.current = null;
 		};
 	}, [visible, logoCount]);
-
-  useEffect(() => {
-	if (visible) return;
-	const node = sectionRef.current;
-	if (!node) return;
-	
-	const observer = new window.IntersectionObserver(
-	  ([entry]) => {
-		if (entry.isIntersecting) {
-		  setVisible(true);
-		  observer.disconnect();
-		}
-	  },
-	  { threshold: 0.15 }
-	);
-	observer.observe(node);
-	return () => observer.disconnect();
-  }, [visible]);
 
 	return (
 		<section
