@@ -90,6 +90,7 @@ export const Hero: React.FC<{ data?: HeroData }> = ({ data }) => {
                    src={image}
                    alt="Hero illustration"
                    fill
+                   sizes="(max-width: 1024px) 100vw, 50vw"
                    className="object-contain filter-[drop-shadow(0_0_50px_rgba(59,130,246,0.3))]"
                    data-tina-field={tinaField(data, 'image')}
                    priority
