@@ -28,7 +28,7 @@ export const Hero: React.FC<{ data?: HeroData }> = ({ data }) => {
   return (
     <section className="relative py-20 lg:py-32 overflow-hidden">
       {/* Cybernetic Background Grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
       
       {/* Spotlight Effect - Enhanced */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-250 h-125 bg-blue-500/10 blur-[100px] rounded-full pointer-events-none mix-blend-screen" />
@@ -55,7 +55,7 @@ export const Hero: React.FC<{ data?: HeroData }> = ({ data }) => {
                 </svg>
               </span>
               {' '}
-              <span className="text-transparent bg-clip-text bg-[linear-gradient(to_right,#60a5fa,#22d3ee,#60a5fa)] [background-size:200%] animate-[gradient-x_3s_ease_infinite] block mt-2 pb-2" data-tina-field={tinaField(data, 'titleAccent')}>
+              <span className="text-transparent bg-clip-text bg-[linear-gradient(to_right,#60a5fa,#22d3ee,#60a5fa)] bg-size-[200%] animate-[gradient-x_3s_ease_infinite] block mt-2 pb-2" data-tina-field={tinaField(data, 'titleAccent')}>
                 {titleAccent || 'rozwiązania IT'}
               </span>
               <span data-tina-field={tinaField(data, 'titleEnd')}>
@@ -78,9 +78,9 @@ export const Hero: React.FC<{ data?: HeroData }> = ({ data }) => {
           </div>
 
           {/* Right Side - Visuals */}
-          <div className="relative lg:h-150 flex items-center justify-center [perspective:1000px]">
+          <div className="relative lg:h-150 flex items-center justify-center perspective-[1000px]">
             {image ? (
-              <div className="relative w-full h-full animate-float [transform-style:preserve-3d]">
+              <div className="relative w-full h-full animate-float transform-3d">
                  {/* Cybernetic Rings */}
                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] border border-blue-500/10 rounded-full animate-[spin_20s_linear_infinite]" />
                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] border border-cyan-500/10 rounded-full animate-[spin_15s_linear_infinite_reverse] border-dashed" />
@@ -90,7 +90,7 @@ export const Hero: React.FC<{ data?: HeroData }> = ({ data }) => {
                    src={image}
                    alt="Hero illustration"
                    fill
-                   className="object-contain [filter:drop-shadow(0_0_50px_rgba(59,130,246,0.3))]"
+                   className="object-contain filter-[drop-shadow(0_0_50px_rgba(59,130,246,0.3))]"
                    data-tina-field={tinaField(data, 'image')}
                    priority
                  />

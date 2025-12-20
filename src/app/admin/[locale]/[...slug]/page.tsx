@@ -42,11 +42,14 @@ export default function AdminPreviewPage(props: PageProps) {
     useEffect(() => {
         async function fetchData() {
             try {
+                console.log('[Admin Preview] Fetching data for:', { fullSlug, locale, pageSlug, slugArray });
+                
                 // CASE 1: Blog post - blog/[slug]
                 if (fullSlug.startsWith('blog/') && slugArray?.length === 2) {
                     const postSlug = slugArray[1];
                     const relativePath = `${locale}/${postSlug}.mdx`;
                     
+                    console.log('[Admin Preview] Fetching blog:', relativePath);
                     const result = await client.queries.blog({
                         relativePath,
                     });
@@ -56,6 +59,7 @@ export default function AdminPreviewPage(props: PageProps) {
                     setQuery(result.query);
                     setVariables(result.variables);
                     setLoading(false);
+                    console.log('[Admin Preview] Blog data loaded successfully');
                     return;
                 }
 
@@ -64,6 +68,7 @@ export default function AdminPreviewPage(props: PageProps) {
                     const itemSlug = slugArray[1];
                     const relativePath = `${locale}/${itemSlug}.mdx`;
                     
+                    console.log('[Admin Preview] Fetching portfolio:', relativePath);
                     const result = await client.queries.portfolio({
                         relativePath,
                     });
@@ -73,15 +78,18 @@ export default function AdminPreviewPage(props: PageProps) {
                     setQuery(result.query);
                     setVariables(result.variables);
                     setLoading(false);
+                    console.log('[Admin Preview] Portfolio data loaded successfully');
                     return;
                 }
 
                 // CASE 3: Regular page
                 if (!isValidSlug(pageSlug)) {
+                    console.error('[Admin Preview] Invalid slug:', pageSlug);
                     notFound();
                 }
 
                 const relativePath = `${locale}/${pageSlug}.mdx`;
+                console.log('[Admin Preview] Fetching page:', relativePath);
                 const result = await client.queries.pages({
                     relativePath,
                 });
@@ -91,8 +99,16 @@ export default function AdminPreviewPage(props: PageProps) {
                 setQuery(result.query);
                 setVariables(result.variables);
                 setLoading(false);
+                console.log('[Admin Preview] Page data loaded successfully:', result);
             } catch (error) {
-                console.error('Error fetching data for preview:', error);
+                console.error('[Admin Preview] Error fetching data:', error);
+                console.error('[Admin Preview] Error details:', {
+                    message: error instanceof Error ? error.message : 'Unknown error',
+                    stack: error instanceof Error ? error.stack : undefined,
+                    fullSlug,
+                    locale,
+                    pageSlug
+                });
                 setLoading(false);
             }
         }

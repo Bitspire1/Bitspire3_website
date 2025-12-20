@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState } from 'react';
 import { tinaField } from 'tinacms/dist/react';
 import { CursorLightCard } from '@/components/features/Cursor-Light';
+import { useBriefForm } from '@/hooks/useBriefForm';
+import { useContactForm } from '@/hooks/useContactForm';
 
 interface ContactInfo {
   email?: string | null;
@@ -102,68 +104,30 @@ const BRIEF_STEPS: Record<string, Step[]> = {
 
 // Komponent Briefu
 function BriefForm({ briefType }: { briefType: string }) {
-  const [step, setStep] = useState(0);
-  const [form, setForm] = useState<{ [key: string]: string }>({});
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
-
   const STEPS = BRIEF_STEPS[briefType] || [];
-  const current = useMemo(() => STEPS[step], [STEPS, step]);
-  const percent = useMemo(() => Math.round(((step + 1) / STEPS.length) * 100), [step, STEPS.length]);
-
-  const handleSelect = useCallback((option: string) => {
-    if ((current.key === "technology" || current.key === "integrations") && option === "Inne") {
-      setForm((prev) => ({ ...prev, [current.key]: "Inne:" }));
-    } else {
-      setForm((prev) => ({ ...prev, [current.key]: option }));
-    }
-  }, [current.key]);
-
-  const isFormValid = useMemo(() => {
-    const requiredFields = STEPS.filter(step => step.required).map(step => step.key);
-    return requiredFields.every(key => form[key] && form[key].trim() !== "");
-  }, [form, STEPS]);
-
-  const encodeFormData = (data: Record<string, string>) => {
-    return Object.keys(data)
-      .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
-      .join("&");
-  };
-
-  const handleSubmit = useCallback(async () => {
-    const requiredFields = STEPS.filter(s => s.required).map(s => s.key);
-    const missing = requiredFields.filter(key => !form[key] || form[key].trim() === "");
-    if (missing.length > 0) {
-      setError("Uzupełnij wszystkie wymagane pola oznaczone gwiazdką.");
-      return;
-    }
-    setLoading(true);
-    setError("");
-    try {
-      const formData = {
-        "form-name": `brief-${briefType}`,
-        ...form
-      };
-
-      await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: encodeFormData(formData),
-      });
-
-      setSuccess(true);
-    } catch (e: unknown) {
-      console.error(`Błąd ${briefType}:`, e);
-      if (e instanceof Error) {
-        setError(e.message || "Błąd podczas wysyłania.");
-      } else {
-        setError("Błąd podczas wysyłania.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, [form, STEPS, briefType]);
+  
+  const {
+    step,
+    form,
+    loading,
+    success,
+    error,
+    current,
+    percent,
+    isFormValid,
+    handleSelect,
+    handleInputChange,
+    handleOtherInputChange,
+    nextStep,
+    prevStep,
+    handleSubmit,
+    isLastStep,
+    isFirstStep,
+    setError,
+  } = useBriefForm({
+    steps: STEPS,
+    briefType,
+  });
 
   return (
     <div className="h-full flex flex-col">
@@ -268,12 +232,7 @@ function BriefForm({ briefType }: { briefType: string }) {
                               ""
                             ) || ""
                           }
-                          onChange={(e) =>
-                            setForm({
-                              ...form,
-                              [current.key]: `Inne:${e.target.value}`,
-                            })
-                          }
+                          onChange={(e) => handleOtherInputChange(e.target.value)}
                           autoFocus
                         />
                       )}
@@ -284,9 +243,7 @@ function BriefForm({ briefType }: { briefType: string }) {
                   className="w-full p-5 rounded-xl bg-slate-900/50 border border-slate-700 text-white text-lg placeholder-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none min-h-40"
                   rows={4}
                   value={form[current.key] || ""}
-                  onChange={(e) =>
-                    setForm({ ...form, [current.key]: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange(e.target.value)}
                   placeholder="Wpisz tutaj..."
                 />
               )}
@@ -295,9 +252,7 @@ function BriefForm({ briefType }: { briefType: string }) {
                   className="w-full p-5 rounded-xl bg-slate-900/50 border border-slate-700 text-white text-lg placeholder-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                   type="text"
                   value={form[current.key] || ""}
-                  onChange={(e) =>
-                    setForm({ ...form, [current.key]: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange(e.target.value)}
                   placeholder="Wpisz tutaj..."
                 />
               )}
@@ -313,16 +268,16 @@ function BriefForm({ briefType }: { briefType: string }) {
           <div className="flex gap-4 pt-4 border-t border-slate-800/50 mt-auto">
             <button
               className={`px-6 py-3 rounded-lg font-medium text-sm transition-all duration-300 border
-                ${step === 0 || loading 
+                ${isFirstStep || loading 
                   ? "border-slate-800 text-slate-600 cursor-not-allowed opacity-50" 
                   : "border-slate-700 text-slate-400 hover:text-white hover:border-slate-500 hover:bg-slate-800"}`}
-              onClick={() => setStep((s) => Math.max(0, s - 1))}
-              disabled={step === 0 || loading}
+              onClick={prevStep}
+              disabled={isFirstStep || loading}
             >
               Wstecz
             </button>
             
-            {step < STEPS.length - 1 ? (
+            {!isLastStep ? (
               <button
                 className={`flex-1 px-6 py-3 rounded-lg font-bold text-sm uppercase tracking-wider transition-all duration-300
                   ${
@@ -330,7 +285,7 @@ function BriefForm({ briefType }: { briefType: string }) {
                       ? "bg-slate-800 text-slate-500 cursor-not-allowed"
                       : "btn-tech-primary"
                   }`}
-                onClick={() => setStep((s) => Math.min(STEPS.length - 1, s + 1))}
+                onClick={nextStep}
                 disabled={!form[current.key] || loading}
               >
                 Dalej
@@ -363,48 +318,15 @@ function BriefForm({ briefType }: { briefType: string }) {
 
 export default function Brief({ data }: { data?: BriefData }) {
   const [activeTab, setActiveTab] = useState('website');
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    
-    try {
-      const formDataEncoded = new URLSearchParams({
-        'form-name': 'contact',
-        ...formData
-      }).toString();
-
-      await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: formDataEncoded
-      });
-      
-      setSuccess(true);
-      setFormData({ name: '', email: '', message: '' });
-    } catch (err) {
-      console.error('Błąd wysyłania:', err);
-      setError('Wystąpił błąd. Spróbuj ponownie.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  
+  const {
+    formData,
+    loading,
+    success,
+    error,
+    handleChange,
+    handleSubmit,
+  } = useContactForm({ formName: 'contact' });
 
   return (
     <section className="py-24 px-4 bg-grid-pattern relative" data-tina-field={tinaField(data, 'brief')}>

@@ -78,7 +78,7 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                      <input
                        type="text"
                        name="name"
-                       value={form.name}
+                       value={formData.name}
                        onChange={handleChange}
                        placeholder="Jan Kowalski"
                        className="w-full px-4 py-3 rounded-lg bg-slate-900/50 text-white border border-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200 placeholder-slate-600"
@@ -93,7 +93,7 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                      <input
                        type="email"
                        name="email"
-                       value={form.email}
+                       value={formData.email}
                        onChange={handleChange}
                        placeholder="jan@example.com"
                        className="w-full px-4 py-3 rounded-lg bg-slate-900/50 text-white border border-slate-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200 placeholder-slate-600"
@@ -108,7 +108,7 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                    </label>
                    <textarea
                      name="message"
-                     value={form.message}
+                     value={formData.message}
                      onChange={handleChange}
                      placeholder="Opisz swój projekt..."
                      rows={6}
@@ -117,12 +117,19 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                    />
                 </div>
                 
+                {error && (
+                  <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm text-center">
+                    {error}
+                  </div>
+                )}
+                
                 <button
                   type="submit"
-                  className="btn-tech-primary w-full py-4 rounded-lg font-bold text-sm uppercase tracking-wider"
+                  disabled={loading}
+                  className={`btn-tech-primary w-full py-4 rounded-lg font-bold text-sm uppercase tracking-wider ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                   data-tina-field={tinaField(data, 'buttonText')}
                 >
-                  {data?.buttonText || 'Wyślij wiadomość'}
+                  {loading ? 'Wysyłanie...' : (data?.buttonText || 'Wyślij wiadomość')}
                 </button>
               </form>
             )}

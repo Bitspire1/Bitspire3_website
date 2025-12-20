@@ -220,6 +220,7 @@ export default async function Page(props: PageProps) {
     // CASE 3: Regular pages z pageRegistry
     const Wrapper = pageRegistry[pageSlug];
     if (!Wrapper) {
+        console.error('No wrapper found for page:', pageSlug);
         notFound();
     }
 
@@ -234,9 +235,54 @@ export default async function Page(props: PageProps) {
             notFound();
         }
 
+        // Specjalna obsługa dla strony blog - pobierz wszystkie posty
+        if (pageSlug === 'blog') {
+            try {
+                const blogConnection = await client.queries.blogConnection();
+                const blogPosts = (blogConnection.data.blogConnection.edges || [])
+                    .map(edge => edge?.node)
+                    .filter((node): node is NonNullable<typeof node> => 
+                        node !== null && node !== undefined && node._sys.relativePath.startsWith(`${locale}/`)
+                    )
+                    .sort((a, b) => {
+                        const dateA = a.date ? new Date(a.date).getTime() : 0;
+                        const dateB = b.date ? new Date(b.date).getTime() : 0;
+                        return dateB - dateA;
+                    });
+
+                return <Wrapper data={{ ...result.data.pages, posts: blogPosts, locale }} />;
+            } catch (error) {
+                console.error('Error loading blog posts:', error);
+                return <Wrapper data={{ ...result.data?.pages, posts: [], locale }} />;
+            }
+        }
+
+        // Specjalna obsługa dla strony portfolio - pobierz wszystkie projekty
+        if (pageSlug === 'portfolio') {
+            try {
+                const portfolioConnection = await client.queries.portfolioConnection();
+                const portfolioProjects = (portfolioConnection.data.portfolioConnection.edges || [])
+                    .map(edge => edge?.node)
+                    .filter((node): node is NonNullable<typeof node> => 
+                        node !== null && node !== undefined && node._sys.relativePath.startsWith(`${locale}/`)
+                    )
+                    .sort((a, b) => {
+                        const dateA = a.date ? new Date(a.date).getTime() : 0;
+                        const dateB = b.date ? new Date(b.date).getTime() : 0;
+                        return dateB - dateA;
+                    });
+
+                return <Wrapper data={{ ...result.data.pages, projects: portfolioProjects, locale }} />;
+            } catch (error) {
+                console.error('Error loading portfolio projects:', error);
+                return <Wrapper data={{ ...result.data?.pages, projects: [], locale }} />;
+            }
+        }
+
+        // Przekaż dane jako prop data
         return <Wrapper data={result.data.pages} />;
     } catch (error) {
-        console.error('Page not found:', error);
+        console.error('Page not found:', pageSlug, error);
         notFound();
     }
 }

@@ -3,6 +3,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
+import { useAdminLink } from '@/hooks/useAdminLink';
 import {
   FaFacebookF,
   FaInstagram,
@@ -56,6 +57,7 @@ const COOKIE_SETTINGS_TEXT = {
 
 export const Footer: React.FC = () => {
   const locale = useLocale() as 'pl' | 'en';
+  const { getLink } = useAdminLink();
   const description = DESCRIPTION[locale];
   const legalLinks = LEGAL_LINKS[locale];
   const cookieSettingsText = COOKIE_SETTINGS_TEXT[locale];
@@ -149,7 +151,7 @@ export const Footer: React.FC = () => {
               {legalLinks.map((link, index) => (
                 <li key={index}>
                   <Link
-                    href={link.href}
+                    href={getLink(link.href)}
                     className="text-gray-300 hover:text-white transition-colors"
                   >
                     {link.label}

@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 export default function AdminIndex() {
   useEffect(() => {
     // Redirect to TinaCMS admin with preview mode
-    window.location.href = '/admin/index.html#/~/admin/preview/pl/home';
+    window.location.href = '/admin/index.html#/~/admin/pl/home';
   }, []);
 
   return (

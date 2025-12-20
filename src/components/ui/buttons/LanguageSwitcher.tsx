@@ -15,17 +15,37 @@ export function LanguageSwitcher() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const switchLanguage = (newLocale: string) => {
-    // Check if we're in preview mode
-    const isPreview = pathname.startsWith('/admin/preview');
+  // Determine current locale from pathname for admin mode, otherwise use useLocale
+  const getCurrentLocale = (): string => {
+    const isAdmin = pathname.startsWith('/admin/');
     
-    if (isPreview) {
-      // Extract current path from pathname: /admin/preview/pl/home -> home
-      const pathMatch = pathname.match(/\/admin\/preview\/[^\/]+\/(.+)/);
-      const currentPath = pathMatch?.[1] || 'home';
+    if (isAdmin) {
+      // Extract locale from pathname: /admin/pl/home -> 'pl'
+      const segments = pathname.split('/').filter(Boolean);
+      if (segments.length >= 2) {
+        return segments[1]; // admin, [locale], path...
+      }
+    }
+    
+    return locale;
+  };
+
+  const currentLocale = getCurrentLocale();
+  const otherLocale = currentLocale === 'pl' ? 'en' : 'pl';
+
+  const switchLanguage = (newLocale: string) => {
+    // Check if we're in TinaCMS admin mode
+    const isAdmin = pathname.startsWith('/admin/');
+    
+    if (isAdmin) {
+      // Extract current path structure: /admin/pl/home -> ['admin', 'pl', 'home']
+      const segments = pathname.split('/').filter(Boolean);
       
-      // Use Next.js router to change only the locale, keeping the path
-      router.push(`/admin/preview/${newLocale}/${currentPath}`);
+      // segments[0] = 'admin', segments[1] = current locale, segments[2+] = path
+      const pathSegments = segments.slice(2); // everything after locale
+      const newPath = `/admin/${newLocale}/${pathSegments.join('/')}`;
+      
+      router.push(newPath);
       return;
     }
     
@@ -40,8 +60,6 @@ export function LanguageSwitcher() {
     // Navigate to new locale
     router.push(`/${newLocale}${pathWithoutLocale}`);
   };
-
-  const otherLocale = locale === 'pl' ? 'en' : 'pl';
 
   return (
     <button

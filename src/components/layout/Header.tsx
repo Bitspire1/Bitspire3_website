@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import { LanguageSwitcher } from '../ui/buttons/LanguageSwitcher';
+import { useAdminLink } from '@/hooks/useAdminLink';
 
 const NAVIGATION = {
   pl: [
@@ -26,6 +27,7 @@ const CTA_BUTTON = {
 export const Header: React.FC = () => {
   const [open, setOpen] = useState(false);
   const locale = useLocale() as 'pl' | 'en';
+  const { getLink } = useAdminLink();
   
   const navigation = NAVIGATION[locale];
   const ctaButton = CTA_BUTTON[locale];
@@ -48,14 +50,14 @@ export const Header: React.FC = () => {
           {/* left: logo + optional center nav */}
           <div className="flex items-center">
             <Link
-              href="/"
+              href={getLink('/')}
               className="flex items-center shrink-0 translate-y-0 motion-safe:transition-transform"
               aria-label={logoAlt}
             >
               <Image
                 src={logo}
                 alt={logoAlt}
-                className="h-8 sm:h-10 w-auto max-h-10 max-w-35 object-contain"
+                className="h-8 sm:h-10 w-auto max-h-10 max-w-[140px] object-contain"
                 width={120}
                 height={40}
                 priority
@@ -67,7 +69,7 @@ export const Header: React.FC = () => {
               {navigation.map((item, index) => (
                 <Link
                   key={index}
-                  href={item.href}
+                  href={getLink(item.href)}
                   className={`${index === 0 ? 'ml-10' : ''} text-sm font-medium text-slate-300 hover:text-white hover:underline underline-offset-4 decoration-blue-400/60 transition`}
                 >
                   {item.label}
@@ -84,7 +86,7 @@ export const Header: React.FC = () => {
 
             <div className="hidden md:flex items-center gap-6">
               <Link
-                href={ctaButton.href}
+                href={getLink(ctaButton.href)}
                 className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md transition"
                 aria-label={ctaButton.text}
               >
@@ -132,7 +134,7 @@ export const Header: React.FC = () => {
             {navigation.map((item, index) => (
               <Link
                 key={index}
-                href={item.href}
+                href={getLink(item.href)}
                 onClick={() => setOpen(false)}
                 className="group relative overflow-hidden rounded-xl bg-linear-to-r from-slate-800/60 to-slate-700/40 border border-slate-600/30 hover:border-blue-400/50 backdrop-blur-sm px-6 py-4 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02]"
               >
@@ -150,7 +152,7 @@ export const Header: React.FC = () => {
             
             <div className="flex flex-col gap-3 pt-3">
               <Link
-                href={ctaButton.href}
+                href={getLink(ctaButton.href)}
                 onClick={() => setOpen(false)}
                 className="relative overflow-hidden flex justify-center items-center py-4 w-full rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900 bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white text-lg font-bold shadow-lg shadow-blue-600/30 hover:shadow-blue-500/40 hover:scale-[1.02] group"
                 aria-label={ctaButton.text}

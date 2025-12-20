@@ -4,6 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { tinaField } from 'tinacms/dist/react';
+import { useAdminLink } from '@/hooks/useAdminLink';
 
 interface PortfolioProject {
   title?: string | null;
@@ -24,6 +25,7 @@ interface PortfolioHighlightsProps {
 }
 
 const PortfolioHighlights: React.FC<PortfolioHighlightsProps> = ({ data }) => {
+  const { getLink } = useAdminLink();
   // Filter featured projects
   const featuredProjects = data?.projects?.filter(project => project?.featured) || [];
 
@@ -124,7 +126,7 @@ const PortfolioHighlights: React.FC<PortfolioHighlightsProps> = ({ data }) => {
         {/* View all projects button */}
         <div className="text-center mt-12">
           <Link
-            href="/portfolio"
+            href={getLink("/portfolio")}
             className="inline-flex items-center gap-2 btn-tech-primary px-8 py-4 rounded-lg font-bold text-sm uppercase tracking-wider"
           >
             Zobacz wszystkie projekty

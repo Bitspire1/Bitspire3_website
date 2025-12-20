@@ -30,7 +30,7 @@ var config_default = defineConfig({
           router: ({ document }) => {
             const pathParts = document._sys.relativePath.split("/");
             const locale = pathParts[0];
-            return `preview/${locale}/home`;
+            return `admin/${locale}/home`;
           }
         },
         fields: [
@@ -93,7 +93,7 @@ var config_default = defineConfig({
           router: ({ document }) => {
             const pathParts = document._sys.relativePath.split("/");
             const locale = pathParts[0];
-            return `preview/${locale}/home`;
+            return `admin/${locale}/home`;
           }
         },
         fields: [
@@ -212,9 +212,9 @@ var config_default = defineConfig({
             if (pathParts.length >= 2) {
               const locale = pathParts[0];
               const slug = pathParts[1].replace(".mdx", "");
-              return `preview/${locale}/portfolio/${slug}`;
+              return `admin/${locale}/portfolio/${slug}`;
             }
-            return "preview/pl/portfolio";
+            return "admin/pl/portfolio";
           }
         },
         fields: [
@@ -316,9 +316,9 @@ var config_default = defineConfig({
             if (pathParts.length >= 2) {
               const locale = pathParts[0];
               const slug = pathParts[1].replace(".mdx", "");
-              return `preview/${locale}/blog/${slug}`;
+              return `admin/${locale}/blog/${slug}`;
             }
-            return "preview/pl/blog";
+            return "admin/pl/blog";
           }
         },
         fields: [
@@ -408,9 +408,9 @@ var config_default = defineConfig({
             if (pathParts.length >= 2) {
               const locale = pathParts[0];
               const slug = pathParts[1].replace(".mdx", "");
-              return `preview/${locale}/${slug}`;
+              return `admin/${locale}/${slug}`;
             }
-            return "preview/pl/home";
+            return "admin/pl/home";
           }
         },
         fields: [

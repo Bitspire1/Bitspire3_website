@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { tinaField } from 'tinacms/dist/react';
 import { CursorLightCard } from '../features/Cursor-Light';
+import { useAdminLink } from '@/hooks/useAdminLink';
 
 interface ProcessStep {
   title?: string | null;
@@ -25,6 +26,7 @@ interface HowWeWorkProps {
 }
 
 const HowWeWork: React.FC<HowWeWorkProps> = ({ data }) => {
+  const { getLink } = useAdminLink();
   const defaultSteps: ProcessStep[] = [
     {
       title: 'Brief i analiza',
@@ -192,7 +194,7 @@ const HowWeWork: React.FC<HowWeWorkProps> = ({ data }) => {
                   {data?.ctaDescription || 'Wypełnij brief, a my skontaktujemy się z Tobą w ciągu 24 godzin'}
                 </p>
                 <Link
-                  href="/brief"
+                  href={getLink("/brief")}
                   className="inline-flex items-center gap-2 btn-tech-primary px-8 py-4 rounded-lg font-bold text-sm uppercase tracking-wider"
                   data-tina-field={tinaField(data, 'ctaButton')}
                 >
