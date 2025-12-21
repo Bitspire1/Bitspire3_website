@@ -8,10 +8,6 @@ export default defineConfig({
   // Get this from tina.io
   token: process.env.TINA_TOKEN,
 
-  contentApiUrlOverride: process.env.NODE_ENV === 'production' 
-    ? '/api/tina/gql' 
-    : undefined,
-
   build: {
     outputFolder: "admin",
     publicFolder: "public",
