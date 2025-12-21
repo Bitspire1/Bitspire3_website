@@ -46,6 +46,7 @@ export function LanguageSwitcher() {
       const newPath = `/admin/${newLocale}/${pathSegments.join('/')}`;
       
       router.push(newPath);
+      router.refresh();
       return;
     }
     
@@ -59,6 +60,7 @@ export function LanguageSwitcher() {
 
     // Navigate to new locale
     router.push(`/${newLocale}${pathWithoutLocale}`);
+    router.refresh();
   };
 
   return (
