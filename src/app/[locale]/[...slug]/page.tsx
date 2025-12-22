@@ -166,20 +166,15 @@ export default async function Page(props: PageProps) {
                 relativePath: `${locale}/${postSlug}.mdx`,
             });
 
-            // Blog używa tej samej strony co blog listing ale z innymi danymi
-            // TODO: Trzeba będzie stworzyć BlogPostWrapper dla pojedynczego artykułu
+            const { default: BlogPostWrapper } = await import('@/components/pages/BlogPostWrapper');
+            
             return (
-                <div className="min-h-screen bg-grid-pattern pt-24 pb-32">
-                    <article className="max-w-4xl mx-auto px-6">
-                        <h1 className="text-4xl font-bold text-white mb-4">
-                            {result.data.blog.title}
-                        </h1>
-                        <p className="text-slate-400 mb-8">
-                            {result.data.blog.description}
-                        </p>
-                        {/* TODO: Render MDX body */}
-                    </article>
-                </div>
+                <BlogPostWrapper 
+                    data={{
+                        ...result.data.blog,
+                        locale
+                    }} 
+                />
             );
         } catch (error) {
             console.error('Blog post not found:', error);
@@ -196,20 +191,15 @@ export default async function Page(props: PageProps) {
                 relativePath: `${locale}/${itemSlug}.mdx`,
             });
 
-            // Portfolio item page
-            // TODO: Trzeba będzie stworzyć PortfolioItemWrapper
+            const { default: PortfolioItemWrapper } = await import('@/components/pages/PortfolioItemWrapper');
+            
             return (
-                <div className="min-h-screen bg-grid-pattern pt-24 pb-32">
-                    <article className="max-w-4xl mx-auto px-6">
-                        <h1 className="text-4xl font-bold text-white mb-4">
-                            {result.data.portfolio.title}
-                        </h1>
-                        <p className="text-slate-400 mb-8">
-                            {result.data.portfolio.description}
-                        </p>
-                        {/* TODO: Render MDX body */}
-                    </article>
-                </div>
+                <PortfolioItemWrapper 
+                    data={{
+                        ...result.data.portfolio,
+                        locale
+                    }} 
+                />
             );
         } catch (error) {
             console.error('Portfolio item not found:', error);
