@@ -31,7 +31,7 @@ export const Header: React.FC = () => {
   
   const navigation = NAVIGATION[locale];
   const ctaButton = CTA_BUTTON[locale];
-  const logo = '/logo/Bitspire logo main.svg';
+   const logo = '/logo/bitspire-logo-main.svg';
   const logoAlt = 'Bitspire - strona główna';
 
   return (
@@ -54,15 +54,14 @@ export const Header: React.FC = () => {
               className="flex items-center shrink-0 translate-y-0 motion-safe:transition-transform"
               aria-label={logoAlt}
             >
-              <Image
-                src={logo}
-                alt={logoAlt}
-                className="h-8 sm:h-10 w-auto max-h-10 max-w-[140px] object-contain"
-                width={120}
-                height={40}
-                priority
-                sizes="140px"
-              />
+               <Image
+                 src="/logo/bitspire-logo-main.svg"
+                 alt="Bitspire logo"
+                 width={120}
+                 height={34}
+                 className="max-w-30 h-auto"
+                 priority
+               />
             </Link>
 
             <nav className="hidden md:flex ml-2 space-x-6" aria-label="Główna nawigacja">

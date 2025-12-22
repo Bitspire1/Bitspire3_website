@@ -166,13 +166,58 @@ export default async function Page(props: PageProps) {
                 relativePath: `${locale}/${postSlug}.mdx`,
             });
 
+            // Fetch related posts (same category or random if no category)
+            let relatedPosts: any[] = [];
+            try {
+                const blogConnection = await client.queries.blogConnection();
+                const allPosts = (blogConnection.data.blogConnection.edges || [])
+                    .map(edge => edge?.node)
+                    .filter((node): node is NonNullable<typeof node> => 
+                        node !== null && 
+                        node !== undefined && 
+                        node._sys.relativePath.startsWith(`${locale}/`) &&
+                        node._sys.filename !== `${postSlug}.mdx`
+                    );
+
+                const currentCategory = result.data.blog.category;
+                
+                // First try to get posts from same category
+                if (currentCategory) {
+                    relatedPosts = allPosts
+                        .filter(post => post.category === currentCategory)
+                        .slice(0, 3);
+                }
+                
+                // If not enough, fill with other posts
+                if (relatedPosts.length < 3) {
+                    const remainingPosts = allPosts
+                        .filter(post => !relatedPosts.includes(post))
+                        .slice(0, 3 - relatedPosts.length);
+                    relatedPosts = [...relatedPosts, ...remainingPosts];
+                }
+
+                // Format related posts data
+                relatedPosts = relatedPosts.map(post => ({
+                    title: post.title,
+                    slug: post._sys.filename.replace('.mdx', ''),
+                    excerpt: post.description || post.excerpt,
+                    image: post.image,
+                    date: post.date,
+                    readTime: post.readTime ? `${post.readTime} min` : undefined,
+                }));
+            } catch (error) {
+                console.error('Error loading related posts:', error);
+            }
+
             const { default: BlogPostWrapper } = await import('@/components/pages/BlogPostWrapper');
             
             return (
                 <BlogPostWrapper 
                     data={{
                         ...result.data.blog,
-                        locale
+                        locale,
+                        slug: postSlug,
+                        relatedPosts
                     }} 
                 />
             );

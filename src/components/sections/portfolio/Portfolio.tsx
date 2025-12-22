@@ -69,17 +69,19 @@ export default function Portfolio({ data }: { data?: PortfolioData }) {
                 >
                   {/* Image */}
                   {project.image && (
-                    <div className="relative w-full aspect-video overflow-hidden bg-slate-900/50 flex items-center justify-center border-b border-slate-800/50">
+                    <div 
+                      className="relative w-full aspect-video overflow-hidden rounded-t-2xl"
+                      style={{
+                        backgroundImage: `url(${project.image})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'top center',
+                        margin: 0,
+                        padding: 0,
+                        display: 'block'
+                      }}
+                    >
                       <div className="absolute inset-0 bg-linear-to-br from-blue-600/10 via-transparent to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                      <Image
-                        src={project.image}
-                        alt={project.imageAlt || project.title}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        sizes="(max-width: 1024px) 100vw, (max-width: 1536px) 50vw, 800px"
-                        priority={idx === 0}
-                      />
                     </div>
                   )}
 

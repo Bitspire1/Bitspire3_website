@@ -1,0 +1,46 @@
+'use client';
+
+import React from 'react';
+
+interface AuthorBoxProps {
+    author?: string;
+    locale?: string;
+}
+
+export default function AuthorBox({ author = 'Bitspire Team', locale = 'pl' }: AuthorBoxProps) {
+    const text = locale === 'pl' ? {
+        title: 'O autorze',
+        bio: 'Zespół ekspertów Bitspire, specjalizujących się w tworzeniu nowoczesnych aplikacji webowych i mobilnych.',
+        contact: 'Skontaktuj się'
+    } : {
+        title: 'About the author',
+        bio: 'Bitspire team of experts specializing in modern web and mobile application development.',
+        contact: 'Get in touch'
+    };
+
+    return (
+        <div className="bg-slate-800/40 border border-slate-700/50 rounded-xl p-6 backdrop-blur-sm shadow-lg">
+            <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold text-lg">
+                    {author.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                    <h3 className="text-sm font-semibold text-white">{author}</h3>
+                    <p className="text-xs text-slate-400">{text.title}</p>
+                </div>
+            </div>
+            <p className="text-sm text-slate-300 leading-relaxed mb-4">
+                {text.bio}
+            </p>
+            <a
+                href="/brief"
+                className="inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors group"
+            >
+                {text.contact}
+                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+        </div>
+    );
+}

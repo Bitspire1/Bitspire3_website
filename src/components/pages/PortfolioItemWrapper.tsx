@@ -3,7 +3,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { TinaMarkdown } from 'tinacms/dist/rich-text';
-import { useAdminLink } from "@/hooks/useAdminLink";
+import { tinaField } from 'tinacms/dist/react';
+import PageBackground from '@/components/layout/PageBackground';
+import BackLink from '@/components/layout/BackLink';
+import PortfolioItemHeader from '@/components/sections/portfolio/PortfolioItemHeader';
 
 interface PortfolioItemData {
     title: string;
@@ -16,6 +19,7 @@ interface PortfolioItemData {
     link?: string | null;
     body: any;
     locale?: string;
+    [key: string]: unknown;
 }
 
 interface PortfolioItemWrapperProps {
@@ -36,58 +40,30 @@ const translations = {
 };
 
 export default function PortfolioItemWrapper({ data }: PortfolioItemWrapperProps) {
-    const { getLink } = useAdminLink();
     const locale = data?.locale || 'pl';
     const t = translations[locale as keyof typeof translations] || translations.en;
 
     return (
-        <div className="min-h-screen relative overflow-hidden">
-            {/* Background Effects */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 blur-[120px] rounded-full pointer-events-none" />
-            <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-cyan-500/10 blur-[120px] rounded-full pointer-events-none animate-pulse-slow" />
-            
+        <PageBackground variant="mixed">
             <main className="relative z-10 max-w-4xl mx-auto px-6 pt-32 pb-20">
-                {/* Back to portfolio link */}
-                <Link 
-                    href={getLink('/portfolio')}
-                    className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors mb-8 group"
-                >
-                    <svg className="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                    </svg>
-                    {t.backToPortfolio}
-                </Link>
+                <BackLink href="/portfolio" label={t.backToPortfolio} />
 
-                {/* Project Header */}
                 <article>
-                    {/* Category & Year */}
-                    <div className="flex items-center gap-4 mb-4">
-                        {data.category && (
-                            <span className="px-3 py-1 text-xs font-semibold text-blue-400 bg-blue-500/10 rounded-full border border-blue-500/20">
-                                {data.category}
-                            </span>
-                        )}
-                        {data.year && (
-                            <span className="text-sm text-slate-400">
-                                {data.year}
-                            </span>
-                        )}
-                    </div>
-
-                    {/* Title */}
-                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
-                        {data.title}
-                    </h1>
-
-                    {/* Description */}
-                    <p className="text-xl text-slate-300 mb-8">
-                        {data.description}
-                    </p>
+                    <PortfolioItemHeader
+                        title={data.title}
+                        description={data.description}
+                        category={data.category}
+                        year={data.year}
+                        data={data}
+                        translations={t}
+                    />
 
                     {/* Featured Image */}
                     {data.image && (
-                        <div className="relative w-full h-[400px] md:h-[500px] rounded-xl overflow-hidden mb-12 shadow-2xl">
+                        <div 
+                            className="relative w-full h-100 md:h-125 rounded-xl overflow-hidden mb-12 shadow-2xl"
+                            data-tina-field={tinaField(data, 'image')}
+                        >
                             <Image
                                 src={data.image}
                                 alt={data.imageAlt || data.title}
@@ -157,6 +133,6 @@ export default function PortfolioItemWrapper({ data }: PortfolioItemWrapperProps
                     )}
                 </article>
             </main>
-        </div>
+        </PageBackground>
     );
 }

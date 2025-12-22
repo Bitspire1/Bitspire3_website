@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { PreviewLink } from '../features/PreviewLink';
+import { PreviewLink } from '../../features/PreviewLink';
 
 interface Article {
   title: string;
