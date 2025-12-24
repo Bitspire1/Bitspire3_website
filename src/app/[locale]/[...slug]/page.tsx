@@ -215,6 +215,7 @@ export default async function Page(props: PageProps) {
                 <BlogPostWrapper 
                     data={{
                         ...result.data.blog,
+                        body: result.data.blog.body || null,
                         locale,
                         slug: postSlug,
                         relatedPosts
@@ -242,6 +243,7 @@ export default async function Page(props: PageProps) {
                 <PortfolioItemWrapper 
                     data={{
                         ...result.data.portfolio,
+                        body: result.data.portfolio.body || null,
                         locale
                     }} 
                 />

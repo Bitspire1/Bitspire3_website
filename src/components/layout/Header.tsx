@@ -35,7 +35,7 @@ export const Header: React.FC = () => {
   const logoAlt = 'Bitspire - strona główna';
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 py-4 px-4 sm:px-6 animate-slide-in-down">
+    <header className="fixed top-0 left-0 right-0 z-50 py-2 md:py-4 px-4 sm:px-6 animate-slide-in-down">
       <div
         className={`
           bg-gray-900/70 border border-gray-700 text-white
@@ -59,7 +59,7 @@ export const Header: React.FC = () => {
                  alt="Bitspire logo"
                  width={120}
                  height={34}
-                 className="max-w-30 h-auto"
+                 className="w-24 md:w-30 h-auto"
                  priority
                />
             </Link>

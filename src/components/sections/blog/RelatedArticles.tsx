@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import { PreviewLink } from '../../features/PreviewLink';
 
 interface Article {
@@ -56,63 +55,65 @@ export const RelatedArticles: React.FC<RelatedArticlesProps> = ({
             <PreviewLink
               key={article.slug}
               href={`/${locale}/${type}/${article.slug}`}
-              className="group block"
             >
-              <article className="relative backdrop-blur-sm bg-slate-800/30 border border-slate-700/40 rounded-xl overflow-hidden hover:border-blue-500/50 hover:bg-slate-800/50 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-2 h-full flex flex-col">
-                <div className="absolute inset-0 bg-linear-to-br from-blue-500/5 via-transparent to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                
-                <div className="relative z-10">
-                  {/* Image */}
-                  {article.image && (
-                    <div className="relative h-48 w-full overflow-hidden">
-                      <Image
-                        src={article.image}
-                        alt={article.title}
-                        fill
-                        className="object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-linear-to-t from-slate-900 to-transparent opacity-60" />
+              <article className="group relative overflow-hidden rounded-2xl border border-slate-700/50 bg-slate-900/40 backdrop-blur-sm hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(59,130,246,0.2)]">
+                {/* Image */}
+                {article.image && (
+                  <div 
+                    className="relative w-full aspect-video overflow-hidden rounded-t-2xl"
+                    style={{
+                      backgroundImage: `url(${article.image})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'top center',
+                      margin: 0,
+                      padding: 0,
+                      display: 'block'
+                    }}
+                  >
+                    <div className="absolute inset-0 bg-linear-to-br from-blue-600/10 via-transparent to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10" />
+                  </div>
+                )}
+
+                {/* Content */}
+                <div className="p-6">
+                  {/* Date and Read Time */}
+                  {article.date && (
+                    <div className="flex items-center gap-3 mb-1 text-xs text-slate-500">
+                      <time dateTime={article.date}>
+                        {new Date(article.date).toLocaleDateString(locale === 'pl' ? 'pl-PL' : 'en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </time>
+                      {article.readTime && (
+                        <>
+                          <span>•</span>
+                          <span>{article.readTime}</span>
+                        </>
+                      )}
                     </div>
                   )}
 
-                  {/* Content */}
-                  <div className="p-6 flex-1 flex flex-col">
-                    {article.date && (
-                      <div className="flex items-center gap-3 text-xs text-slate-400 mb-3">
-                        <time dateTime={article.date}>
-                          {new Date(article.date).toLocaleDateString(locale === 'pl' ? 'pl-PL' : 'en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}
-                        </time>
-                        {article.readTime && (
-                          <>
-                            <span>•</span>
-                            <span>{article.readTime}</span>
-                          </>
-                        )}
-                      </div>
-                    )}
+                  <h3 className="text-2xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-linear-to-r group-hover:from-blue-400 group-hover:to-cyan-400 transition-all duration-300 mb-4 leading-tight">
+                    {article.title}
+                  </h3>
 
-                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors line-clamp-2">
-                      {article.title}
-                    </h3>
+                  {article.excerpt && (
+                    <p className="text-slate-300 text-base leading-relaxed mb-4">
+                      {article.excerpt}
+                    </p>
+                  )}
 
-                    {article.excerpt && (
-                      <p className="text-slate-400 text-sm mb-4 line-clamp-3 flex-1">
-                        {article.excerpt}
-                      </p>
-                    )}
-
-                    <div className="flex items-center text-blue-400 text-sm font-medium group-hover:gap-3 gap-2 transition-all">
-                      <span>{locale === 'pl' ? 'Czytaj więcej' : 'Read more'}</span>
-                      <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
-                  </div>
+                  {/* Read More Link */}
+                  <span className="inline-flex items-center gap-2 text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors group/link">
+                    {locale === 'pl' ? 'Czytaj więcej' : 'Read more'}
+                    <span className="group-hover/link:translate-x-1 transition-transform" aria-hidden>→</span>
+                  </span>
                 </div>
+
+                {/* Accent line */}
+                <div className="absolute bottom-0 left-0 h-0.5 w-0 bg-linear-to-r from-blue-500 to-cyan-400 group-hover:w-full transition-all duration-500" />
               </article>
             </PreviewLink>
           ))}

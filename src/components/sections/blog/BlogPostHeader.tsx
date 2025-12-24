@@ -39,7 +39,7 @@ export default function BlogPostHeader({
     return (
         <>
             {/* Category & Read Time */}
-            <div className="flex items-center gap-4 mb-2">
+            <div className="flex items-center justify-center gap-4 mb-2">
                 {category && (
                     <MetaBadge 
                         label={category} 
@@ -59,7 +59,7 @@ export default function BlogPostHeader({
 
             {/* Title */}
             <h1 
-                className="text-4xl md:text-5xl font-bold text-white mb-3 leading-tight"
+                className="text-4xl md:text-5xl font-bold text-white mb-3 leading-tight wrap-break-word overflow-wrap-anywhere text-center"
                 data-tina-field={data ? tinaField(data, 'title') : undefined}
             >
                 {title}
@@ -67,14 +67,14 @@ export default function BlogPostHeader({
 
             {/* Description */}
             <p 
-                className="text-xl text-slate-300 mb-6"
+                className="text-xl text-slate-300 mb-6 wrap-break-word overflow-wrap-anywhere text-center"
                 data-tina-field={data ? tinaField(data, 'description') : undefined}
             >
                 {description}
             </p>
 
             {/* Meta info */}
-            <div className="flex items-center gap-4 text-sm text-slate-400 mb-8 pb-8 border-b border-slate-700/50">
+            <div className="flex items-center justify-center gap-4 text-sm text-slate-400 mb-8 pb-8 border-b border-slate-700/50">
                 <span>{t.by} {author}</span>
                 <span>•</span>
                 <span data-tina-field={data ? tinaField(data, 'date') : undefined}>

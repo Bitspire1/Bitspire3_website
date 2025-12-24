@@ -57,18 +57,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   return [
+    // Main pages - Polish (default)
     {
       url: baseUrl,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 1,
     },
+    // Main pages - English
     {
       url: `${baseUrl}/en`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 1,
     },
+    // Portfolio pages
     {
       url: `${baseUrl}/portfolio`,
       lastModified: new Date(),
@@ -81,6 +84,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.8,
     },
+    // Blog pages
     {
       url: `${baseUrl}/blog`,
       lastModified: new Date(),
@@ -93,8 +97,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.8,
     },
+    // Brief/Contact pages
+    {
+      url: `${baseUrl}/brief`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/en/brief`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    // Individual portfolio and blog posts
     ...portfolioPosts,
     ...blogPosts,
+    // Legal pages - Polish
     {
       url: `${baseUrl}/polityka-prywatnosci`,
       lastModified: new Date(),
