@@ -107,7 +107,7 @@ export default async function RootLayout({
   const messages = await getMessages({ locale });
 
   return (
-    <html lang={locale || 'pl'} suppressHydrationWarning>
+    <html lang={locale || 'pl'} suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         {/* Podstawowa responsywność */}
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />

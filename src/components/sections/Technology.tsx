@@ -175,6 +175,7 @@ const Technology: React.FC<{ data?: TechnologyData }> = ({ data }) => {
               className="h-14 w-auto object-contain opacity-60 transition-all duration-500 group-hover:opacity-100 group-hover:scale-110 relative z-10 brightness-0 invert"
               loading="lazy"
               sizes="80px"
+              style={{ height: 'auto' }}
             />
           </div>
 				</span>

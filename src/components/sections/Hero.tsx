@@ -75,7 +75,7 @@ export const Hero: React.FC<HeroProps> = ({ data, locale = 'pl' }) => {
           </div>
 
           {/* Right Side - Visuals */}
-          <div className="relative lg:h-150 flex items-center justify-center perspective-[1000px]">
+          <div className="relative h-96 lg:h-150 flex items-center justify-center perspective-[1000px]">
             {data?.image ? (
               <div className="relative w-full h-full animate-float transform-3d">
                  {/* Cybernetic Rings */}

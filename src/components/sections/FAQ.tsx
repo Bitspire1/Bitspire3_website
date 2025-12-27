@@ -69,7 +69,7 @@ const FAQ: React.FC<FAQProps> = ({ data, locale = 'pl' }) => {
   return (
     <section className="py-12 px-4 bg-slate-900/40 relative overflow-hidden" id="faq" data-tina-field={tinaField(data)}>
       {/* Background decoration */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-200 h-200 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
       
       <div className="container mx-auto max-w-4xl relative z-10">
         <div className="text-center mb-10">
