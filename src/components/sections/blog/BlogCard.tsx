@@ -11,10 +11,11 @@ interface BlogCardProps {
     readTime?: number | null;
     tags?: (string | null)[] | null;
     locale: string;
-    translations: {
-        readMore: string;
-        readTime: (minutes: number) => string;
-    };
+    translations?: {
+        readMore?: string | null;
+        readTime?: string | null;
+        by?: string | null;
+    } | null;
     getLink: (path: string) => string;
 }
 
@@ -28,7 +29,7 @@ export default function BlogCard({
     readTime, 
     tags,
     locale,
-    translations: t,
+    translations,
     getLink
 }: BlogCardProps) {
     const formattedDate = new Date(date).toLocaleDateString(
@@ -68,10 +69,10 @@ export default function BlogCard({
                     <time dateTime={date}>
                         {formattedDate}
                     </time>
-                    {readTime && (
+                    {readTime && translations?.readTime && (
                         <>
                             <span>•</span>
-                            <span>{t.readTime(readTime)}</span>
+                            <span>{translations.readTime.replace('{minutes}', readTime.toString())}</span>
                         </>
                     )}
                 </div>
@@ -98,7 +99,7 @@ export default function BlogCard({
                     href={`/${locale}/blog/${slug}`}
                     className="inline-flex items-center gap-2 text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors group/link"
                 >
-                    {t.readMore}
+                    {translations?.readMore}
                     <span className="group-hover/link:translate-x-1 transition-transform" aria-hidden>→</span>
                 </Link>
             </div>

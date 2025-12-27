@@ -6,62 +6,27 @@ import { useSearch } from '@/hooks/useSearch';
 
 type ContentType = 'blog' | 'portfolio';
 
+interface SearchTranslations {
+  searchPlaceholder?: string;
+  clearSearch?: string;
+  filterByTech?: string;
+  clearFilters?: string;
+  showLess?: string;
+  showMore?: string;
+  activeFilters?: string;
+  removeFilter?: string;
+}
+
 interface SearchBarProps {
   allTags: string[];
   onSearchChange: (query: string) => void;
   onTagsChange: (tags: string[]) => void;
   locale: string;
   type?: ContentType;
+  translations?: SearchTranslations;
 }
 
-const translations = {
-  blog: {
-    pl: {
-      searchPlaceholder: 'Szukaj artykułów...',
-      clearSearch: 'Wyczyść wyszukiwanie',
-      filterByTech: 'Filtruj po tagach',
-      clearFilters: 'Wyczyść filtry',
-      showLess: 'Pokaż mniej',
-      showMore: (count: number) => `+${count} więcej`,
-      activeFilters: 'Aktywne filtry:',
-      removeFilter: (tag: string) => `Usuń filtr ${tag}`,
-    },
-    en: {
-      searchPlaceholder: 'Search articles...',
-      clearSearch: 'Clear search',
-      filterByTech: 'Filter by tags',
-      clearFilters: 'Clear filters',
-      showLess: 'Show less',
-      showMore: (count: number) => `+${count} more`,
-      activeFilters: 'Active filters:',
-      removeFilter: (tag: string) => `Remove filter ${tag}`,
-    },
-  },
-  portfolio: {
-    pl: {
-      searchPlaceholder: 'Szukaj projektów...',
-      clearSearch: 'Wyczyść wyszukiwanie',
-      filterByTech: 'Filtruj po technologiach',
-      clearFilters: 'Wyczyść filtry',
-      showLess: 'Pokaż mniej',
-      showMore: (count: number) => `+${count} więcej`,
-      activeFilters: 'Aktywne filtry:',
-      removeFilter: (tag: string) => `Usuń filtr ${tag}`,
-    },
-    en: {
-      searchPlaceholder: 'Search projects...',
-      clearSearch: 'Clear search',
-      filterByTech: 'Filter by technology',
-      clearFilters: 'Clear filters',
-      showLess: 'Show less',
-      showMore: (count: number) => `+${count} more`,
-      activeFilters: 'Active filters:',
-      removeFilter: (tag: string) => `Remove filter ${tag}`,
-    },
-  },
-};
-
-export function SearchBar({ allTags, onSearchChange, onTagsChange, locale, type = 'blog' }: SearchBarProps) {
+export function SearchBar({ allTags, onSearchChange, onTagsChange, locale, type = 'blog', translations }: SearchBarProps) {
   const {
     searchQuery,
     selectedTags,
@@ -78,7 +43,7 @@ export function SearchBar({ allTags, onSearchChange, onTagsChange, locale, type 
     showAllTags,
   } = useSearch({ maxVisibleTags: 8 });
 
-  const t = translations[type][locale as keyof typeof translations.blog] || translations[type].en;
+  const t = translations || {};
   const displayedTags = getDisplayedTags(allTags);
   const remainingCount = getRemainingTagsCount(allTags);
 
@@ -174,7 +139,7 @@ export function SearchBar({ allTags, onSearchChange, onTagsChange, locale, type 
                 onClick={toggleShowAllTags}
                 className="px-3 py-1.5 rounded-full text-xs font-medium bg-slate-700/50 text-slate-400 hover:text-slate-200 border border-slate-600/50 hover:border-slate-500 transition-all"
               >
-                {showAllTags ? t.showLess : t.showMore(remainingCount)}
+                {showAllTags ? t.showLess : `+${remainingCount} ${t.showMore}`}
               </button>
             )}
           </div>
@@ -193,7 +158,7 @@ export function SearchBar({ allTags, onSearchChange, onTagsChange, locale, type 
                     <button
                       onClick={() => handleTagClick(tag)}
                       className="hover:text-blue-100 transition-colors"
-                      aria-label={t.removeFilter(tag)}
+                      aria-label={`${t.removeFilter} ${tag}`}
                     >
                       <FaTimes className="text-[10px]" />
                     </button>

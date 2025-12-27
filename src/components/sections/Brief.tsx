@@ -5,6 +5,7 @@ import { tinaField } from 'tinacms/dist/react';
 import { CursorLightCard } from '@/components/features/Cursor-Light';
 import { useBriefForm } from '@/hooks/useBriefForm';
 import { useContactForm } from '@/hooks/useContactForm';
+import { RichText } from '../ui/RichTextPresets';
 
 interface ContactInfo {
   email?: string | null;
@@ -15,10 +16,57 @@ interface ContactInfo {
   [key: string]: unknown;
 }
 
+interface TabType {
+  label?: string | null;
+  value?: string | null;
+}
+
+interface FormLabels {
+  progressLabel?: string | null;
+  requiredMark?: string | null;
+  placeholderTextarea?: string | null;
+  placeholderText?: string | null;
+  placeholderTechnology?: string | null;
+  placeholderIntegrations?: string | null;
+  buttonPrev?: string | null;
+  buttonNext?: string | null;
+  buttonSubmit?: string | null;
+  buttonSubmitting?: string | null;
+  successTitle?: string | null;
+  successMessage?: string | null;
+}
+
+interface ContactFormLabels {
+  title?: string | null;
+  placeholderName?: string | null;
+  placeholderEmail?: string | null;
+  placeholderMessage?: string | null;
+  buttonSend?: string | null;
+  buttonSending?: string | null;
+  successTitle?: string | null;
+  successMessage?: string | null;
+}
+
+interface ContactInfoLabels {
+  title?: string | null;
+  emailLabel?: string | null;
+  phoneLabel?: string | null;
+  addressLabel?: string | null;
+  quickResponseLabel?: string | null;
+  quickResponseText?: string | null;
+}
+
 interface BriefData {
   title?: string | null;
-  description?: string | null;
+  description?: any;
   buttonText?: string | null;
+  badge?: string | null;
+  heroTitle?: any;
+  heroTitleHighlight?: any;
+  tabs?: TabType[] | null;
+  form?: FormLabels | null;
+  contactForm?: ContactFormLabels | null;
+  contactInfo?: ContactInfoLabels | null;
   contact?: ContactInfo | null;
   [key: string]: unknown;
 }
@@ -103,7 +151,7 @@ const BRIEF_STEPS: Record<string, Step[]> = {
 };
 
 // Komponent Briefu
-function BriefForm({ briefType }: { briefType: string }) {
+function BriefForm({ briefType, labels, tabs }: { briefType: string, labels?: FormLabels | null, tabs?: TabType[] | null }) {
   const STEPS = BRIEF_STEPS[briefType] || [];
   
   const {
@@ -133,7 +181,7 @@ function BriefForm({ briefType }: { briefType: string }) {
     <div className="h-full flex flex-col">
       <div className="mb-8">
         <div className="flex justify-between items-end mb-2">
-          <span className="text-xs font-mono text-blue-400">POSTĘP</span>
+          <span className="text-xs font-mono text-blue-400">{labels?.progressLabel}</span>
           <span className="text-xs font-mono text-blue-400">{percent}%</span>
         </div>
         <div className="w-full h-2 bg-slate-900/50 rounded-full overflow-hidden border border-slate-800">
@@ -156,9 +204,9 @@ function BriefForm({ briefType }: { briefType: string }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h3 className="text-2xl font-bold text-white mb-3">Brief wysłany pomyślnie!</h3>
+          <h3 className="text-2xl font-bold text-white mb-3">{labels?.successTitle}</h3>
           <p className="text-slate-400 max-w-md">
-            Dziękujemy za poświęcony czas. Przeanalizujemy Twoje odpowiedzi i skontaktujemy się z Tobą w ciągu 24 godzin.
+            {labels?.successMessage}
           </p>
         </div>
       ) : (
@@ -167,7 +215,7 @@ function BriefForm({ briefType }: { briefType: string }) {
             <label className="block text-2xl md:text-3xl font-bold mb-6 text-white leading-tight">
               {current.label}{" "}
               {current.required && (
-                <span className="text-blue-500 text-lg align-top">*</span>
+                <span className="text-blue-500 text-lg align-top">{labels?.requiredMark}</span>
               )}
             </label>
             
@@ -225,7 +273,7 @@ function BriefForm({ briefType }: { briefType: string }) {
                         <input
                           className="w-full mt-3 p-4 rounded-xl bg-slate-900/80 border border-blue-500/50 text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all animate-fade-in"
                           type="text"
-                          placeholder={current.key === "technology" ? "Podaj preferowane technologie..." : "Podaj integracje..."}
+                          placeholder={current.key === "technology" ? labels?.placeholderTechnology || "" : labels?.placeholderIntegrations || ""}
                           value={
                             form[current.key]?.replace(
                               "Inne:",
@@ -244,7 +292,7 @@ function BriefForm({ briefType }: { briefType: string }) {
                   rows={4}
                   value={form[current.key] || ""}
                   onChange={(e) => handleInputChange(e.target.value)}
-                  placeholder="Wpisz tutaj..."
+                  placeholder={labels?.placeholderTextarea || ""}
                 />
               )}
               {current.type === "text" && (
@@ -253,7 +301,7 @@ function BriefForm({ briefType }: { briefType: string }) {
                   type="text"
                   value={form[current.key] || ""}
                   onChange={(e) => handleInputChange(e.target.value)}
-                  placeholder="Wpisz tutaj..."
+                  placeholder={labels?.placeholderText || ""}
                 />
               )}
             </div>
@@ -274,7 +322,7 @@ function BriefForm({ briefType }: { briefType: string }) {
               onClick={prevStep}
               disabled={isFirstStep || loading}
             >
-              Wstecz
+              {labels?.buttonPrev}
             </button>
             
             {!isLastStep ? (
@@ -288,7 +336,7 @@ function BriefForm({ briefType }: { briefType: string }) {
                 onClick={nextStep}
                 disabled={!form[current.key] || loading}
               >
-                Dalej
+                {labels?.buttonNext}
               </button>
             ) : (
               <button
@@ -304,9 +352,9 @@ function BriefForm({ briefType }: { briefType: string }) {
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
                     <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                    Wysyłanie...
+                    {labels?.buttonSubmitting}
                   </span>
-                ) : "Wyślij brief"}
+                ) : labels?.buttonSubmit}
               </button>
             )}
           </div>
@@ -329,7 +377,7 @@ export default function Brief({ data }: { data?: BriefData }) {
   } = useContactForm({ formName: 'contact' });
 
   return (
-    <section className="py-24 px-4 bg-grid-pattern relative" data-tina-field={tinaField(data, 'brief')}>
+    <section className="py-24 px-4 bg-grid-pattern relative" data-tina-field={tinaField(data)}>
       <div className="container mx-auto max-w-7xl relative z-10">
         <div className="grid lg:grid-cols-3 gap-10">
           
@@ -338,25 +386,25 @@ export default function Brief({ data }: { data?: BriefData }) {
             {/* Nagłówek */}
             <div className="mb-10">
               <div className="inline-block px-3 py-1 mb-4 rounded-full border border-blue-500/20 bg-blue-500/5">
-                 <span className="text-blue-400 text-xs font-bold tracking-widest uppercase">Start Project</span>
+                 <span className="text-blue-400 text-xs font-bold tracking-widest uppercase" data-tina-field={tinaField(data, 'badge')}>{data?.badge}</span>
               </div>
-              <h2 
+              <div 
                 className="text-4xl lg:text-6xl font-bold text-white mb-6"
-                data-tina-field={tinaField(data, 'title')}
+                data-tina-field={tinaField(data, 'heroTitle')}
               >
-                Określ czego <span className="text-gradient">potrzebujesz</span>
-              </h2>
-              <p 
+                <RichText content={data?.heroTitle} preset="hero-title" />
+              </div>
+              <div 
                 className="text-xl text-slate-400 leading-relaxed max-w-2xl"
                 data-tina-field={tinaField(data, 'description')}
               >
-                {data?.description || 'Wypełnij brief i pomóż nam lepiej zrozumieć Twoje potrzeby. To pierwszy krok do realizacji Twojego projektu.'}
-              </p>
+                <RichText content={data?.description} preset="subtitle" />
+              </div>
             </div>
 
             {/* Taby */}
             <div className="flex flex-wrap gap-3 mb-8">
-              {TAB_TYPES.map((tab) => (
+              {(data?.tabs || TAB_TYPES).map((tab) => (
                 <button
                   key={tab.value}
                   className={`px-6 py-3 rounded-lg font-medium text-sm transition-all duration-300 border
@@ -364,7 +412,7 @@ export default function Brief({ data }: { data?: BriefData }) {
                       ? 'bg-blue-600 text-white border-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.3)]' 
                       : 'text-slate-400 bg-slate-900/50 border-slate-800 hover:border-blue-500/50 hover:text-white'}
                     grow sm:grow-0`}
-                  onClick={() => setActiveTab(tab.value)}
+                  onClick={() => setActiveTab(tab.value || '')}
                 >
                   {tab.label}
                 </button>
@@ -373,7 +421,7 @@ export default function Brief({ data }: { data?: BriefData }) {
 
             {/* Formularz brief */}
             <CursorLightCard className="relative rounded-2xl glass-panel p-8 flex-1 min-h-120 overflow-y-auto">
-              <BriefForm briefType={activeTab} key={activeTab} />
+              <BriefForm briefType={activeTab} key={activeTab} labels={data?.form} tabs={data?.tabs} />
             </CursorLightCard>
           </div>
 
@@ -387,7 +435,7 @@ export default function Brief({ data }: { data?: BriefData }) {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                     </svg>
                  </div>
-                 <h3 className="text-xl font-bold text-white">Skontaktuj się</h3>
+                 <h3 className="text-xl font-bold text-white" data-tina-field={tinaField(data?.contactForm, 'title')}>{data?.contactForm?.title}</h3>
               </div>
               
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -398,8 +446,8 @@ export default function Brief({ data }: { data?: BriefData }) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <p className="text-white font-bold mb-2">Wiadomość wysłana!</p>
-                    <p className="text-slate-400 text-sm">Odpowiemy wkrótce.</p>
+                    <p className="text-white font-bold mb-2" data-tina-field={tinaField(data?.contactForm, 'successTitle')}>{data?.contactForm?.successTitle}</p>
+                    <p className="text-slate-400 text-sm" data-tina-field={tinaField(data?.contactForm, 'successMessage')}>{data?.contactForm?.successMessage}</p>
                   </div>
                 ) : (
                   <>
@@ -409,7 +457,7 @@ export default function Brief({ data }: { data?: BriefData }) {
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        placeholder="Imię i nazwisko"
+                        placeholder={data?.contactForm?.placeholderName || ""}
                         className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                         required
                       />
@@ -421,7 +469,7 @@ export default function Brief({ data }: { data?: BriefData }) {
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        placeholder="Adres email"
+                        placeholder={data?.contactForm?.placeholderEmail || ""}
                         className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                         required
                       />
@@ -432,7 +480,7 @@ export default function Brief({ data }: { data?: BriefData }) {
                         name="message"
                         value={formData.message}
                         onChange={handleChange}
-                        placeholder="Twoja wiadomość..."
+                        placeholder={data?.contactForm?.placeholderMessage || ""}
                         rows={4}
                         className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none"
                         required
@@ -450,7 +498,7 @@ export default function Brief({ data }: { data?: BriefData }) {
                       disabled={loading}
                       className={`btn-tech-primary w-full py-3 rounded-lg font-bold text-sm uppercase tracking-wider ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                      {loading ? 'Wysyłanie...' : 'Wyślij wiadomość'}
+                      {loading ? data?.contactForm?.buttonSending : data?.contactForm?.buttonSend}
                     </button>
                   </>
                 )}
@@ -465,7 +513,7 @@ export default function Brief({ data }: { data?: BriefData }) {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
                  </div>
-                 <h3 className="text-xl font-bold text-white">Dane kontaktowe</h3>
+                 <h3 className="text-xl font-bold text-white" data-tina-field={tinaField(data?.contactInfo, 'title')}>{data?.contactInfo?.title}</h3>
               </div>
               
               <div className="space-y-6">
@@ -477,13 +525,13 @@ export default function Brief({ data }: { data?: BriefData }) {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-slate-500 text-xs uppercase tracking-wider font-bold mb-1">Email</p>
+                    <p className="text-slate-500 text-xs uppercase tracking-wider font-bold mb-1" data-tina-field={tinaField(data?.contactInfo, 'emailLabel')}>{data?.contactInfo?.emailLabel}</p>
                     <a 
-                      href={`mailto:${data?.contact?.email || 'kontakt@bitspire.pl'}`}
+                      href={`mailto:${data?.contact?.email}`}
                       className="text-white hover:text-blue-400 font-medium transition-colors"
                       data-tina-field={tinaField(data?.contact, 'email')}
                     >
-                      {data?.contact?.email || 'kontakt@bitspire.pl'}
+                      {data?.contact?.email}
                     </a>
                   </div>
                 </div>
@@ -496,13 +544,13 @@ export default function Brief({ data }: { data?: BriefData }) {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-slate-500 text-xs uppercase tracking-wider font-bold mb-1">Telefon</p>
+                    <p className="text-slate-500 text-xs uppercase tracking-wider font-bold mb-1" data-tina-field={tinaField(data?.contactInfo, 'phoneLabel')}>{data?.contactInfo?.phoneLabel}</p>
                     <a 
-                      href={`tel:${data?.contact?.phone || '+48778768363'}`}
+                      href={`tel:${data?.contact?.phone}`}
                       className="text-white hover:text-blue-400 font-medium transition-colors"
                       data-tina-field={tinaField(data?.contact, 'phone')}
                     >
-                      {data?.contact?.phone || '+48 778 768 363'}
+                      {data?.contact?.phone}
                     </a>
                   </div>
                 </div>
@@ -516,16 +564,16 @@ export default function Brief({ data }: { data?: BriefData }) {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-slate-500 text-xs uppercase tracking-wider font-bold mb-1">Adres</p>
+                    <p className="text-slate-500 text-xs uppercase tracking-wider font-bold mb-1" data-tina-field={tinaField(data?.contactInfo, 'addressLabel')}>{data?.contactInfo?.addressLabel}</p>
                     <div className="text-white text-sm">
                       <p className="font-medium" data-tina-field={tinaField(data?.contact, 'address')}>
-                        {data?.contact?.address || 'Bitspire'}
+                        {data?.contact?.address}
                       </p>
                       <p className="text-slate-400" data-tina-field={tinaField(data?.contact, 'addressLine2')}>
-                        {data?.contact?.addressLine2 || 'ul. Tuwima 22a'}
+                        {data?.contact?.addressLine2}
                       </p>
                       <p className="text-slate-400" data-tina-field={tinaField(data?.contact, 'city')}>
-                        {data?.contact?.city || '76-200 Słupsk'}
+                        {data?.contact?.city}
                       </p>
                     </div>
                   </div>
@@ -536,9 +584,9 @@ export default function Brief({ data }: { data?: BriefData }) {
               <div className="bg-blue-500/5 border border-blue-500/10 rounded-xl p-4 mt-6 flex items-center gap-3">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                 <div>
-                   <p className="text-blue-400 font-bold text-xs uppercase tracking-wider mb-0.5">Szybka odpowiedź</p>
-                   <p className="text-slate-400 text-xs">
-                     Odpowiadamy w ciągu 24h w dni robocze.
+                   <p className="text-blue-400 font-bold text-xs uppercase tracking-wider mb-0.5" data-tina-field={tinaField(data?.contactInfo, 'quickResponseLabel')}>{data?.contactInfo?.quickResponseLabel}</p>
+                   <p className="text-slate-400 text-xs" data-tina-field={tinaField(data?.contactInfo, 'quickResponseText')}>
+                     {data?.contactInfo?.quickResponseText}
                    </p>
                 </div>
               </div>

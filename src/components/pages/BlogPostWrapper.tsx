@@ -33,6 +33,28 @@ interface BlogPostData {
         date?: string;
         readTime?: string;
     }>;
+    blog?: {
+        noArticles?: string;
+        readMore?: string;
+        readTime?: string;
+        by?: string;
+        backToBlog?: string;
+        publishedOn?: string;
+        shareTitle?: string;
+        shareButtons?: {
+            twitter?: string;
+            linkedin?: string;
+            facebook?: string;
+            copyLink?: string;
+        };
+        tableOfContentsTitle?: string;
+        authorBox?: {
+            title?: string;
+            bio?: string;
+            contact?: string;
+        };
+        relatedArticlesTitle?: string;
+    } | null;
     [key: string]: unknown;
 }
 
@@ -40,30 +62,14 @@ interface BlogPostWrapperProps {
     data: BlogPostData;
 }
 
-const translations = {
-    pl: {
-        by: 'przez',
-        readTime: (minutes: number) => `${minutes} min czytania`,
-        backToBlog: 'Powrót do bloga',
-        publishedOn: 'Opublikowano',
-    },
-    en: {
-        by: 'by',
-        readTime: (minutes: number) => `${minutes} min read`,
-        backToBlog: 'Back to blog',
-        publishedOn: 'Published on',
-    },
-};
-
 export default function BlogPostWrapper({ data }: BlogPostWrapperProps) {
     const locale = data?.locale || 'pl';
-    const t = translations[locale as keyof typeof translations] || translations.en;
 
     return (
         <PageBackground variant="blue">
             <ReadingProgressBar />
             <div className="relative z-10 w-full max-w-4xl lg:max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-20 md:pt-32 pb-20">
-                <BackLink href="/blog" label={t.backToBlog} />
+                <BackLink href="/blog" label={data?.blog?.backToBlog} />
 
                 <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_280px]">
                     {/* Main Content */}
@@ -78,7 +84,7 @@ export default function BlogPostWrapper({ data }: BlogPostWrapperProps) {
                                 date={data.date}
                                 locale={locale}
                                 data={data}
-                                translations={t}
+                                translations={data?.blog}
                             />
 
                             {/* Featured Image - 16:9 aspect ratio */}
@@ -140,9 +146,20 @@ export default function BlogPostWrapper({ data }: BlogPostWrapperProps) {
 
                     {/* Sidebar */}
                     <aside className="space-y-6 hidden lg:block">
-                        <AuthorBox author={data.author} locale={locale} />
-                        <ShareButtons locale={locale} />
-                        <TableOfContents locale={locale} />
+                        <AuthorBox 
+                            author={data.author} 
+                            authorBox={data?.blog?.authorBox}
+                            locale={locale} 
+                        />
+                        <ShareButtons 
+                            title={data?.blog?.shareTitle}
+                            buttons={data?.blog?.shareButtons}
+                            locale={locale} 
+                        />
+                        <TableOfContents 
+                            title={data?.blog?.tableOfContentsTitle}
+                            locale={locale} 
+                        />
                     </aside>
                 </div>
             </div>
@@ -154,6 +171,7 @@ export default function BlogPostWrapper({ data }: BlogPostWrapperProps) {
                     currentSlug={data.slug || ''}
                     locale={locale}
                     type="blog"
+                    sectionTitle={data?.blog?.relatedArticlesTitle}
                 />
             )}
         </PageBackground>

@@ -4,10 +4,11 @@ import React from "react";
 import { CursorLightCard } from "../features/Cursor-Light";
 import { tinaField } from 'tinacms/dist/react';
 import { useContactForm } from "@/hooks/useContactForm";
+import { RichText } from '../ui/RichTextPresets';
 
 interface ContactData {
-  title?: string | null;
-  description?: string | null;
+  title?: any;
+  description?: any;
   email?: string | null;
   phone?: string | null;
   address?: string | null;
@@ -20,6 +21,8 @@ interface ContactData {
   messageLabel?: string | null;
   buttonText?: string | null;
   contactDataTitle?: string | null;
+  quickResponseLabel?: string | null;
+  quickResponseText?: string | null;
   [key: string]: unknown;
 }
 
@@ -34,16 +37,16 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
   } = useContactForm({ formName: "contact" });
 
   return (
-    <section className="py-12 px-4 bg-slate-900/20" id="contact">
+    <section className="py-12 px-4 bg-slate-900/20" id="contact" data-tina-field={tinaField(data)}>
       <div className="container mx-auto max-w-7xl">
         <div className="text-center mb-8">
           <div className="w-16 h-0.5 bg-linear-to-r from-blue-600 to-cyan-500 mb-4 mx-auto"></div>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-3" data-tina-field={tinaField(data, 'title')}>
-            {data?.title || 'Porozmawiajmy o Twoim projekcie'}
-          </h2>
-          <p className="text-slate-300 text-base" data-tina-field={tinaField(data, 'description')}>
-            {data?.description || 'Wypełnij formularz, a my skontaktujemy się z Tobą w ciągu 24 godzin'}
-          </p>
+          <div data-tina-field={tinaField(data, 'title')}>
+            <RichText content={data?.title} preset="section-title" />
+          </div>
+          <div data-tina-field={tinaField(data, 'description')}>
+            <RichText content={data?.description} preset="subtitle" />
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-[2fr_1fr] gap-8">
@@ -57,10 +60,10 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                    </svg>
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-3" data-tina-field={tinaField(data, 'successTitle')}>
-                  {data?.successTitle || 'Dziękujemy za kontakt!'}
+                  {data?.successTitle}
                 </h3>
                 <p className="text-slate-400" data-tina-field={tinaField(data, 'successMessage')}>
-                  {data?.successMessage || 'Odpowiemy wkrótce na Twoją wiadomość.'}
+                  {data?.successMessage}
                 </p>
               </div>
             ) : (
@@ -73,7 +76,7 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                      <label className="text-xs font-medium text-slate-400 uppercase tracking-wider ml-1" data-tina-field={tinaField(data, 'nameLabel')}>
-                       {data?.nameLabel || 'Imię i nazwisko'}
+                       {data?.nameLabel}
                      </label>
                      <input
                        type="text"
@@ -88,7 +91,7 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                   
                   <div className="space-y-2">
                      <label className="text-xs font-medium text-slate-400 uppercase tracking-wider ml-1" data-tina-field={tinaField(data, 'emailLabel')}>
-                       {data?.emailLabel || 'Email'}
+                       {data?.emailLabel}
                      </label>
                      <input
                        type="email"
@@ -104,7 +107,7 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                 
                 <div className="space-y-2">
                    <label className="text-xs font-medium text-slate-400 uppercase tracking-wider ml-1" data-tina-field={tinaField(data, 'messageLabel')}>
-                     {data?.messageLabel || 'Wiadomość'}
+                     {data?.messageLabel}
                    </label>
                    <textarea
                      name="message"
@@ -129,7 +132,7 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                   className={`btn-tech-primary w-full py-4 rounded-lg font-bold text-sm uppercase tracking-wider ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                   data-tina-field={tinaField(data, 'buttonText')}
                 >
-                  {loading ? 'Wysyłanie...' : (data?.buttonText || 'Wyślij wiadomość')}
+                  {loading ? 'Wysyłanie...' : data?.buttonText}
                 </button>
               </form>
             )}
@@ -144,7 +147,7 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                   </svg>
                </div>
                <h3 className="text-xl font-bold text-white" data-tina-field={tinaField(data, 'contactDataTitle')}>
-                 {data?.contactDataTitle || 'Dane kontaktowe'}
+                 {data?.contactDataTitle}
                </h3>
             </div>
             
@@ -159,11 +162,11 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                 <div>
                   <p className="text-slate-500 text-xs uppercase tracking-wider font-bold mb-1">Email</p>
                   <a 
-                    href={`mailto:${data?.email || 'kontakt@bitspire.pl'}`}
+                    href={`mailto:${data?.email || ''}`}
                     className="text-white hover:text-blue-400 font-medium transition-colors"
                     data-tina-field={tinaField(data, 'email')}
                   >
-                    {data?.email || 'kontakt@bitspire.pl'}
+                    {data?.email}
                   </a>
                 </div>
               </div>
@@ -178,11 +181,11 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                 <div>
                   <p className="text-slate-500 text-xs uppercase tracking-wider font-bold mb-1">Telefon</p>
                   <a 
-                    href={`tel:${data?.phone || '+48778768363'}`}
+                    href={`tel:${data?.phone || ''}`}
                     className="text-white hover:text-blue-400 font-medium transition-colors"
                     data-tina-field={tinaField(data, 'phone')}
                   >
-                    {data?.phone || '+48 778 768 363'}
+                    {data?.phone}
                   </a>
                 </div>
               </div>
@@ -199,13 +202,13 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
                   <p className="text-slate-500 text-xs uppercase tracking-wider font-bold mb-1">Adres</p>
                   <div className="text-white text-sm">
                     <p className="font-medium" data-tina-field={tinaField(data, 'address')}>
-                      {data?.address || 'Bitspire'}
+                      {data?.address}
                     </p>
                     <p className="text-slate-400" data-tina-field={tinaField(data, 'addressLine2')}>
-                      {data?.addressLine2 || 'ul. Tuwima 22a'}
+                      {data?.addressLine2}
                     </p>
                     <p className="text-slate-400" data-tina-field={tinaField(data, 'city')}>
-                      {data?.city || '76-200 Słupsk'}
+                      {data?.city}
                     </p>
                   </div>
                 </div>
@@ -216,9 +219,11 @@ const Contact: React.FC<{ data?: ContactData }> = ({ data }) => {
             <div className="bg-blue-500/5 border border-blue-500/10 rounded-xl p-4 mt-6 flex items-center gap-3">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
               <div>
-                 <p className="text-blue-400 font-bold text-xs uppercase tracking-wider mb-0.5">Szybka odpowiedź</p>
-                 <p className="text-slate-400 text-xs">
-                   Odpowiadamy w ciągu 24h w dni robocze.
+                 <p className="text-blue-400 font-bold text-xs uppercase tracking-wider mb-0.5" data-tina-field={tinaField(data, 'quickResponseLabel')}>
+                   {data?.quickResponseLabel}
+                 </p>
+                 <p className="text-slate-400 text-xs" data-tina-field={tinaField(data, 'quickResponseText')}>
+                   {data?.quickResponseText}
                  </p>
               </div>
             </div>

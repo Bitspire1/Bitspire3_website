@@ -17,13 +17,15 @@ interface RelatedArticlesProps {
   currentSlug: string;
   locale: string;
   type?: 'blog' | 'portfolio';
+  sectionTitle?: string;
 }
 
 export const RelatedArticles: React.FC<RelatedArticlesProps> = ({ 
   articles, 
   currentSlug, 
   locale,
-  type = 'blog'
+  type = 'blog',
+  sectionTitle
 }) => {
   // Filter out current article and limit to 3
   const filteredArticles = articles
@@ -33,10 +35,6 @@ export const RelatedArticles: React.FC<RelatedArticlesProps> = ({
   if (filteredArticles.length === 0) {
     return null;
   }
-
-  const sectionTitle = type === 'blog' 
-    ? (locale === 'pl' ? 'Powiązane artykuły' : 'Related Articles')
-    : (locale === 'pl' ? 'Inne projekty' : 'Other Projects');
 
   return (
     <section className="py-16 px-4 bg-slate-900/20 relative overflow-hidden">

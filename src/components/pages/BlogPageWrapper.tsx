@@ -32,32 +32,22 @@ interface BlogPageData {
     locale?: string;
     title?: string;
     description?: string;
+    blog?: {
+        noArticles?: string | null;
+        readMore?: string | null;
+        readTime?: string | null;
+        by?: string | null;
+    };
 }
 
 interface BlogPageWrapperProps {
     data: BlogPageData;
 }
 
-const translations = {
-    pl: {
-        noArticles: 'Brak artykułów.',
-        readMore: 'Czytaj więcej',
-        readTime: (minutes: number) => `${minutes} min czytania`,
-        by: 'przez',
-    },
-    en: {
-        noArticles: 'No articles found.',
-        readMore: 'Read more',
-        readTime: (minutes: number) => `${minutes} min read`,
-        by: 'by',
-    },
-};
-
 export default function BlogPageWrapper({ data }: BlogPageWrapperProps) {
     const { getLink } = useAdminLink();
     const posts = data?.posts || [];
     const locale = data?.locale || 'pl';
-    const t = translations[locale as keyof typeof translations] || translations.en;
 
     // Search and filter state
     const [searchQuery, setSearchQuery] = useState('');
@@ -97,6 +87,7 @@ export default function BlogPageWrapper({ data }: BlogPageWrapperProps) {
                 <BlogHeader 
                     title={data?.title}
                     description={data?.description}
+                    data={data}
                 />
 
                 {allTags.length > 0 && (
@@ -114,7 +105,7 @@ export default function BlogPageWrapper({ data }: BlogPageWrapperProps) {
                 <BlogGrid 
                     posts={filteredPosts}
                     locale={locale}
-                    translations={t}
+                    translations={data?.blog}
                     getLink={getLink}
                 />
             </main>

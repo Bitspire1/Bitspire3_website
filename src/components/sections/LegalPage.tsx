@@ -48,11 +48,11 @@ export default function LegalPage({ data }: { data?: LegalPageData }) {
         {sections.length > 0 && (
           <aside className="md:sticky md:top-28 h-max hidden md:block">
             <nav 
-              aria-label="Spis treści" 
+              aria-label={data?.tocTitle || ""}
               className="space-y-4 bg-slate-800/40 border border-slate-700 rounded-xl p-5 backdrop-blur-sm"
             >
               <h2 className="text-sm font-semibold tracking-wider uppercase text-slate-400">
-                Spis treści
+                {data?.tocTitle}
               </h2>
               <ol className="space-y-2 text-sm">
                 {sections.map((s) => (

@@ -9,14 +9,13 @@ interface Heading {
 }
 
 interface TableOfContentsProps {
+    title?: string;
     locale?: string;
 }
 
-export default function TableOfContents({ locale = 'pl' }: TableOfContentsProps) {
+export default function TableOfContents({ title, locale = 'pl' }: TableOfContentsProps) {
     const [headings, setHeadings] = useState<Heading[]>([]);
     const [activeId, setActiveId] = useState<string>('');
-
-    const title = locale === 'pl' ? 'Spis treści' : 'Table of Contents';
 
     useEffect(() => {
         // Extract headings from the article content

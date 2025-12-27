@@ -209,6 +209,17 @@ export default async function Page(props: PageProps) {
                 console.error('Error loading related posts:', error);
             }
 
+            // Fetch blog page data for translations
+            let blogTranslations = null;
+            try {
+                const blogPageResult = await client.queries.pages({
+                    relativePath: `${locale}/blog.mdx`,
+                });
+                blogTranslations = blogPageResult.data.pages.blog;
+            } catch (error) {
+                console.error('Error loading blog page translations:', error);
+            }
+
             const { default: BlogPostWrapper } = await import('@/components/pages/BlogPostWrapper');
             
             return (
@@ -218,7 +229,8 @@ export default async function Page(props: PageProps) {
                         body: result.data.blog.body || null,
                         locale,
                         slug: postSlug,
-                        relatedPosts
+                        relatedPosts,
+                        blog: blogTranslations
                     }} 
                 />
             );
@@ -313,6 +325,29 @@ export default async function Page(props: PageProps) {
             } catch (error) {
                 console.error('Error loading portfolio projects:', error);
                 return <Wrapper data={{ ...result.data?.pages, projects: [], locale }} />;
+            }
+        }
+
+        // Specjalna obsługa dla strony home - pobierz portfolio projekty dla PortfolioHighlights
+        if (pageSlug === 'home') {
+            try {
+                const portfolioConnection = await client.queries.portfolioConnection();
+                const portfolioProjects = (portfolioConnection.data.portfolioConnection.edges || [])
+                    .map(edge => edge?.node)
+                    .filter((node): node is NonNullable<typeof node> => 
+                        node !== null && node !== undefined && node._sys.relativePath.startsWith(`${locale}/`)
+                    );
+
+                // Inject projects into portfolioHighlights
+                const pageData = result.data.pages;
+                if (pageData.home?.portfolioHighlights) {
+                    pageData.home.portfolioHighlights.projects = portfolioProjects;
+                }
+
+                return <Wrapper data={{ ...pageData, locale }} />;
+            } catch (error) {
+                console.error('Error loading portfolio projects for home:', error);
+                return <Wrapper data={{ ...result.data?.pages, locale }} />;
             }
         }
 

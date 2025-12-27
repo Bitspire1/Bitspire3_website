@@ -5,28 +5,36 @@ import Image from 'next/image';
 import { CTAButton } from '@/components/ui/buttons/CTA__button';
 import { BriefButton } from '@/components/ui/buttons/brief_button';
 import { tinaField } from 'tinacms/dist/react';
+import { RichText, Gradient } from '@/components/ui/RichTextPresets';
 
 interface HeroData {
-  title?: string | null;
-  titleAccent?: string | null;
-  titleEnd?: string | null;
-  subtitle?: string | null;
-  ctaButton?: string | null;
-  briefButton?: string | null;
+  title?: any; // Rich-text content
+  subtitle?: any; // Rich-text content
   image?: string | null;
-  [key: string]: unknown; // For TinaCMS fields
+  [key: string]: unknown;
 }
 
-export const Hero: React.FC<{ data?: HeroData }> = ({ data }) => {
-  // Graceful handling for editing mode - don't throw errors when fields are empty
-  const title = data?.title || '';
-  const titleAccent = data?.titleAccent || '';
-  const titleEnd = data?.titleEnd || '';
-  const subtitle = data?.subtitle || '';
-  const image = data?.image || null;
+interface HeroProps {
+  data?: HeroData;
+  locale?: string;
+}
 
+// Hardcoded button texts per locale
+const buttonTexts = {
+  pl: {
+    cta: "Rozpocznij projekt",
+    brief: "Wypełnij brief"
+  },
+  en: {
+    cta: "Start project",
+    brief: "Fill brief"
+  }
+} as const;
+
+export const Hero: React.FC<HeroProps> = ({ data, locale = 'pl' }) => {
+  const texts = buttonTexts[locale as keyof typeof buttonTexts] || buttonTexts.pl;
   return (
-    <section className="relative py-20 lg:py-32 overflow-hidden">
+    <section className="relative py-20 lg:py-32 overflow-hidden"  data-tina-field={tinaField(data)}>
       {/* Cybernetic Background Grid */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
       
@@ -47,39 +55,28 @@ export const Hero: React.FC<{ data?: HeroData }> = ({ data }) => {
               <span className="text-blue-200 text-xs font-bold tracking-widest uppercase drop-shadow-sm font-mono">System Online</span>
             </div>
             
-            <h1 className="text-5xl lg:text-7xl font-bold text-white mb-8 leading-tight tracking-tight drop-shadow-lg">
-              <span data-tina-field={tinaField(data, 'title')} className="relative inline-block">
-                {title || 'Nowoczesne'}
-                <svg className="absolute -bottom-2 left-0 w-full h-2 text-blue-500/50" viewBox="0 0 100 10" preserveAspectRatio="none">
-                  <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="2" fill="none" />
-                </svg>
-              </span>
-              {' '}
-              <span className="text-transparent bg-clip-text bg-[linear-gradient(to_right,#60a5fa,#22d3ee,#60a5fa)] bg-size-[200%] animate-[gradient-x_3s_ease_infinite] block mt-2 pb-2" data-tina-field={tinaField(data, 'titleAccent')}>
-                {titleAccent || 'rozwiązania IT'}
-              </span>
-              <span data-tina-field={tinaField(data, 'titleEnd')}>
-                {titleEnd || 'dla Twojego biznesu'}
-              </span>
+            <h1 data-tina-field={tinaField(data, 'title')}>
+              <RichText content={data?.title} preset="hero-title" className="mb-8" />
             </h1>
             
-            <p 
-              className="text-lg lg:text-xl text-slate-400 mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed border-l-2 border-blue-500/30 pl-6"
-              data-tina-field={tinaField(data, 'subtitle')}
-            >
-              {subtitle || 'Tworzymy profesjonalne strony internetowe, aplikacje web i systemy, które przyciągają klientów i zwiększają Twoje zyski.'}
-            </p>
+            <div data-tina-field={tinaField(data, 'subtitle')}>
+              <RichText 
+                content={data?.subtitle} 
+                preset="subtitle" 
+                className="mb-10 max-w-2xl mx-auto lg:mx-0 border-l-2 border-blue-500/30 pl-6" 
+              />
+            </div>
             
-            {/* Buttons */}
+            {/* Buttons - hardcoded per locale */}
             <div className="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
-              <CTAButton />
-              <BriefButton />
+              <CTAButton>{texts.cta}</CTAButton>
+              <BriefButton>{texts.brief}</BriefButton>
             </div>
           </div>
 
           {/* Right Side - Visuals */}
           <div className="relative lg:h-150 flex items-center justify-center perspective-[1000px]">
-            {image ? (
+            {data?.image ? (
               <div className="relative w-full h-full animate-float transform-3d">
                  {/* Cybernetic Rings */}
                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] border border-blue-500/10 rounded-full animate-[spin_20s_linear_infinite]" />
@@ -87,7 +84,7 @@ export const Hero: React.FC<{ data?: HeroData }> = ({ data }) => {
                  
                  <div className="absolute inset-0 bg-[linear-gradient(to_top_right,rgba(59,130,246,0.1),rgba(6,182,212,0.1))] rounded-3xl blur-3xl -z-10" />
                  <Image
-                   src={image}
+                   src={data.image}
                    alt="Hero illustration"
                    fill
                    sizes="(max-width: 1024px) 100vw, 50vw"

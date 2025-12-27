@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { tinaField } from 'tinacms/dist/react';
 import { useAdminLink } from '@/hooks/useAdminLink';
+import { RichText } from '../../ui/RichTextPresets';
 
 interface PortfolioProject {
   title?: string | null;
@@ -19,8 +20,8 @@ interface PortfolioProject {
 interface PortfolioHighlightsProps {
   data?: {
     projects?: PortfolioProject[] | null;
-    title?: string | null;
-    description?: string | null;
+    title?: any;
+    description?: any;
   };
 }
 
@@ -34,23 +35,32 @@ const PortfolioHighlights: React.FC<PortfolioHighlightsProps> = ({ data }) => {
   }
 
   return (
-    <section className="py-24 px-4 bg-slate-900/20 relative overflow-hidden" id="portfolio-highlights">
+    <section className="py-24 px-4 bg-slate-900/20 relative overflow-hidden" id="portfolio-highlights" data-tina-field={tinaField(data)}>
       {/* Background decoration */}
   <div className="absolute inset-0 bg-linear-to-b from-blue-500/5 via-transparent to-transparent pointer-events-none" />
       
       <div className="container mx-auto max-w-7xl relative z-10">
         <div className="text-center mb-16">
           <div className="w-16 h-0.5 bg-linear-to-r from-blue-600 to-cyan-500 mb-6 mx-auto"></div>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4" data-tina-field={tinaField(data, 'title')}>
-            {data?.title || 'Wyróżnione projekty'}
-          </h2>
-          <p className="text-slate-400 text-lg max-w-2xl mx-auto" data-tina-field={tinaField(data, 'description')}>
-            {data?.description || 'Sprawdź nasze najlepsze realizacje'}
-          </p>
+          <div data-tina-field={tinaField(data, 'title')}>
+            <RichText content={data?.title} preset="section-title" />
+          </div>
+          <div data-tina-field={tinaField(data, 'description')}>
+            <RichText content={data?.description} preset="subtitle" />
+          </div>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredProjects.map((project, index) => (
+          {featuredProjects.map((project, index) => {
+            // Convert title/description to string if they're rich-text objects
+            const projectTitle = typeof project?.title === 'string' 
+              ? project.title 
+              : (project?.title as any)?.children?.[0]?.text || 'Project';
+            const projectDescription = typeof project?.description === 'string'
+              ? project.description
+              : (project?.description as any)?.children?.[0]?.text || '';
+            
+            return (
             <Link
               key={index}
               href={`/portfolio/${project?.slug || '#'}`}
@@ -61,7 +71,7 @@ const PortfolioHighlights: React.FC<PortfolioHighlightsProps> = ({ data }) => {
                 {project?.image ? (
                   <Image
                     src={project.image}
-                    alt={project?.title || 'Project'}
+                    alt={projectTitle}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -89,11 +99,11 @@ const PortfolioHighlights: React.FC<PortfolioHighlightsProps> = ({ data }) => {
               {/* Project Content */}
               <div className="p-6">
                 <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
-                  {project?.title || 'Projekt'}
+                  {projectTitle}
                 </h3>
                 
                 <p className="text-slate-400 text-sm mb-4 line-clamp-2">
-                  {project?.description || 'Opis projektu'}
+                  {projectDescription}
                 </p>
 
                 {/* Tags */}
@@ -121,7 +131,8 @@ const PortfolioHighlights: React.FC<PortfolioHighlightsProps> = ({ data }) => {
                 </div>
               </div>
             </Link>
-          ))}
+            );
+          })}
         </div>
 
         {/* View all projects button */}

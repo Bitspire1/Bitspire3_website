@@ -21,15 +21,16 @@ interface BlogPost {
 interface BlogGridProps {
     posts: BlogPost[];
     locale: string;
-    translations: {
-        noArticles: string;
-        readMore: string;
-        readTime: (minutes: number) => string;
-    };
+    translations?: {
+        noArticles?: string | null;
+        readMore?: string | null;
+        readTime?: string | null;
+        by?: string | null;
+    } | null;
     getLink: (path: string) => string;
 }
 
-export default function BlogGrid({ posts, locale, translations: t, getLink }: BlogGridProps) {
+export default function BlogGrid({ posts, locale, translations, getLink }: BlogGridProps) {
     if (posts.length === 0) {
         return (
             <section aria-label="Blog posts" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
@@ -39,7 +40,7 @@ export default function BlogGrid({ posts, locale, translations: t, getLink }: Bl
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                     </div>
-                    <p className="text-slate-400 text-lg">{t.noArticles}</p>
+                    <p className="text-slate-400 text-lg">{translations?.noArticles}</p>
                 </div>
             </section>
         );
@@ -59,7 +60,7 @@ export default function BlogGrid({ posts, locale, translations: t, getLink }: Bl
                     readTime={post.readTime}
                     tags={post.tags}
                     locale={locale}
-                    translations={t}
+                    translations={translations}
                     getLink={getLink}
                 />
             ))}

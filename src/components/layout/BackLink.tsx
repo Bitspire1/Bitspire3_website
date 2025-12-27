@@ -3,11 +3,13 @@ import { useAdminLink } from '@/hooks/useAdminLink';
 
 interface BackLinkProps {
     href: string;
-    label: string;
+    label?: string;
 }
 
 export default function BackLink({ href, label }: BackLinkProps) {
     const { getLink } = useAdminLink();
+    
+    if (!label) return null;
     
     return (
         <Link 

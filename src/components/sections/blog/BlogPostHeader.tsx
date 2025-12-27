@@ -10,10 +10,11 @@ interface BlogPostHeaderProps {
     date: string;
     locale: string;
     data?: any;
-    translations: {
-        by: string;
-        readTime: (minutes: number) => string;
-    };
+    translations?: {
+        by?: string;
+        readTime?: string;
+        publishedOn?: string;
+    } | null;
 }
 
 export default function BlogPostHeader({ 
@@ -25,7 +26,7 @@ export default function BlogPostHeader({
     date,
     locale,
     data,
-    translations: t 
+    translations
 }: BlogPostHeaderProps) {
     const formatDate = (dateString: string) => {
         const dateObj = new Date(dateString);
@@ -47,12 +48,12 @@ export default function BlogPostHeader({
                         tinaField={data ? tinaField(data, 'category') : undefined}
                     />
                 )}
-                {readTime && (
+                {readTime && translations?.readTime && (
                     <span 
                         className="text-sm text-slate-400"
                         data-tina-field={data ? tinaField(data, 'readTime') : undefined}
                     >
-                        {t.readTime(readTime)}
+                        {translations.readTime.replace('{minutes}', readTime.toString())}
                     </span>
                 )}
             </div>
@@ -75,7 +76,7 @@ export default function BlogPostHeader({
 
             {/* Meta info */}
             <div className="flex items-center justify-center gap-4 text-sm text-slate-400 mb-8 pb-8 border-b border-slate-700/50">
-                <span>{t.by} {author}</span>
+                <span>{translations?.by} {author}</span>
                 <span>•</span>
                 <span data-tina-field={data ? tinaField(data, 'date') : undefined}>
                     {formatDate(date)}

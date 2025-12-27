@@ -29,7 +29,7 @@ export default function Portfolio({ data }: { data?: PortfolioData }) {
   const projects = (data?.projects || []).filter((p): p is Project => p !== null);
 
   return (
-    <div className="min-h-screen bg-grid-pattern pt-24 pb-32 relative overflow-hidden">
+    <div className="min-h-screen bg-grid-pattern pt-24 pb-32 relative overflow-hidden" data-tina-field={tinaField(data)}>
       <main className="relative z-10 max-w-7xl mx-auto px-6">
         <header className="mb-20">
           <div className="flex items-center gap-4 mb-6">
@@ -42,13 +42,13 @@ export default function Portfolio({ data }: { data?: PortfolioData }) {
             className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
             data-tina-field={tinaField(data, 'title')}
           >
-            {data?.title || 'Portfolio'}
+            {data?.title}
           </h1>
           <p 
             className="text-lg md:text-xl text-slate-400 max-w-2xl leading-relaxed"
             data-tina-field={tinaField(data, 'description')}
           >
-            {data?.description || 'Nasze realizacje'}
+            {data?.description}
           </p>
         </header>
 

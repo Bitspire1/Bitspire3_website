@@ -1,48 +1,3 @@
-fragment HeaderParts on Header {
-  __typename
-  logo
-  logoAlt
-  navigation {
-    __typename
-    label
-    href
-  }
-  ctaButton {
-    __typename
-    text
-    href
-  }
-}
-
-fragment FooterParts on Footer {
-  __typename
-  companyName
-  description
-  contact {
-    __typename
-    email
-    phone
-    location
-  }
-  navigation {
-    __typename
-    label
-    href
-  }
-  socialMedia {
-    __typename
-    platform
-    url
-  }
-  copyright
-  legalLinks {
-    __typename
-    label
-    href
-  }
-  cookieSettingsText
-}
-
 fragment PortfolioParts on Portfolio {
   __typename
   title
@@ -82,43 +37,18 @@ fragment PagesParts on Pages {
   title
   description
   lastUpdate
+  tocTitle
   selectedProjects
-  projects {
-    __typename
-    title
-    description
-    image
-    imageAlt
-    tags
-    year
-    link
-  }
-  sections {
-    __typename
-    id
-    title
-    content
-  }
   hero {
     __typename
     title
-    titleAccent
-    titleEnd
     subtitle
-    ctaButton
-    briefButton
     image
   }
   technology {
     __typename
     title
     description
-    items {
-      __typename
-      name
-      icon
-      useBrightness
-    }
   }
   offer {
     __typename
@@ -137,9 +67,50 @@ fragment PagesParts on Pages {
   }
   brief {
     __typename
-    title
     description
-    buttonText
+    badge
+    heroTitle
+    heroTitleHighlight
+    tabs {
+      __typename
+      label
+      value
+    }
+    form {
+      __typename
+      progressLabel
+      requiredMark
+      placeholderTextarea
+      placeholderText
+      placeholderTechnology
+      placeholderIntegrations
+      buttonPrev
+      buttonNext
+      buttonSubmit
+      buttonSubmitting
+      successTitle
+      successMessage
+    }
+    contactForm {
+      __typename
+      title
+      placeholderName
+      placeholderEmail
+      placeholderMessage
+      buttonSend
+      buttonSending
+      successTitle
+      successMessage
+    }
+    contactInfo {
+      __typename
+      title
+      emailLabel
+      phoneLabel
+      addressLabel
+      quickResponseLabel
+      quickResponseText
+    }
     contact {
       __typename
       email
@@ -165,9 +136,6 @@ fragment PagesParts on Pages {
       icon
       duration
     }
-    ctaTitle
-    ctaDescription
-    ctaButton
   }
   faq {
     __typename
@@ -178,8 +146,6 @@ fragment PagesParts on Pages {
       question
       answer
     }
-    ctaQuestion
-    ctaButton
   }
   contact {
     __typename
@@ -197,6 +163,62 @@ fragment PagesParts on Pages {
     messageLabel
     buttonText
     contactDataTitle
+    quickResponseLabel
+    quickResponseText
+  }
+  portfolio {
+    __typename
+    title
+    description
+    sectionLabel
+  }
+  blog {
+    __typename
+    title
+    description
+    sectionLabel
+    shareTitle
+    shareButtons {
+      __typename
+      twitter
+      linkedin
+      facebook
+      copyLink
+    }
+    tableOfContentsTitle
+    authorBox {
+      __typename
+      title
+      bio
+      contact
+    }
+    relatedArticlesTitle
+    otherProjectsTitle
+  }
+  searchBar {
+    __typename
+    blog {
+      __typename
+      searchPlaceholder
+      clearSearch
+      filterByTech
+      clearFilters
+      showLess
+      showMore
+      activeFilters
+      removeFilter
+    }
+    portfolio {
+      __typename
+      searchPlaceholder
+      clearSearch
+      filterByTech
+      clearFilters
+      showLess
+      showMore
+      activeFilters
+      removeFilter
+    }
   }
   body
 }

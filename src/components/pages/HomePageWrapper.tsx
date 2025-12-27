@@ -9,13 +9,11 @@ import PortfolioHighlights from "@/components/sections/portfolio/PortfolioHighli
 
 interface HomePageData {
     [key: string]: unknown;
+    locale?: string;
     hero?: {
-        title?: string;
-        titleAccent?: string;
-        titleEnd?: string;
-        subtitle?: string;
-        ctaButton?: string;
-        briefButton?: string;
+        title?: any;
+        subtitle?: any;
+        subtitle?: any;
         image?: string;
     };
     offer?: {
@@ -92,6 +90,8 @@ interface HomePageWrapperProps {
 }
 
 export default function HomePageWrapper({ data }: HomePageWrapperProps) {
+    const locale = data?.locale || 'pl';
+    
     // Fallback jeśli data jest undefined
     if (!data) {
         return null;
@@ -99,13 +99,13 @@ export default function HomePageWrapper({ data }: HomePageWrapperProps) {
 
     return (
         <>
-            <Hero data={data?.hero} />
+            <Hero data={data?.hero} locale={locale} />
             <Offer data={data?.offer} />
             <Technology data={data?.technology} />
-            <HowWeWork data={data?.howWeWork} />
+            <HowWeWork data={data?.howWeWork} locale={locale} />
             <PortfolioHighlights data={data?.portfolioHighlights} />
             <Brief data={data?.brief} />
-            <FAQ data={data?.faq} />
+            <FAQ data={data?.faq} locale={locale} />
             <Contact data={data?.contact} />
         </>
     );

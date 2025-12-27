@@ -3,10 +3,11 @@ import React, { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import { tinaField } from 'tinacms/dist/react';
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { RichText } from "@/components/ui/RichTextPresets";
 
 interface TechnologyData {
-  title?: string | null;
-  description?: string | null;
+  title?: any;
+  description?: any;
   [key: string]: unknown;
 }
 
@@ -117,16 +118,17 @@ const Technology: React.FC<{ data?: TechnologyData }> = ({ data }) => {
 		<section
 			ref={sectionRef}
 			className="w-full py-12 relative overflow-hidden"
+			data-tina-field={tinaField(data)}
 		>
       <div className="container mx-auto px-4 mb-8">
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
 		  <div className="w-16 h-0.5 bg-linear-to-r from-blue-600 to-cyan-500 mb-4"></div>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-3" data-tina-field={tinaField(data, 'title')}>
-            {data?.title || 'Technologie nowej generacji'}
-          </h2>
-          <p className="text-slate-300 text-base" data-tina-field={tinaField(data, 'description')}>
-            {data?.description || 'Wykorzystujemy najnowocześniejsze narzędzia do budowy szybkich i skalowalnych aplikacji'}
-          </p>
+          <div data-tina-field={tinaField(data, 'title')}>
+            <RichText content={data?.title} preset="section-title" className="mb-3" />
+          </div>
+          <div data-tina-field={tinaField(data, 'description')}>
+            <RichText content={data?.description} preset="description" />
+          </div>
         </div>
       </div>
       
