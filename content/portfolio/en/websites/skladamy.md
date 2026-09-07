@@ -10,7 +10,7 @@ technologies:
   - Strapi
   - MariaDB
   - Vercel
-websiteUrl: https://skladamy.com.pl
+websiteUrl: https://skladamy.com
 screenshot: /portfolio/websites/skladamy/skladamy.png
 ---
 
@@ -66,8 +66,16 @@ The biggest challenge was combining **easy content editing** with strong **searc
 
 ## Results
 
-Launching the site at `skladamy.com.pl` improved the company's online presence and streamlined customer acquisition. The site generates phone and form inquiries, while blog articles build organic traffic and position SkładaMy as local experts in IKEA furniture assembly.
+Launching the site at `skladamy.com` improved the company's online presence and streamlined customer acquisition. The site generates phone and form inquiries, while blog articles build organic traffic and position SkładaMy as local experts in IKEA furniture assembly.
+
+### Google Search Console visibility
+
+The visibility numbers in Google Search Console are remarkable for a small-business website in a city of roughly 80,000 residents: **over 970 clicks and about 42,000 impressions**. This means the site regularly appears in front of local customers and effectively converts organic traffic into real inquiries.
+
+![Google Search Console results for skladamy.com](/portfolio/websites/skladamy/skladamy-gsc.png)
+
+This confirms that the combination of local SEO, an expert blog, and a fast Next.js website delivers a concrete, measurable business impact — without paid campaigns, purely from organic traffic.
 
 ## See the site
 
-[skladamy.com.pl](https://skladamy.com.pl)
+[skladamy.com](https://skladamy.com)

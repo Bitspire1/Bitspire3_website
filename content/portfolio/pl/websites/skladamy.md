@@ -10,7 +10,7 @@ technologies:
   - Strapi
   - MariaDB
   - Vercel
-websiteUrl: https://skladamy.com.pl
+websiteUrl: https://skladamy.com
 screenshot: /portfolio/websites/skladamy/skladamy.png
 ---
 
@@ -32,13 +32,13 @@ SkładaMy powstało w 2020 roku i od początku rozwijało się głównie przez p
 ## Dla kogo jest ta strona?
 
 - Właściciele mieszkań i domów kupujący meble IKEA.
-- Osoby szukające pomocy przy montażu szaf PAX, kuchni, łóżek i mebiosek.
+- Osoby szukające pomocy przy montażu szaf PAX, kuchni, łóżek i zestawów mebli.
 - Firmy i biura, które potrzebują montażu większej liczby mebli.
 - Lokalni klienci z Słupska i okolic.
 
 ## Jak to działa?
 
-Strona jest zbudowana wokół prostego flow decyzyjnego: klient trafia na stronę, widzy zakres usług, argumenty „dlaczego my”, proces pracy i od razu może zadzwonić lub wysłać zapytanie. Główne sekcje:
+Strona jest zbudowana wokół prostego flow decyzyjnego: klient trafia na stronę, widzi zakres usług, argumenty „dlaczego my”, proces pracy i od razu może zadzwonić lub wysłać zapytanie. Główne sekcje:
 
 1. **Hero** — główne hasło, CTA do telefonu i zapytania, obszar działania.
 2. **Usługi** — montaż mebli IKEA, wieszanie szafek, kotwienie w ścianach.
@@ -66,8 +66,16 @@ Największym wyzwaniem było połączenie **łatwej edycji treści** z dobrą **
 
 ## Efekty
 
-Wdrożenie strony na `skladamy.com.pl` poprawiło obecność firmy w internecie i usprawniło proces pozyskiwania klientów. Strona generuje zapytania telefoniczne i przez formularz, a artykuły na blogu budują ruch organiczny i pozycjonują SkładaMy jako lokalnych ekspertów od montażu mebli IKEA.
+Wdrożenie strony na `skladamy.com` poprawiło obecność firmy w internecie i usprawniło proces pozyskiwania klientów. Strona generuje zapytania telefoniczne i przez formularz, a artykuły na blogu budują ruch organiczny i pozycjonują SkładaMy jako lokalnych ekspertów od montażu mebli IKEA.
+
+### Widoczność w Google Search Console
+
+Wyniki widoczności w Google Search Console robią wrażenie jak na stronę firmową w mieście liczącym około 80 tysięcy mieszkańców: **ponad 970 kliknięć i około 42 tysiące wyświetleń**. Oznacza to, że strona regularnie pojawia się przed lokalnymi klientami i skutecznie konwertuje ruch organiczny na realne zapytania.
+
+![Wyniki Google Search Console dla skladamy.com](/portfolio/websites/skladamy/skladamy-gsc.png)
+
+To potwierdza, że połączenie lokalnego SEO, bloga eksperckiego i szybkiej strony opartej na Next.js przynosi konkretny, mierzalny efekt biznesowy — bez płatnych kampanii, tylko z ruchu organicznego.
 
 ## Zobacz stronę
 
-[skladamy.com.pl](https://skladamy.com.pl)
+[skladamy.com](https://skladamy.com)
